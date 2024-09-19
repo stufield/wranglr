@@ -1,0 +1,71 @@
+---
+title: "Safely Map Values via dplyr::join()"
+author: "Stu Field"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Safely Map Values via dplyr::join()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(splyr)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+set.seed(1)
+```
+
+
+# Introduction
+
+Mapping values in one column to specific values in another (new) column 
+of a data frame is a common task in data science. Doing so _safely_ is
+often a struggle. There are some existing methods in the `tidyverse`
+that are useful, but in my opinion come with some drawbacks:
+
+  * `dplyr::recode()`
+    + can be clunky to implement -> LHS/RHS syntax 
+      difficult (for me) to remember
+  * `dplyr::case_when()`
+    + complex syntax -> difficult to remember; overkill
+      for mapping purposes
+
+Below is what I see is a _safe_ way to map (re-code) values in an existing 
+column to a new column.
+
+
+
+
+## Mapping example
+
+```{r map-values}
+# wish to map values of 'x'
+a <- data.frame(id = 1:10, value = rnorm(10),
+                x = sample(letters[1:3], 10, replace = TRUE))
+a
+
+# create a n x 2 lookup-table/hash map
+# n = values to map
+# x = existing values to map
+# newx = new mapped values for each `x`
+map <- data.frame(x = letters[1:4], newx = c("cat", "dog", "bird", "turtle"))
+map
+
+# use table `dplyr::left_join()`
+# note: 'turtle' is absent from `a$x`; thus ignored (no mapping)
+dplyr::left_join(a, map)
+```
+
+
+## Caveat: non-mapped values -> `NAs`
+
+```{r unmapped-NA}
+map2 <- data.frame(x = c("a", "c", "d", "m"),      # `b` is missing in the map
+                   newx = c("cat", "dog", "bird", "turtle"))
+map2
+
+# note: un-mapped values generate NAs: `b -> NA`
+dplyr::left_join(a, map2, by = "x")
+```

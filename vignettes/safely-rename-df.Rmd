@@ -1,0 +1,60 @@
+---
+title: "Safely Rename Data Frames"
+author: "Stu Field"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Safely Rename Data Frames}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(splyr)
+sim_test_data <- splyr::sim_test_data
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+
+Renaming variables/features of a data frame (or `tibble`) 
+is a common task in data science. Doing so _safely_ is often a struggle.
+This can be achieved _safely_ via the `dplyr::rename()` function via 2
+steps:
+
+1. Set up the mapping in either a named list or vector
+1. Apply the `dplyr::rename()` function via `!!!` syntax
+
+* **Note**: all entries in the mapping (i.e. key) object _must_ be
+  present as `names` in the data frame object.
+
+
+## Example with `mtcars`
+
+```{r rename-df}
+# Create map/key of the names to map
+key <- list(MPG = "mpg", GEAR = "gear")   # this could also be a named vector
+key
+
+# rename `mtcars`
+rename(mtcars, !!! key) |> head()
+```
+
+
+
+## A SomaLogic example (`sim_test_data`)
+```{r rename-sim}
+names(sim_test_data)
+
+# create map (named vector)
+key <- SomaDataIO::getAnalytes(sim_test_data)  
+names(key) <- SomaDataIO::getSeqId(key)   # re-name `seq.XXXX` -> SeqIds
+key <- c(key, RID = "id")     # id -> RID
+key
+
+# rename `sim_test_data`
+rename(sim_test_data, !!! key)
+```

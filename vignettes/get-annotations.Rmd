@@ -1,0 +1,157 @@
+---
+title: "Get Umbrella Annotations"
+output:
+  rmarkdown::html_vignette:
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Get Umbrella Annotations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(splyr)
+sample.adat <- splyr:::sample.adat
+knitr::opts_chunk$set(
+  collapse = TRUE, 
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+
+
+The analyte-specific 'metadata', aka "annotations", changes semi-regularly.
+The `getAnnotations()` function returns a static object of Umbrella's
+annotations that is updated on an irregular interval.
+This API version, `getAnnotationsAPI()`, hits an Umbrella API endpoint
+and requests the _latest_ annotations as they exist in Umbrella's database.
+As such, it is dynamic and should not be expected to return a stable
+set of annotations (by design).
+
+
+---------------------
+
+
+## Useful functions associated Analyte-annotations:
+
+* `getAnnotations()`:
+returns _static_ analyte metadata (annotations) from Umbrella at a previous
+point in time, usually 6-12 months.
+
+* `getAnnotationsAPI()`:
+returns _dynamic_ analyte metadata (annotations) contained in Umbrella.
+If it cannot reach Umbrella's API, the static table object obtained
+from `getAnnotations()` is returned.
+
+* `seqify()`:
+This generates _non-SeqId_ information from `SeqIds`. So, given a list of 
+`SeqIds`, it returns the `EntrezGeneSymbol` and the `Target` information. 
+It does not generate `SeqIds`.
+
+* `lookupAnnotations()`:
+Looks for pattern matches in the annotations. These can be in the 
+EntrezGeneSymbol, the Target, the `SeqId`, or the list 
+(options in list are "black", "gray", and "" for the white list). 
+Returns rows that have a match in _any_ of these columns.
+
+* `seqLookup()`:
+Looks up the target and gene symbol associated with a `seqId`;
+not the `seqId` associated with a gene symbol. That is, given a list of 
+SeqIds (which are formatted number-number), return the `EntrezGeneSymbol`
+and `Target`.
+
+* `getSeqId()`:
+This generates `SeqIds` from aptamer names. The aptamer names can be 
+either the 'old version' - which is `EntrezGeneSymbol` concatenated
+with `SeqIds`, or the 'new version', called 'anonymous aptamer names'. 
+These are in the format `seq.XXXX.XX`. The resulting seq-IDs are in 
+the format `XXXX-XX`.
+
+
+
+----------------------
+
+
+## Examples
+
+For the Applied Modeling group, the most common usage of `getAnnotations()`
+is to obtain the black and/or gray list and getting them into a format that 
+can be used to select columns of adats. Here are the steps to do that.
+
+### Get the "blacklist"
+
+Get all rows from the `umbrella_annotations` object with 
+`List == "black"` (this function is actually matching on _any_ of the 
+annotations columns, but the only one that should contain the 
+pattern `"black"` is the List column). You don't need to call 
+`getAnnotations()` before you call this function.:
+
+
+```{r blacklist}
+black <- lookupAnnotations("black")
+```
+
+Grab the `SeqIds` from this list:
+
+```{r getSeqIds-black}
+black_sids <- dplyr:::pull(black, "SeqId")
+head(black_sids, 10L)
+```
+
+Now you have a list of all of the `SeqIds` on the black list. 
+To use these names to select/deselect columns in an ADAT, you must convert
+to Anonymous-Aptamer names, `AptNames`, i.e. `seq.XXXX.XX` format.
+
+### Convert blacklist to "anonymous" AptNames
+Anonymous-Aptamer names are in the format `seq.XXXX.XX`. If you want 
+to select RFU columns by name from an adat, you need to convert
+`SeqIds` into this format. 
+
+This can be achieved via `seqid2apt()`:
+
+```{r AptNames}
+black_anon_apts <- SomaDataIO::seqid2apt(black_sids)
+head(black_anon_apts, 10L)
+```
+
+--------------
+
+
+### `SeqIds` by regular expression
+If you want to look for other information about the aptamers, you can 
+search for particular patterns within any of the other columns as well.
+Say for some reason you know you want all the entries with 
+`999` in them _in any column_. Do this:
+
+```{r seq999}
+seq999 <- lookupAnnotations("999")
+```
+
+Resulting in:
+
+```{r seq999-2}
+seq999
+```
+
+Note that the `999` can be anywhere in the name, not just at the beginning.
+
+
+## Subsetting an ADAT by blacklist
+A sample workflow for subsetting a `soma_adat` object by black/gray lists:
+
+```{r subset-black}
+data <- sample.adat
+dim(data)
+
+anno <- getAnnotations()    # anno is a tibble; so can use filter()
+bad_apts <- anno |> 
+  dplyr::filter(List == "blacklist" | List == "graylist") |>  # filter rows
+  dplyr::pull(SeqId) |>          # get SeqIds
+  SomaDataIO::matchSeqIds(SomaDataIO::getAnalytes(data), order.by.x = FALSE) # keep order of `data`
+bad_apts
+
+data_nice <- dplyr::select(data, -any_of(bad_apts))
+dim(data_nice)
+```

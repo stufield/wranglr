@@ -1,0 +1,129 @@
+url: https://confluence.sladmin.com/display/BITOOLS/somaverse
+
+home:
+  strip_header: true
+  links:
+  - text: Bitbucket
+    href: http://bitbucket.sladmin.com/projects/SV/repos/somaplyr/browse
+  - text: Report a bug
+    href: bitools@somalogic.com
+  - text: Learn more about SomaScan
+    href: http://www.somalogic.com
+  - text: The tidyverse
+    href: https://www.tidyverse.org
+
+template:
+  bootstrap: 5
+  bslib:
+    #bg: "#202123"      # dark theme
+    #fg: "#B8BCC2"      # dark theme
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+    base_font: {google: "Roboto"}
+
+authors:
+  Stu Field:
+    href: https://github.com/stufield
+
+development:
+  mode: auto
+
+articles:
+  - title: Getting Started
+    navbar: ~
+    contents:
+    - SomaPlyr
+
+  - title: Safe Operations for Data Science
+    navbar: ~
+    desc: >
+      Examples of how to 'safely' perform some stanard data science operations.
+    contents:
+    - safely-map-values-join
+    - safely-rename-df
+    - train-test-setup
+
+  - title: The problem with GeneID-AptNames
+    navbar: ~
+    desc: >
+      Why are GeneIDs in AptNames so problematic to reproducible research.
+    contents:
+    - GeneIDs-AptNames
+
+  - title: Get Umbrella Analyte Annotations
+    navbar: ~
+    desc: >
+      Get annotations from the Umbrella database.
+    contents:
+    - get-annotations
+
+  - title: Preprocessing SomaScan Data
+    navbar: ~
+    desc: >
+      Data transformation and preprocessing via somaverse recipes.
+    contents:
+    - somaverse-recipes
+
+reference:
+  - title: Manipulating data
+    desc: >
+      Functions to manipulate data, particulraly `soma_adat` (ADAT) objects.
+    contents:
+    - createChildAttributes
+    - removeBufferSamples
+    - group_labels
+    - rename
+    - refactorData
+    - rearrange
+    - rbindIntersect
+    - distinctAt
+    - pivotLong
+    - stripMeta
+    - create_kfold
+
+  - title: Adding and augmenting
+    desc:  Functions to create summaries and add summary data to objects.
+    contents:
+    - starts_with("add[A-Z]")
+    - createSummaryTable
+    - calcCVdecomp
+
+  - title: Transforming data
+    desc: >
+      Functions to transform data, particulraly `soma_adat` (ADAT) objects.
+    contents:
+    - centerScaleData
+    - starts_with("impute")
+    - makeNumeric
+    - somaRecipe
+    - getRecipeParams
+    - transform
+    - scaleAnalytes
+    - createLogRatioAdat
+    - sampleImbalance
+
+  - title: Annotations
+    desc: >
+      Useful helpers for matching, exploring, and looking up
+      analyte annotations based on `Seqid`.
+    contents:
+    - getAnnotations
+    - seqLookup
+    - matchSamples
+    - revertAptNames
+    - lookupAnnotations
+
+  - title: Data
+    desc: Package data objects.
+    contents:
+    - objects
+
+  - title: Deprecated
+    desc: >
+      Functions that have been deprecated in the current SomaPlyr release.
+    contents:
+    - SomaPlyr-deprecated
+
+news:
+  - one_page: true

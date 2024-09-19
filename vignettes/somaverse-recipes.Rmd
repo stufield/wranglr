@@ -1,0 +1,279 @@
+---
+title: "Pre-processing SomaScan data via `somaverse` recipes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Pre-processing SomaScan data via `somaverse` recipes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(splyr)
+sim_test_data <- splyr::sim_test_data
+library(recipes)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+
+# Introduction
+
+Standard data transformations are common in preparing data for analysis.
+Among the most common are:
+
+* log-transformation
+* centering with mean zero
+* scaling to unit variance (`sd = 1`)
+
+which are the typical data preparation steps for SomaScan RFU data.
+
+Numerous tools exist in the `R` ecosystem, including some relatively new
+packages, e.g. the [recipes](https://recipes.tidymodels.org) package, however
+comes with significant implementation costs:
+
+1. `recipes` is in its infancy, still in a zero-point release (currently
+   v`r packageVersion('recipes')`). As such, development is expected to
+   be ongoing, resulting in likely interface changes and other underlying
+   changes that would impact end-users. This represents a significant
+   challenge to create a stable, production environment.
+1. `recipes` is designed with a broader use case in mind than SomaScan data.
+   As such, numerous trade-offs and generalizations must be made to
+   accommodate various data sets it would be required to act upon.
+1. Many of its assumptions about data format, e.g. feature data vs meta data,
+   and whether certain features are present in both the training set and test
+   set are in direct conflict with existing SomaLogic workflows.
+1. `recipes` stores large portions of objects inside the object. While
+   this may be appropriate for smaller, low-dimensional data, SomaScan data
+   with ~5000 features (stretch-goal of > 10k) quickly becomes
+   unmanageable and results in extremely large objects that must be saved
+   and incorporated into our production environments for reproducibility.
+
+Given this considerable technical overhead in adopting `recipes` as our
+primary data transformation tool, and the relatively simple transformations
+that SomaScan data requires, the technical costs of incorporating `recipes`
+into production level workflows do not seem to balance the solutions
+it overcomes.
+
+
+# Base example
+
+We start with a typical pre-processing that can be achieved via
+`dplyr::mutate()` and our own S3 dplyr-methods tools. Combined with
+the `?SomaDataIO::MathGenerics` function `log10()`, SomaScan pre-processing can
+be as simple as the following:
+
+```{r center-scale}
+cs <- function(.x) {    # .x = numeric vector
+  out <- .x - mean(.x)  # center
+  out / sd(out)         # scale
+}
+
+new <- log10(sim_test_data) |>
+  purrr::modify_at(
+    SomaDataIO::getAnalytes(sim_test_data), # just features
+    cs)                                     # center/scale
+
+# check means of feature data
+apply(stripMeta(new), 2, mean) |> sum()  # mean = 0
+
+# check sd of feature data
+apply(stripMeta(new), 2, sd)
+```
+
+
+## Preprocessing via `recipes`
+
+Of course the same result can be achieved via the `recipes` package, however
+not without some unintended consequences and type conversions:
+
+```{r recipes}
+rcp <- recipe(sim_test_data) |>
+  step_log(starts_with("seq"), base = 10) |>
+  step_center(starts_with("seq")) |>
+  step_scale(starts_with("seq")) |>
+  prep()
+
+rcp_data <- bake(rcp, sim_test_data)    # bake its own recipe
+
+SomaDataIO::diffAdats(new, rcp_data)
+```
+
+The two objects are *NOT* the same ... significant modifications have occurred
+and perhaps most significantly, it is done so invisibly:
+
+```{r compare}
+# lets take a closer look at the changes
+all.equal(new, rcp_data)
+
+# most importantly; special `soma_adat` class is stripped!!!
+class(new); class(rcp_data)
+
+# the rownames are stripped
+data.frame(orig = rownames(new), recipes = rownames(rcp_data)) |> head()
+
+# undesired meta data type conversions
+class(new$class_response); class(rcp_data$class_response)
+
+# but the feature set is identical; unname() to sync rowname attributes
+identical(unname(stripMeta(new)), unname(stripMeta(rcp_data)))
+```
+
+
+# An alternative SomaScan workflow
+
+The vast majority of SomaScan pre-processing involves:
+
+1. log10-transformation
+1. center to $\mu = 0$
+1. scale to $\sigma = 1$
+
+where this pre-processing is first applied to a training set and therefore
+must also be applied to the test set. The `somaverse` recipes ecosystem
+defaults are set up to accommodate this workflow.
+
+The goal is to provide users with the most beneficial aspects of `recipes`
+without the imposed costs of stepping into the `recipes` ecosystem. We
+will introduce 2 new user-facing functions to the `somaverse`:
+
+* `somaRecipe()`
+* `somaBake()`
+
+First, create train/test sets randomly:
+
+```{r workflow}
+set.seed(101)
+train  <- dplyr::sample_n(sim_test_data, size = 75)
+test   <- dplyr::filter(sim_test_data, !SampleId %in% train$SampleId)
+```
+
+Set up the `soma_recipe` processing controller object (as in `recipes`),
+however it combines the `recipes::recipe()` and `recipes::prep()` into one step:
+
+```{r soma-recipe}
+# use the defaults: log -> center -> scale
+soma_rcp <- somaRecipe(train, log10 = TRUE, center = TRUE, scale = TRUE)
+
+# new class object
+class(soma_rcp)
+
+# S3 print
+soma_rcp
+
+# the recipe contains a processing parameter table
+soma_rcp$par_tbl
+```
+
+Compared to a `recipe` class object, a `soma_recipe` is much smaller
+and accomplishes the same task:
+
+```{r size}
+lobstr::obj_size(rcp)
+lobstr::obj_size(soma_rcp)
+```
+
+Now apply the recipe in the familiar "bake" style:
+
+```{r bake}
+soma_data <- somaBake(soma_rcp, test)
+
+# convenient to know if data has been "baked"
+is.baked(soma_data)
+
+soma_data
+```
+
+
+## What about clinical meta data?
+
+Although non-standard, pre-processing of the clinical meta data, see `getMeta()`,
+can be achieved via the `...` mechanism. Simply pass arguments to `...`
+in the form `variable = function()` to process any clinical variables.
+You may also pass anonymous functions "on-the-fly". Functions should take
+a vector input and return a vector of the same length.
+
+The example below is somewhat arbitrary, but demonstrates the syntax and
+functionality:
+
+```{r dots}
+# key-value pairs as `variable-function`
+# SiteId -> factor
+# reg_response -> no -ve values
+# time -> anonymous dummy function
+meta_rcp <- somaRecipe(sim_test_data, SiteId = factor, reg_response = abs,
+                       time = function(x) sqrt(x + pi))
+meta_rcp
+
+# the 'additional' modified variables
+meta_rcp$dot_vars
+
+# apply the new recipe
+meta_sim <- somaBake(meta_rcp, sim_test_data)
+
+# compare modified meta data
+head(sim_test_data[, meta_rcp$dot_vars]) |> as_tibble()
+head(meta_sim[, meta_rcp$dot_vars]) |> as_tibble()
+```
+
+
+-------------
+
+
+# Underlying machinery
+
+The main underlying non-user-facing function to center and/or scale data is
+`centerScaleData()`, which was previously in common use throughout the
+`somaverse`.
+
+## `centerScaleData()`
+
+```{r center-scale-data}
+cs_data <- log10(train) |> centerScaleData()
+
+# check new class
+is.centerScaled(cs_data)
+
+# get the parameter table
+pars <- attr(cs_data, "par_tbl")
+
+# center/scale test based on train parameters
+processed <- log10(test) |> centerScaleData(pars)
+
+# yields same as "recipes" style workflow; but without the "baked" attribute
+# first remove "baked" then compare
+attr(soma_data, "baked") <- NULL
+SomaDataIO::diffAdats(processed, soma_data)
+```
+
+
+## Revert with `undoCenterScale()`
+
+You can simply undo any center/scaling that has occurred via `undoCenterScale()`.
+
+```{r undo, error = TRUE}
+old <- undoCenterScale(processed)
+SomaDataIO::diffAdats(old, log10(test))
+
+# Safe-guards are in place so that you cannot double-undo:
+# `par_tbl` entry is removed from attributes
+undoCenterScale(old)
+```
+
+
+
+------------
+
+
+# Future: to-do
+
+* better `SeqId` matching safe guards; currently best with `seq.XXXX.XX` format
+* additional steps; evaluate default steps; engage users
+* add `update()` functionality
+* determine which aspects of `recipes` are missing and desired
+
+
+---------------
+

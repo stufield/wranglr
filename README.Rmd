@@ -1,0 +1,228 @@
+---
+output: github_document
+---
+
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+
+```{r setup, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-"
+)
+cvr <- covr::percent_coverage(covr::package_coverage())
+coverage <- sprintf(
+  "https://img.shields.io/badge/coverage-%0.1f%%25-%s.svg?style=flat&logo=codecov",
+  cvr, ifelse(cvr > 75, "success", ifelse(cvr > 50, "yellow", "critical"))
+)
+#lints <- length(lintr::lint_dir("R", show_progress = FALSE))
+lints <- 0
+lintage <- sprintf(
+  "https://img.shields.io/badge/lints-%s-%s.svg?style=flat&logo=gitlab",
+  lints, ifelse(lints < 25, "success", ifelse(lints < 50, "yellow", "critical"))
+)
+sim_test_data <- SomaReadr::sim_test_data
+sample.adat <- splyr:::sample.adat
+```
+
+
+# The `splyr` package
+
+<!-- badges: start -->
+[![build](https://img.shields.io/badge/build-passing-success.svg?logo=travis)](http://bitbucket.sladmin.com/projects/SV/repos/somaplyr/commits)
+![coverage](`r coverage`)
+![lint](`r lintage`)
+[![pkgdown](https://img.shields.io/badge/pkgdown-_-critical.svg?logo=semantic-web&logoColor=red)](https://bitbucket.sladmin.com/pages/SV/somaplyr/bb-pkgdown/browse/index.html)
+[![License: GPL-3](https://img.shields.io/badge/License-GPL3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+<!-- badges: end -->
+
+
+## Overview
+
+The `splyr` package contains the general functions necessary to manipulate
+internal `R` representations of `*.adat` files and wrangle those data into
+convenient form for analysis.
+
+
+----------------
+
+
+## Installation
+
+```{r install-git, eval = FALSE}
+remotes::install_github("splyr")
+```
+
+
+----------------
+
+
+## Usage
+
+To load `splyr` simply make a call to `library()` as usual:
+
+```{r load, message = FALSE}
+library(splyr)
+```
+
+
+## Help summary of the package
+
+```{r help, eval = FALSE}
+library(help = splyr)
+```
+
+
+-------------
+
+
+## Useful functions in `splyr`
+
+
+### Transforming Data
+* `centerScaleData()`
+* `somaRecipe()`
+```{r center-scale}
+scaled <- centerScaleData(sim_test_data)
+apply(stripMeta(scaled), 2, mean) %>% sum()  # mean = 0
+apply(stripMeta(scaled), 2, sd)              # sd = 1
+
+# `somaRecipe()`
+rcp <- somaRecipe(sim_test_data)
+rcp
+```
+
+-----------
+
+
+```{r globalr, echo = FALSE}
+library(globalr)   # getOutliers
+```
+
+### Imputing Data
+* `imputeOutliers()`, `getOutliers()` (`SomaGlobals`)
+* `imputeNAs()`
+* `imputePredictors()`
+```{r imputing}
+# Outliers
+x <- withr::with_seed(1, rnorm(10))   # normal
+x <- c(x, 100)                        # add outlier
+getOutliers(x)                        # index of the outlier
+
+# parameters stored in attributes (parametric only)
+attributes(getOutliers(x, type = "para"))
+
+# Impute 11th value
+imputeOutliers(x)
+
+# Impute NAs
+x <- withr::with_seed(1, rnorm(6))
+x[ c(3, 5) ] <- NA
+median(x, na.rm = TRUE)
+
+imputeNAs(x)
+
+table(imputeNAs(x))
+
+# Predictors
+x   <- data.frame(a = 1:3, b = 4:6, c = 7:9, d = c(1.23, 4.56, 7.89))
+tbl <- tibble::tribble(
+  ~ AptName,  ~ xtrm_max, ~ impute_max, ~ xtrm_min, ~ impute_min,
+    "a",         NA,        NA,           NA,         NA,
+    "b",         5,         5,            0,          1,
+    "c",         9,         7,            7.1,        7.1
+)
+imputePredictors(x, tbl)
+```
+
+-----------
+
+### Shaping Data
+* `pivotLong()`
+```{r pivot}
+widelong <- tibble::tibble(
+  subject_id    = c(1561L, 1561L, 1561L, 3358L, 3358L, 3358L),
+  ie            = c("IE1", "IE2", "IE3", "IE1", "IE2", "IE3"),
+  clin_var1_ie1 = c(93L, 93L, 93L, 56L, 56L, 56L),
+  clin_var1_ie2 = c(84L, 84L, 84L, 79L, 79L, 79L),
+  clin_var1_ie3 = c(89L, 89L, 89L, 68L, 68L, 68L),
+  clin_var2_ie1 = c(15L, 15L, 15L, 77L, 77L, 77L),
+  clin_var2_ie2 = c(99L, 99L, 99L, 92L, 92L, 92L),
+  clin_var2_ie3 = c(100L, 100L, 100L, 16L, 16L, 16L),
+  clin_var3_ie1 = c("N", "N", "N", "N", "N", "N"),
+  clin_var3_ie3 = c("N", "N", "N", "N", "N", "N"),
+  seq.15529.33  = c(31498.5, 20108.1, 11905.1, 5726.6, 46357.8, 47059.8)
+)
+widelong
+
+# run with default arguments
+pivotLong(widelong)
+```
+
+-----------
+
+### Binding Data
+* `rbindIntersect()`
+* `rbindUnion()`
+```{r rbind}
+df1 <- data.frame(a = 1, b = 2, c = 3, row.names = "A")
+df2 <- data.frame(a = 4, b = 5, d = 6, row.names = "B")
+df3 <- data.frame(a = 7, b = 8, e = 9, row.names = "C")
+list_df  <- list(a = df1, b = df2, c = df3)
+list_df
+
+rbindIntersect(list_df)
+
+rbindUnion(list_df)
+```
+
+-----------
+
+### Stripping Data
+* `refactorData()`
+* `stripMeta()`
+```{r strip}
+df <- data.frame(a = factor(c("a", "b")), b = 1:2)
+foo <- df[df$a == "a", ]
+foo
+
+levels(foo$a)   # 2 levels! "b" is a ghost level
+
+bar <- refactorData(foo)
+levels(bar$a)   # 1 level now
+```
+
+-----------
+
+### `seq.XXXX` formats
+* `seqLookup()`
+* `seqify()`
+* `lookupAnnotations()`
+```{r seqLookup}
+seqs <- withr::with_seed(101, sample(SomaReadr::getAnalytes(sample.adat), 10))
+seqs
+
+# NAs for those analytes dropped from menu
+seqLookup(seqs)
+
+seqify(seqs)
+
+# Pass `apt.data` from appropriate ADAT
+# to reconstitute those missing analytes
+ad <- SomaReadr::getAnalyteInfo(sample.adat)
+seqLookup(seqs, ad)
+
+# OR: on the fly
+seqLookup(seqs, attributes(sample.adat)$Col.Meta)
+```
+
+
+-------------
+
+
+#### LICENSE
+
+Please note that this SomaLogic, Inc. internal package is released with 
+a [LICENSE](LICENSE). By using in this package you agree to abide by its terms.

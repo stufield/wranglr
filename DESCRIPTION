@@ -1,0 +1,47 @@
+Type: Package
+Package: splyr
+Title: Manipulate and Wrangle SomaScan Data
+Version: 0.0.1
+Authors@R: c(
+    person(given = "Stu",
+           family = "Field",
+           role = c("aut", "cre", "cph"),
+           email = "stu.g.field@gmail.com",
+           comment = c(ORCID = "0000-0002-1024-5859"))
+    )
+Description: The splyr package contains the general functions
+    necessary to manipulate internal R representations of `*.adat`
+    files and wrangle those data into convenient form for analysis.
+License: GPL-3 | file LICENSE
+Depends:
+    R (>= 4.4.1),
+    dplyr (>= 1.0.3)
+Imports:
+    lifecycle,
+    purrr,
+    SomaDataIO,
+    globalr,
+    tibble,
+    tidyr
+Suggests:
+    ggplot2,
+    httr,
+    knitr,
+    lintr,
+    lobstr,
+    randomForest,
+    recipes,
+    rlang,
+    rmarkdown,
+    spelling,
+    testthat,
+    withr
+VignetteBuilder:
+    knitr
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+LazyLoad: true
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1

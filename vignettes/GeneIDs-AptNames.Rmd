@@ -1,0 +1,247 @@
+---
+title: "The Problem with GeneIDs in AptNames"
+author: "Stu Field"
+date: "2019-08-27"
+output:
+  rmarkdown::html_vignette:
+    fig_caption: yes
+ratio: '9:16'
+tables: yes
+fontsize: 12pt
+vignette: >
+  %\VignetteIndexEntry{The Problem with GeneIDs in AptNames}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, echo = FALSE, message = FALSE}
+library(splyr)
+sample.adat <- splyr:::sample.adat
+getAnalytes <- SomaDataIO::getAnalytes
+matchSeqIds <- SomaDataIO::matchSeqIds
+knitr::opts_chunk$set(
+  fig.align  = "center",    # alignment for figures; left, right, center
+  comment    = ">",         # return comment of source code
+  eval       = TRUE,        # evaluate the chunk?
+  include    = TRUE,        # should the chunk be included as output?
+  tidy       = FALSE        # should output be cleaned up?
+)
+```
+
+
+
+# What's the Issue?
+
+Data frame objects names in R cannot begin with a number (`tibbles` can), 
+however the command-line auto-complete is less useful and you must surround 
+names with a tick (`) which can become cumbersome to code around.
+
+Keeping track of ~5000 analyte `SeqIds` names can be difficult for most a 
+humans (I cannot), so early on in `soma_adat` object format development the
+convention was determined where `EntrezGeneSymbol` (GeneIDs), which are 
+non-numeric, were added to the `SeqIds`
+to generate what is called an `AptName`, a concatenation of `EntrezGeneSymbol` +
+`SeqId`, which looks similar to: `ABCD.1234.89`. In addition, all 
+non-alphanumeric characters are converted to the "`.`" via a call to
+`SomaReadr::cleanNames()`.
+
+This has the benefit of:
+
+1. Auto-completion at the command-line interface (CLI)
+1. Plays nice with `R`'s data frame object naming convention
+1. Allows humans analysts to recognize `SeqIds` during analyses
+
+But it also has drawbacks:
+
+1. The "Gene" that generates the Target molecule is *not* what SOMAmer reagents
+   bind to ... it's the protein target epitope we are interested in measuring,
+   we are after all a proteomics company, not a genomics company!
+1. When the `EntrezGeneSymbol` in the database changes (which they periodically
+   do), new ADATs generated after the update will have a different `AptName`
+   even though the analyte/SOMAmer has not changed! This wreaks havoc on
+   any long-term modeling efforts that require stable feature naming
+   conventions.
+
+
+-------------
+
+
+# Case Study
+
+We'll build a binary model on a fake training set but change the
+feature names to look more like SomaScan `AptNames`. Fit a model then pretend
+some time passes and `EntrezGeneSymbols` in the database change one or more 
+of the features.
+
+```{r model-fit}
+withr::with_seed(101, {
+  iris2 <- dplyr::filter(datasets::iris, Species != "versicolor")
+  n <- nrow(iris2)
+  devel_data <- dplyr::sample_n(iris2, size = n) |>    # reorder randomly
+    dplyr::mutate(Species = as.character(Species)) |>  # convert Species -> character
+    dplyr::mutate(Species = ifelse(runif(n) > 0.5, sample(Species), Species)) |> # scramble half
+    dplyr::mutate(Species = as.factor(Species)) |>     # return Species -> factor
+    dplyr::mutate_if(is.double, jitter, amount = 1) |> # jitter features
+    setNames(c("AABB.1234.56", "CCBB.9876.23", "MMPP.2748.19",
+               "ACYY.5599.44", "Species"))
+})
+
+head(devel_data)
+
+# Fit a Logistic Regression model
+fit <- stats::glm(Species ~ ., data = devel_data, family = "binomial", model = FALSE)
+summary(fit)
+
+# What are the model features?
+feats_orig <- names(fit$coefficients)[-1L]
+feats_orig
+```
+
+## Fast-Forward 1 year
+
+Now, assume 12 months pass, the database has been updated with new information
+and some of the relevant `EntrezGeneSymbols` have changed. For example, we discover
+that an analyte now also binds another target in addition to the one it was
+developed from during SELEX. Let's assume the following:
+
+* `CCBB.9876.23` -> `BYOB.9876.23`
+* `MMPP.2748.19` -> `MMPP.MMQQ.2748.19`
+  
+We now have a "new" data set we wish to make predictions on with a brand new ADAT.
+What sort of obstacles will we face?
+
+```{r newdata, error = TRUE}
+new_data <- withr::with_seed(1, {
+  dplyr::filter(datasets::iris, Species != "versicolor") |>
+    dplyr::sample_n(25L, replace = TRUE) |>
+    setNames(c("AABB.1234.56",
+               "BYOB.9876.23",         # new GeneID
+               "MMPP.MMQQ.2748.19",    # modified GeneID
+               "ACYY.5599.44",
+               "Species"))
+})
+head(new_data)
+
+# predict on the new test set
+new_preds <- predict(fit, new_data)
+
+# WAAT!?!? Let's check the vector diffs
+data.frame(old = names(devel_data), new = names(new_data))
+```
+
+
+# Short-term Solutions
+
+There are currently 3 functions in the the analysis suite
+that can be useful to solve this issue:
+
+* `SomaDataIO`
+  + `matchSeqIds()`
+  + `getSeqIdMatches()`
+* `palantir`
+  + `fixAptNames()`
+
+The `matchSeqIds()` function does the work under the hood, 
+and generates a `character` class object corresponding to the 
+elements of `y` that have common `SeqIds` with `x`. 
+By default, the elements are ordered as they would appear in `x`. 
+
+Please take a look and the vignette for those functions in 
+`SomaReadr` and `palantir` packages.
+
+
+---------------
+
+
+# Long-term Solution: 'Anonymous'-`AptNames`
+
+* `AptNames` are a concatenation of `"seq." + SeqId`, i.e. `seq.1224.85` format.
+* `EntrezGeneSymbol` and all `Col.Meta` is free to change without
+   affecting current or future models.
+
+
+## Humans and Anonymous `AptNames`
+
+It can be difficult for humans to recognize and work with the new `AptNames`
+with *anonymous* names, especially as the SomaScan menu expands. Yet this 
+expansion is precisely the value in breaking the dependence on
+changing `EntrezGeneSymbols`.
+
+However, there is new `SomaPlyr` functionality meant to ease the burden
+on its users:
+
+* `revertAptNames()`
+* `convertAptNames()`
+* `seqify()`
+* `seqLookup()`
+
+
+## Using `revertAptNames()`
+
+```{r revertAptNames, fig.width = 6, fig.width = 6}
+# revert takes new -> old format
+adat <- revertAptNames(sample.adat)
+adat |>
+  dplyr::select(head(getAnalytes(adat), 25L))
+
+# convert takes old -> new format
+adat <- convertAptNames(adat)
+adat |> 
+  dplyr::select(head(getAnalytes(adat), 25L))
+```
+
+
+## Using `seqify()`
+
+Viewing "anonymous"-AptNames at the command line is simple via `seqify()`.
+
+```{r seqify}
+feats <- withr::with_seed(99, sample(names(adat), 10L))
+feats
+
+seqs <- seqify(feats)
+class(seqs)
+seqs
+```
+
+
+## Fixing `AptNames`
+
+We can remap an entire data set by first setting up a key (map) and
+using `dplyr::rename()`. This is the underlying machinery in the `palantir`
+package (see `fixAptNames()`).
+
+The goal hear is the take the names present in the new data, and map them
+back to their corresponding names from the original data. Here is what
+`fixAptNames()` looks like:
+
+
+```{r fixAptNames}
+fixAptNames <- function(data, x) {
+  model_names <- setdiff(x, names(data))               # names needing fixing
+  bad_names   <- matchSeqIds(model_names, names(data)) # non-matches
+  if ( length(bad_names) != length(model_names) ) {
+    stop("Unable to match some features with a corresponding SeqId", call. = FALSE)
+  }
+  key <- setNames(bad_names, model_names) # mapping
+  dplyr::rename(data, !!!key)
+}
+
+old_names <- c("AABB.1234.56", "CCBB.9876.23", "MMPP.2748.19", "ACYY.5599.44")
+n <- 5
+new_df <- data.frame(
+  A.1234.56 = rnorm(n),
+  B.9876.23 = rnorm(n),
+  C.2748.19 = rnorm(n),
+  D.5599.44 = rnorm(n),
+  Species   = LETTERS[1:n])
+
+# note: all the names here are wrong
+new_df
+
+# below: the names now are matched on SeqId
+# the data is renamed appropriately and ready for analysis
+fixAptNames(new_df, old_names)
+```
+
