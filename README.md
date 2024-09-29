@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# The `SomaPlyr` package
+# The `splyr` package
 
 <!-- badges: start -->
 
 [![build](https://img.shields.io/badge/build-passing-success.svg?logo=travis)](http://bitbucket.sladmin.com/projects/SV/repos/somaplyr/commits)
-![coverage](https://img.shields.io/badge/coverage-81.2%25-success.svg?style=flat&logo=codecov)
+![coverage](https://img.shields.io/badge/coverage-74.1%25-yellow.svg?style=flat&logo=codecov)
 ![lint](https://img.shields.io/badge/lints-0-success.svg?style=flat&logo=gitlab)
 [![pkgdown](https://img.shields.io/badge/pkgdown-_-critical.svg?logo=semantic-web&logoColor=red)](https://bitbucket.sladmin.com/pages/SV/somaplyr/bb-pkgdown/browse/index.html)
 [![License:
@@ -15,62 +15,50 @@ GPL-3](https://img.shields.io/badge/License-GPL3-blue.svg)](https://www.gnu.org/
 
 ## Overview
 
-The `SomaPlyr` package contains the general functions necessary to
-manipulate internal `R` representations of adat files and wrangle those
-data into convenient form for analysis. The SomaLogic analogue to the
-`dplyr` package in the *tidyverse*.
+The `splyr` package contains the general functions necessary to
+manipulate internal `R` representations of `*.adat` files and wrangle
+those data into convenient form for analysis.
 
-For cross-referenced help, running examples, and vignettes, please visit
-the
-[pkgdown](https://bitbucket.sladmin.com/pages/SV/somaplyr/bb-pkgdown/browse/index.html)
-website.
+-----
 
-------------------------------------------------------------------------
-
-## Custom Installation
-
-It is possible to install a specific version of `SomaPlyr` (i.e. one
-differing from your current installation of
-[SLIDE](http://bitbucket.sladmin.com/projects/BFX/repos/slide/browse)),
-but it comes with a possible trade-off in the reproducibility of your
-work! So be *careful* and considerate of those who may follow you. The
-method below ensures your installation is both traceable and
-reproducible:
+## Installation
 
 ``` r
-somaverse::install_sl_bitbucket("SomaPlyr", "commit-SHA", "USERNAME")
+remotes::install_github("splyr")
 ```
 
-------------------------------------------------------------------------
+-----
 
 ## Usage
 
-To load `SomaPlyr` simply make a call to `library()` as usual:
+To load `splyr` simply make a call to `library()` as usual:
 
 ``` r
-library(SomaPlyr)
+library(splyr)
 ```
 
 ## Help summary of the package
 
 ``` r
-library(help = SomaPlyr)
+library(help = splyr)
 ```
 
-------------------------------------------------------------------------
+-----
 
-## Useful functions in `SomaPlyr`
+## Useful functions in `splyr`
 
 ### Transforming Data
 
--   `centerScaleData()`
--   `somaRecipe()`
+  - `centerScaleData()`
+  - `somaRecipe()`
+
+<!-- end list -->
 
 ``` r
 scaled <- centerScaleData(sim_test_data)
-apply(stripMeta(scaled), 2, mean) %>% sum()  # mean = 0
+apply(stripMeta(scaled), 2, mean) |> sum()  # mean = 0
 #> [1] -1.049005e-15
-apply(stripMeta(scaled), 2, sd)              # sd = 1
+apply(stripMeta(scaled), 2, sd)             # sd = 1
 #> seq.2802.68 seq.9251.29 seq.1942.70 seq.5751.80 seq.9608.12 seq.3459.49 
 #>           1           1           1           1           1           1 
 #> seq.3865.56 seq.3363.21 seq.4487.88 seq.5994.84 seq.9011.72 seq.2902.23 
@@ -104,13 +92,15 @@ rcp
 #> ════════════════════════════════════════════════════════════════════════════════
 ```
 
-------------------------------------------------------------------------
+-----
 
 ### Imputing Data
 
--   `imputeOutliers()`, `getOutliers()` (`SomaGlobals`)
--   `imputeNAs()`
--   `imputePredictors()`
+  - `imputeOutliers()`, `getOutliers()` (`SomaGlobals`)
+  - `imputeNAs()`
+  - `imputePredictors()`
+
+<!-- end list -->
 
 ``` r
 # Outliers
@@ -166,11 +156,13 @@ imputePredictors(x, tbl)
 #> 3 3 5 9.0 7.89
 ```
 
-------------------------------------------------------------------------
+-----
 
 ### Shaping Data
 
--   `pivotLong()`
+  - `pivotLong()`
+
+<!-- end list -->
 
 ``` r
 widelong <- tibble::tibble(
@@ -212,12 +204,14 @@ pivotLong(widelong)
 #> 6       3358 IE3          68        16 N               47060.
 ```
 
-------------------------------------------------------------------------
+-----
 
 ### Binding Data
 
--   `rbindIntersect()`
--   `rbindUnion()`
+  - `rbindIntersect()`
+  - `rbindUnion()`
+
+<!-- end list -->
 
 ``` r
 df1 <- data.frame(a = 1, b = 2, c = 3, row.names = "A")
@@ -250,12 +244,14 @@ rbindUnion(list_df)
 #> C    c 7 8 NA NA  9
 ```
 
-------------------------------------------------------------------------
+-----
 
 ### Stripping Data
 
--   `refactorData()`
--   `stripMeta()`
+  - `refactorData()`
+  - `stripMeta()`
+
+<!-- end list -->
 
 ``` r
 df <- data.frame(a = factor(c("a", "b")), b = 1:2)
@@ -272,16 +268,18 @@ levels(bar$a)   # 1 level now
 #> [1] "a"
 ```
 
-------------------------------------------------------------------------
+-----
 
 ### `seq.XXXX` formats
 
--   `seqLookup()`
--   `seqify()`
--   `lookupAnnotations()`
+  - `seqLookup()`
+  - `seqify()`
+  - `lookupAnnotations()`
+
+<!-- end list -->
 
 ``` r
-seqs <- withr::with_seed(101, sample(SomaReadr::getAnalytes(sample.adat), 10))
+seqs <- withr::with_seed(101, sample(SomaDataIO::getAnalytes(sample.adat), 10L))
 seqs
 #>  [1] "seq.4545.53" "seq.2682.68" "seq.5004.69" "seq.3115.64" "seq.4801.13"
 #>  [6] "seq.3554.24" "seq.3204.2"  "seq.3209.69" "seq.3469.74" "seq.4792.51"
@@ -320,7 +318,7 @@ seqify(seqs)
 
 # Pass `apt.data` from appropriate ADAT
 # to reconstitute those missing analytes
-ad <- SomaReadr::getAnalyteInfo(sample.adat)
+ad <- SomaDataIO::getAnalyteInfo(sample.adat)
 seqLookup(seqs, ad)
 #> # A tibble: 10 × 8
 #>    seq       SeqId EntrezGeneSymbol Target TargetFullName Type  Dilution UniProt
@@ -353,10 +351,6 @@ seqLookup(seqs, attributes(sample.adat)$Col.Meta)
 #> 10 seq.4792… 4792… Human-virus      C34 g… gp41 C34 pept… Prot… 40       Q70626
 ```
 
-------------------------------------------------------------------------
+-----
 
 #### LICENSE
-
-Please note that this SomaLogic, Inc. internal package is released with
-a [LICENSE](LICENSE). By using in this package you agree to abide by its
-terms.

@@ -23,7 +23,7 @@ lintage <- sprintf(
   "https://img.shields.io/badge/lints-%s-%s.svg?style=flat&logo=gitlab",
   lints, ifelse(lints < 25, "success", ifelse(lints < 50, "yellow", "critical"))
 )
-sim_test_data <- SomaReadr::sim_test_data
+sim_test_data <- splyr::sim_test_data
 sample.adat <- splyr:::sample.adat
 ```
 
@@ -86,8 +86,8 @@ library(help = splyr)
 * `somaRecipe()`
 ```{r center-scale}
 scaled <- centerScaleData(sim_test_data)
-apply(stripMeta(scaled), 2, mean) %>% sum()  # mean = 0
-apply(stripMeta(scaled), 2, sd)              # sd = 1
+apply(stripMeta(scaled), 2, mean) |> sum()  # mean = 0
+apply(stripMeta(scaled), 2, sd)             # sd = 1
 
 # `somaRecipe()`
 rcp <- somaRecipe(sim_test_data)
@@ -201,7 +201,7 @@ levels(bar$a)   # 1 level now
 * `seqify()`
 * `lookupAnnotations()`
 ```{r seqLookup}
-seqs <- withr::with_seed(101, sample(SomaReadr::getAnalytes(sample.adat), 10))
+seqs <- withr::with_seed(101, sample(SomaDataIO::getAnalytes(sample.adat), 10L))
 seqs
 
 # NAs for those analytes dropped from menu
@@ -211,7 +211,7 @@ seqify(seqs)
 
 # Pass `apt.data` from appropriate ADAT
 # to reconstitute those missing analytes
-ad <- SomaReadr::getAnalyteInfo(sample.adat)
+ad <- SomaDataIO::getAnalyteInfo(sample.adat)
 seqLookup(seqs, ad)
 
 # OR: on the fly
@@ -224,5 +224,3 @@ seqLookup(seqs, attributes(sample.adat)$Col.Meta)
 
 #### LICENSE
 
-Please note that this SomaLogic, Inc. internal package is released with 
-a [LICENSE](LICENSE). By using in this package you agree to abide by its terms.
