@@ -52,6 +52,6 @@ function seamlessly. Model types this data can support:
 sim_test_data
 }
 \author{
-Stu Field, Leigh Alexander
+Stu Field
 }
 \keyword{datasets}

@@ -33,7 +33,7 @@
 #'   * 25 noise analytes
 #'   * 4 sex/gender analytes (with noise features)
 #'   * `PGAM` (`seq.3896.5` for sample handling
-#' @author Stu Field, Leigh Alexander
+#' @author Stu Field
 #' @examples
 #' sim_test_data
 "sim_test_data"
