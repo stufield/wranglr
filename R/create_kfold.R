@@ -52,7 +52,7 @@
 #'   to `depth`. The number of stratification bins are based on
 #'   `min(5, floor(n / depth))`,  where `n = length(x)`.
 #'
-#' @return A `soma_split` object (extension of the list class). Element `data`
+#' @return A `x_split` object (extension of the list class). Element `data`
 #'   contains the original data. Element `splits` contains a tibble. Each row
 #'   of the tibble corresponds to an individual split. Column `split` contains
 #'   lists with named elements "analysis" and "assessment". These
@@ -114,7 +114,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   .call <- match.call()
 
   structure(
-    addClass(return_obj, "soma_split"),
+    addClass(return_obj, "x_split"),
     k = k, repeats = repeats, breaks = breaks, call = .call
   )
 }
@@ -415,24 +415,24 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 }
 
 
-#' Test for object class "soma_split"
+#' Test for object class "x_split"
 #'
 #' @rdname create_kfold
 #' @param x An `R` object to test.
-#' @return [is.soma_split()]: Logical. `TRUE` if `x` inherits from
-#'   class `soma_split`.
+#' @return [is.x_split()]: Logical. `TRUE` if `x` inherits from
+#'   class `x_split`.
 #' @export
-is.soma_split <- function(x) {
-  inherits(x, "soma_split")
+is.x_split <- function(x) {
+  inherits(x, "x_split")
 }
 
 
-#' Retrieve the analysis data from a `soma_split` object.
+#' Retrieve the analysis data from a `x_split` object.
 #'
 #' [analysis()] : `r lifecycle::badge("questioning")`
 #'
 #' @rdname create_kfold
-#' @param object A `soma_split` object.
+#' @param object A `x_split` object.
 #' @param i An integer or `NULL`. If an integer, the split for which the
 #'   analysis or assessment data is to be retrieved.
 #' @return [analysis()]: A list ... each element containing an object of
@@ -448,7 +448,7 @@ is.soma_split <- function(x) {
 #' @export
 analysis <- function(object, i = NULL) {
   stopifnot(
-    "`object` must be a `soma_split` object." = is.soma_split(object),
+    "`object` must be a `x_split` object." = is.x_split(object),
     "`i` must be a positive integer." = is.null(i) ||
       (is.Integer(i) && is.vector(i) && len_one(i) && i > 0.0),
     "`i` cannot exceed the number of splits." = is.null(i) ||
@@ -463,7 +463,7 @@ analysis <- function(object, i = NULL) {
 }
 
 
-#' Retrieve the assessment data from a `soma_split` object.
+#' Retrieve the assessment data from a `x_split` object.
 #'
 #' [assessment()] : `r lifecycle::badge("questioning")`
 #'
@@ -480,7 +480,7 @@ analysis <- function(object, i = NULL) {
 #' @export
 assessment <- function(object, i = NULL) {
   stopifnot(
-    "`object` must be a `soma_split` object." = is.soma_split(object),
+    "`object` must be a `x_split` object." = is.x_split(object),
     "`i` must be a positive integer." = is.null(i) ||
       (is.Integer(i) && is.vector(i) && len_one(i) && i > 0.0),
     "`i` cannot exceed the number of splits." = is.null(i) ||
@@ -495,13 +495,13 @@ assessment <- function(object, i = NULL) {
 }
 
 
-#' S3 method for `soma_split` object
+#' S3 method for `x_split` object
 #' @noRd
 #' @importFrom globalr signal_rule value add_color
 #' @export
-print.soma_split <- function(x, ...) {
+print.x_split <- function(x, ...) {
   writeLines(
-    signal_rule("A `soma_split` object", lty = "double", line_col = "magenta")
+    signal_rule("A `x_split` object", lty = "double", line_col = "magenta")
   )
   call <- attr(x, "call")
   key <- c("k", "repeats", "stratified", "orig data") |> pad(12)
@@ -514,7 +514,7 @@ print.soma_split <- function(x, ...) {
 
   liter(key, value, function(.x, .y) {
     writeLines(paste(add_color("\u2022", "red"), .x, .y))
-  }) |> invisible()
+  })
 
   writeLines(signal_rule("split info", line_col = "cyan"))
   print(x$splits)

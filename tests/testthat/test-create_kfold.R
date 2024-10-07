@@ -629,7 +629,7 @@ test_that("`create_kfold()` returns expected results for repeats = 1", {
     split_objs <- .vfold_splits(data = data, k = k, breaks = breaks, depth = depth)
     split_objs$Repeat <- NA_integer_
     return_obj <- list(data = data, splits = split_objs)
-    structure(addClass(return_obj, "soma_split"), breaks = breaks)
+    structure(addClass(return_obj, "x_split"), breaks = breaks)
   }
 
   # test that depth is properly understood
@@ -686,7 +686,7 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
     names(split_objs) <- seq_len(repeats)
     split_objs <- split_objs |> dplyr::bind_rows() |> tibble::tibble()
     return_obj <- list(data = data, splits = split_objs)
-    structure(addClass(return_obj, "soma_split"), breaks = breaks)
+    structure(addClass(return_obj, "x_split"), breaks = breaks)
   }
 
   # each input is properly passed along
@@ -707,7 +707,7 @@ test_that("`assessment()` returns expected errors", {
   split_obj <- create_kfold(sim_test_data, k = 4L)
   expect_error(
     assessment(sim_test_data),
-    "`object` must be a `soma_split` object."
+    "`object` must be a `x_split` object."
   )
   expect_positive_integer_scalar("assessment",
                                  list(object = split_obj, i = 10L),
@@ -741,7 +741,7 @@ test_that("`analysis()` returns expected errors", {
   split_obj <- create_kfold(sim_test_data, k = 4L)
   expect_error(
     analysis(sim_test_data),
-    "`object` must be a `soma_split` object."
+    "`object` must be a `x_split` object."
   )
   expect_positive_integer_scalar("analysis",
                                  list(object = split_obj, i = 10L),
@@ -768,8 +768,8 @@ test_that("`analysis()` returns expected results", {
   expect_equal(analysis(split_obj, i = 4), list(expected[[4L]]))
 })
 
-# print.soma_split() ----
-test_that("`print.soma_split()` returns expected messaging", {
+# print.x_split() ----
+test_that("`print.x_split()` returns expected messaging", {
 
   expect_snapshot({
     # no stratification; no repeats
@@ -799,11 +799,11 @@ test_that("`print.soma_split()` returns expected messaging", {
   })
 })
 
-# is.soma_split ----
+# is.x_split ----
 # Safe to only run these in the nightly.
-test_that("`is.soma_split()` returns expected results", {
+test_that("`is.x_split()` returns expected results", {
   object <- create_kfold(sim_test_data, k = 5L, repeats = 3L,
                          breaks = list(time = 4L, status = NA))
-  expect_true(is.soma_split(object))
-  expect_false(is.soma_split(unclass(object)))
+  expect_true(is.x_split(object))
+  expect_false(is.x_split(unclass(object)))
 })

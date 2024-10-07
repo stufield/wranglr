@@ -2,14 +2,14 @@
 % Please edit documentation in R/create_kfold.R
 \name{create_kfold}
 \alias{create_kfold}
-\alias{is.soma_split}
+\alias{is.x_split}
 \alias{analysis}
 \alias{assessment}
 \title{k-Fold Partitioning}
 \usage{
 create_kfold(data, k = 10L, repeats = 1L, breaks = NULL, ...)
 
-is.soma_split(x)
+is.x_split(x)
 
 analysis(object, i = NULL)
 
@@ -34,13 +34,13 @@ to \code{depth}. The number of stratification bins are based on
 
 \item{x}{An \code{R} object to test.}
 
-\item{object}{A \code{soma_split} object.}
+\item{object}{A \code{x_split} object.}
 
 \item{i}{An integer or \code{NULL}. If an integer, the split for which the
 analysis or assessment data is to be retrieved.}
 }
 \value{
-A \code{soma_split} object (extension of the list class). Element \code{data}
+A \code{x_split} object (extension of the list class). Element \code{data}
 contains the original data. Element \code{splits} contains a tibble. Each row
 of the tibble corresponds to an individual split. Column \code{split} contains
 lists with named elements "analysis" and "assessment". These
@@ -48,8 +48,8 @@ elements contain the indices of \code{data} to be used for each category.
 Columns \code{Fold} and \code{Repeat} provide fold and repeat indices for
 each corresponding split.
 
-\code{\link[=is.soma_split]{is.soma_split()}}: Logical. \code{TRUE} if \code{x} inherits from
-class \code{soma_split}.
+\code{\link[=is.x_split]{is.x_split()}}: Logical. \code{TRUE} if \code{x} inherits from
+class \code{x_split}.
 
 \code{\link[=analysis]{analysis()}}: A list ... each element containing an object of
 class \code{data.frame} or \code{soma_adat}.

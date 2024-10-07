@@ -33,12 +33,12 @@
       Warning:
       Too little data to stratify. Non-stratified resampling will be used.
 
-# `print.soma_split()` returns expected messaging
+# `print.x_split()` returns expected messaging
 
     Code
       create_kfold(sim_test_data, k = 4L, repeats = 1L)
     Output
-      == A `soma_split` object =======================================================
+      == A `x_split` object ==========================================================
       • k            4
       • repeats      1
       • stratified   'NULL'
@@ -58,7 +58,7 @@
     Code
       create_kfold(sim_test_data, k = 4L, repeats = 3L)
     Output
-      == A `soma_split` object =======================================================
+      == A `x_split` object ==========================================================
       • k            4
       • repeats      3
       • stratified   'NULL'
@@ -87,7 +87,7 @@
       df <- as.data.frame(sim_test_data[, c("time", "status")])
       create_kfold(df, k = 5L)
     Output
-      == A `soma_split` object =======================================================
+      == A `x_split` object ==========================================================
       • k            5
       • repeats      1
       • stratified   'NULL'
@@ -108,7 +108,7 @@
     Code
       create_kfold(sim_test_data, k = 5L, breaks = list(status = NA))
     Output
-      == A `soma_split` object =======================================================
+      == A `x_split` object ==========================================================
       • k            5
       • repeats      1
       • stratified   'list(status = NA)'
@@ -130,7 +130,7 @@
       create_kfold(sim_test_data, k = 5L, repeats = 3L, breaks = list(time = 4L,
         status = NA))
     Output
-      == A `soma_split` object =======================================================
+      == A `x_split` object ==========================================================
       • k            5
       • repeats      3
       • stratified   'list(time = 4L, status = NA)'
