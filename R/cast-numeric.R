@@ -1,7 +1,7 @@
 #' Convert Table Entries to Numeric
 #'
 #' Selectively convert an R object to a numeric vector if
-#' doing so does _not_ result in a warning. This is
+#' doing so does *not* result in a warning. This is
 #' typically the case when a `character` string
 #' contains a symbol that cannot be coerced cleanly. The following rules
 #' apply during conversion:
@@ -31,18 +31,18 @@
 #'   y      = c(as.character(runif(19)), NA),  # YES; only 1 NA, 5% total
 #'   z      = as.character(rnorm(20))          # YES
 #' )
-#' makeNumeric(tbl)
+#' cast_numeric(tbl)
 #' @export
-makeNumeric <- function(x, ...) UseMethod("makeNumeric")
+cast_numeric <- function(x, ...) UseMethod("cast_numeric")
 
 #' @export
-makeNumeric.default <- function(x, ...) {
+cast_numeric.default <- function(x, ...) {
   as.numeric(x, ...)
 }
 
-#' @rdname makeNumeric
+#' @rdname cast_numeric
 #' @export
-makeNumeric.character <- function(x, ...) {
+cast_numeric.character <- function(x, ...) {
   na_warn <- logical(1)
   ret <- withCallingHandlers(
     as.numeric(x),
@@ -59,42 +59,42 @@ makeNumeric.character <- function(x, ...) {
 }
 
 #' @export
-makeNumeric.numeric <- function(x, ...) {
+cast_numeric.numeric <- function(x, ...) {
   x
 }
 
-#' @rdname makeNumeric
+#' @rdname cast_numeric
 #' @param coerce.factor Logical. Should `factor` types be
 #'   converted to their corresponding numeric?
 #' @export
-makeNumeric.factor <- function(x, ..., coerce.factor = TRUE) {
+cast_numeric.factor <- function(x, ..., coerce.factor = TRUE) {
   if ( coerce.factor ) {
     x <- as.numeric(x)
   }
   x
 }
 
-#' @rdname makeNumeric
+#' @rdname cast_numeric
 #' @export
-makeNumeric.integer <- function(x, ...) {
+cast_numeric.integer <- function(x, ...) {
   x
 }
 
-#' @rdname makeNumeric
+#' @rdname cast_numeric
 #' @export
-makeNumeric.logical <- function(x, ...) {
+cast_numeric.logical <- function(x, ...) {
   as.numeric(x)
 }
 
-#' @rdname makeNumeric
+#' @rdname cast_numeric
 #' @export
-makeNumeric.list <- function(x, ..., coerce.factor = TRUE) {
-  modify(x, makeNumeric, coerce.factor = coerce.factor)
+cast_numeric.list <- function(x, ..., coerce.factor = TRUE) {
+  modify(x, cast_numeric, coerce.factor = coerce.factor)
 }
 
-#' @rdname makeNumeric
+#' @rdname cast_numeric
 #' @importFrom purrr modify
 #' @export
-makeNumeric.data.frame <- function(x, ..., coerce.factor = TRUE) {
-  modify(x, makeNumeric, coerce.factor = coerce.factor)
+cast_numeric.data.frame <- function(x, ..., coerce.factor = TRUE) {
+  modify(x, cast_numeric, coerce.factor = coerce.factor)
 }

@@ -38,7 +38,7 @@ imputePredictors(x, tbl)
 \seealso{
 Other impute: 
 \code{\link{imputeNAs}()},
-\code{\link{imputeOutliers}()}
+\code{\link{impute_outliers}()}
 }
 \author{
 Alex Poole, Stu Field

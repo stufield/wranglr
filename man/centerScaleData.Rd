@@ -60,8 +60,8 @@ transformation.
 }}
 \examples{
 scaled <- centerScaleData(sim_test_data)
-apply(stripMeta(scaled), 2, mean) |> sum()  # mean = 0
-apply(stripMeta(scaled), 2, sd)             # sd = 1
+apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
+apply(strip_meta(scaled), 2, sd)             # sd = 1
 
 # Pass parameters based on OTHER data
 idx   <- withr::with_seed(1,
@@ -74,8 +74,8 @@ new   <- centerScaleData(test, ref.data = train)
 # However, it is preferred to pass `par_tbl` over `ref.data`
 #   by creating a `par_tbl` object based on `train`
 par <- tibble::tibble(AptName = SomaDataIO::getAnalytes(train),
-                      means   = colMeans(stripMeta(train)),
-                      sds     = apply(stripMeta(train), 2, sd))
+                      means   = colMeans(strip_meta(train)),
+                      sds     = apply(strip_meta(train), 2, sd))
 new2 <- centerScaleData(test, par_tbl = par)
 # Logical test
 is.centerScaled(new)

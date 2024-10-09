@@ -1,6 +1,6 @@
 #' Vertically Combine Data Frames by Intersect
 #'
-#' For [rbindIntersect()]: [rbind()] is used to vertically **combine** data
+#' For [bind_intersect()]: [rbind()] is used to vertically **combine** data
 #' frames based on the _intersect_ of their column names.
 #' This creates _fewer_ columns than the original data, or at best the same
 #' number of columns. The resulting data frame has the dimensions:
@@ -12,41 +12,42 @@
 #' Incidentally, the default behavior of [rbind()] reorders the columns
 #'   correctly, but will only do so if their intersect matches.
 #'
+#' @name bind
 #' @param ... Data frames to combine. Can also be a _list_ of data frames
 #'   to combine, typically `soma_adat` objects.
 #' @return A single data frame with the total number of rows =
 #'   `sum(sapply(..., nrow))`.
-#' @note For [rbindIntersect()], columns are combined on their _intersect_ only.
+#' @note For [bind_intersect()], columns are combined on their _intersect_ only.
 #' @author Stu Field
 #' @seealso [Reduce()], [rbind()], [intersect()]
 #' @examples
-#' # For `rbindIntersect()`
+#' # For `bind_intersect()`
 #' spl <- split(mtcars, mtcars$cyl) |> unname()
 #' foo <- mapply(spl, -c(11, 10, 9), FUN = function(x, y) x[, y], SIMPLIFY = FALSE)
 #' sapply(spl, names)
 #' sapply(spl, ncol)
 #'
 #' # Pass a list
-#' rbindIntersect(spl)
+#' bind_intersect(spl)
 #'
 #' # Can pass either list or via '...'
-#' identical(rbindIntersect(spl), rbindIntersect(spl[[1L]], spl[[2L]], spl[[3L]]))
+#' identical(bind_intersect(spl), bind_intersect(spl[[1L]], spl[[2L]], spl[[3L]]))
 #'
 #' # Passing a _named_ list adds `data` column with those names
 #' names(spl) <- letters[1:3L]
-#' rbindIntersect(spl)
+#' bind_intersect(spl)
 #'
 #' @export
-rbindIntersect <- function(...) {
+bind_intersect <- function(...) {
   dlist  <- .checkdots(...)
   common <- Reduce(intersect, lapply(dlist, names))
-  lapply(dlist, `[`, common) |> rbindUnion()
+  lapply(dlist, `[`, common) |> bind_union()
 }
 
 #' Vertically Combine Data Frames by Union
 #'
-#' @rdname rbindIntersect
-#' @description For [rbindUnion()]: [rbind()] is used to vertically **merge**
+#' @rdname bind
+#' @description For [bind_union()]: [rbind()] is used to vertically **merge**
 #'   data frames based on the _union_ of their column names. This creates
 #'   columns of `NAs` for the rows of a data frame with non-overlapping
 #'   column names. The resulting data frame has the dimensions:
@@ -54,17 +55,17 @@ rbindIntersect <- function(...) {
 #'   \item rows: `nrow(df1) + nrow(df2) + ... + nrow(df_n)`
 #'   \item cols: `union(names(...))`
 #' }
-#' @note For [rbindUnion()], the ordering of the rows correspond to the order
+#' @note For [bind_union()], the ordering of the rows correspond to the order
 #'   they are supplied.
 #' @seealso [union()]
 #' @examples
-#' # For `rbindUnion()`
-#' rbindUnion(spl)
-#' rbindUnion(spl[[1L]], spl[[2L]])
-#' rbindUnion(spl[[1L]], spl[[2L]], spl[[3L]])
+#' # For `bind_union()`
+#' bind_union(spl)
+#' bind_union(spl[[1L]], spl[[2L]])
+#' bind_union(spl[[1L]], spl[[2L]], spl[[3L]])
 #' @importFrom SomaDataIO col2rn getMeta rn2col
 #' @export
-rbindUnion <- function(...) {
+bind_union <- function(...) {
   x <- .checkdots(...)
   lapply(x, rn2col) |> .bind_and_clean()
 }

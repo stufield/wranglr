@@ -53,7 +53,7 @@
 #' new_adat <- createChildAttributes(new_adat, adat)
 #'
 #' SomaDataIO::is_intact_attr(new_adat)   # TRUE; atts are back!
-#' @importFrom globalr diffVectors pad signal_rule value add_color
+#' @importFrom globalr diff_vecs pad signal_rule value add_color
 #' @importFrom globalr signal_done signal_info signal_todo
 #' @importFrom SomaDataIO getAnalytes is_intact_attr getSeqId matchSeqIds addAttributes
 #' @importFrom tibble tibble
@@ -177,8 +177,8 @@ createChildAttributes <- function(child.df, parent, verbose = interactive()) {
 
     if ( !logic_colmeta ) {
       writeLines(signal_rule("They differ in:", line_col = "blue"))
-      tmp_diff <- diffVectors(child_atts$Header.Meta$COL_DATA$Name,
-                              names(child_atts$Col.Meta), verbose = FALSE)
+      tmp_diff <- diff_vecs(child_atts$Header.Meta$COL_DATA$Name,
+                            names(child_atts$Col.Meta), verbose = FALSE)
       first  <- tmp_diff[[1L]]
       second <- tmp_diff[[2L]]
       signal_todo("  In COL_DATA not Col.Meta:", value(first))
@@ -196,7 +196,7 @@ createChildAttributes <- function(child.df, parent, verbose = interactive()) {
 
     if ( !logic_rowmeta ) {
       writeLines(signal_rule("They differ in:", line_col = "blue"))
-      tmp_diff <- diffVectors(child_atts$Header.Meta$ROW_DATA$Name,
+      tmp_diff <- diff_vecs(child_atts$Header.Meta$ROW_DATA$Name,
                               getMeta(child.df), verbose = FALSE)
       first  <- tmp_diff[[1L]]
       second <- tmp_diff[[2L]]

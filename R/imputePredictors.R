@@ -119,7 +119,7 @@ imputePredictors <- function(data, extrm_vals) {
     )
   }
 
-  rfu     <- stripMeta(x)
+  rfu     <- strip_meta(x)
   is_cntr <- sum(colSums(rfu)) < 1
   if ( !is_cntr ) {
     warning(

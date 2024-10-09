@@ -63,8 +63,8 @@ test_that("`centerScaleData()` generates correct values when passing ref.data", 
   train <- data[ idx, ]
   test  <- data[-idx, ]
   tbl <- tibble::tibble(AptName = getAnalytes(train),
-                        means   = unname(colMeans(stripMeta(train))),
-                        sds     = unname(apply(stripMeta(train), 2, sd)))
+                        means   = unname(colMeans(strip_meta(train))),
+                        sds     = unname(apply(strip_meta(train), 2, sd)))
   new  <- centerScaleData(test, tbl)
   true <- data.frame(
     row.names = c("C", "E", "F", "H", "J"),

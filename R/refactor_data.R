@@ -18,12 +18,12 @@
 #' new$Sex           # ghost levels!
 #' levels(new$Sex)   # ghost levels!
 #'
-#' new2 <- refactorData(new)
+#' new2 <- refactor_data(new)
 #' new2$Sex
 #' levels(new2$Sex)
 #' @importFrom globalr signal_info value
 #' @export
-refactorData <- function(data) {
+refactor_data <- function(data) {
   lgl <- vapply(data[ getMeta(data)], is.factor, NA, USE.NAMES = TRUE)
   nms <- names(lgl[lgl])
   for ( meta in nms ) {

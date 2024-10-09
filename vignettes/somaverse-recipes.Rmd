@@ -78,10 +78,10 @@ new <- log10(sim_test_data) |>
     cs)                                     # center/scale
 
 # check means of feature data
-apply(stripMeta(new), 2, mean) |> sum()  # mean = 0
+apply(strip_meta(new), 2, mean) |> sum()  # mean = 0
 
 # check sd of feature data
-apply(stripMeta(new), 2, sd)
+apply(strip_meta(new), 2, sd)
 ```
 
 
@@ -119,7 +119,7 @@ data.frame(orig = rownames(new), recipes = rownames(rcp_data)) |> head()
 class(new$class_response); class(rcp_data$class_response)
 
 # but the feature set is identical; unname() to sync rowname attributes
-identical(unname(stripMeta(new)), unname(stripMeta(rcp_data)))
+identical(unname(strip_meta(new)), unname(strip_meta(rcp_data)))
 ```
 
 

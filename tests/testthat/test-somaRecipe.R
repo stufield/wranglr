@@ -73,8 +73,8 @@ test_that("SomaScan recipe-bake workflow is same as centerScaleData()", {
   x   <- log10(train)
   tbl <- tibble::tibble(
     AptName = getAnalytes(x),
-    means   = unname(colMeans(stripMeta(x))),
-    sds     = unname(apply(stripMeta(x), 2, sd))
+    means   = unname(colMeans(strip_meta(x))),
+    sds     = unname(apply(strip_meta(x), 2, sd))
   )
   bkd <- somaBake(rcp, test)
   attr(bkd, "baked") <- NULL    # 'baked' attribute differs; rm to compare

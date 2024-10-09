@@ -12,10 +12,10 @@
 #' dim(sim_test_data)
 #' class(sim_test_data)
 #'
-#' stripMeta(sim_test_data) |> dim()
-#' stripMeta(sim_test_data) |> class()
+#' strip_meta(sim_test_data) |> dim()
+#' strip_meta(sim_test_data) |> class()
 #' @importFrom SomaDataIO getAnalytes
 #' @export
-stripMeta <- function(data) {
+strip_meta <- function(data) {
   data.matrix(data[, getAnalytes(data)])
 }

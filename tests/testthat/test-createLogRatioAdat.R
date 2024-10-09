@@ -20,9 +20,9 @@ test_that("createLogRatioAdat generates correct dimensions", {
 })
 
 test_that("createLogRatioAdat generates correct values", {
-  expect_equal(range(stripMeta(a1)), c(-6.75093550962, 6.81033300629))
-  expect_equal(sum(stripMeta(a1)), -375.401843685)
-  expect_equal(median(stripMeta(a1)), 0)
+  expect_equal(range(strip_meta(a1)), c(-6.75093550962, 6.81033300629))
+  expect_equal(sum(strip_meta(a1)), -375.401843685)
+  expect_equal(median(strip_meta(a1)), 0)
 })
 
 test_that("createLogRatioAdat rm.baseline argument returns correct dimensions", {
@@ -35,7 +35,7 @@ test_that("createLogRatioAdat rm.baseline argument returns correct dimensions", 
 })
 
 test_that("createLogRatioAdat rm.baseline argument returns correct values", {
-  expect_equal(range(stripMeta(a2)), range(stripMeta(a1)))   # same range for both
-  expect_equal(sum(stripMeta(a2)), -375.401843685)   # same sum b/c only rm zeros
-  expect_equal(median(stripMeta(a2)), -0.00963727725903)
+  expect_equal(range(strip_meta(a2)), range(strip_meta(a1)))   # same range for both
+  expect_equal(sum(strip_meta(a2)), -375.401843685)   # same sum b/c only rm zeros
+  expect_equal(median(strip_meta(a2)), -0.00963727725903)
 })

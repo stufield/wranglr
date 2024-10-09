@@ -2,44 +2,44 @@
 # Setup ----
 # Testing ----
 # S3 methods
-test_that("`makeNumeric()` character class converted when possible", {
-  expect_equal(letters, makeNumeric(letters))
+test_that("`cast_numeric()` character class converted when possible", {
+  expect_equal(letters, cast_numeric(letters))
   x <- c("0.1", "0.2")
-  expect_equal(makeNumeric(x), c(0.1, 0.2))
-  expect_equal(makeNumeric(c(x, NA_character_)), c(0.1, 0.2, NA_real_)) # NAs converted
+  expect_equal(cast_numeric(x), c(0.1, 0.2))
+  expect_equal(cast_numeric(c(x, NA_character_)), c(0.1, 0.2, NA_real_)) # NAs converted
   x <- c(x, "foo")
-  expect_equal(makeNumeric(x), x) # non-convertable strings are not
+  expect_equal(cast_numeric(x), x) # non-convertable strings are not
 })
 
-test_that("`makeNumeric()` integer class is NOT converted", {
-  expect_equal(makeNumeric(1L), 1L)
-  expect_equal(makeNumeric(NA_integer_), NA_integer_)
+test_that("`cast_numeric()` integer class is NOT converted", {
+  expect_equal(cast_numeric(1L), 1L)
+  expect_equal(cast_numeric(NA_integer_), NA_integer_)
 })
 
-test_that("`makeNumeric()` factor class is converted on request", {
+test_that("`cast_numeric()` factor class is converted on request", {
   x <- factor(c("A", "B"))
-  expect_equal(makeNumeric(x), 1:2)
-  expect_equal(makeNumeric(x, coerce.factor = FALSE), x)
+  expect_equal(cast_numeric(x), 1:2)
+  expect_equal(cast_numeric(x, coerce.factor = FALSE), x)
 })
 
-test_that("`makeNumeric()` logical is converted correctly", {
-  expect_equal(makeNumeric(c(TRUE, FALSE)), 1:0)
+test_that("`cast_numeric()` logical is converted correctly", {
+  expect_equal(cast_numeric(c(TRUE, FALSE)), 1:0)
 })
 
-test_that("`makeNumeric()` list is converted correctly", {
+test_that("`cast_numeric()` list is converted correctly", {
   x <- list(a = 1:2L, b = "0.5", c = factor(c("A", "B")), d = TRUE)
   expect_equal(
-    makeNumeric(x),
+    cast_numeric(x),
     list(a = 1:2L, b = 0.5, c = 1:2, d = 1)
   )
   expect_equal(
-    makeNumeric(x, coerce.factor = FALSE),
+    cast_numeric(x, coerce.factor = FALSE),
     list(a = 1:2L, b = 0.5, c = factor(c("A", "B")), d = 1)
   )
 })
 
 # data frame/tibble ----
-test_that("`makeNumeric()` data frame method", {
+test_that("`cast_numeric()` data frame method", {
   tbl <- withr::with_seed(101, {
     tibble::tibble(
       id     = 1:20,                            # NO
@@ -54,13 +54,13 @@ test_that("`makeNumeric()` data frame method", {
   })
 
   # maintains same class
-  expect_equal(class(makeNumeric(tbl)), class(tbl))
-  expect_equal(class(makeNumeric(sim_test_data)), class(sim_test_data))
+  expect_equal(class(cast_numeric(tbl)), class(tbl))
+  expect_equal(class(cast_numeric(sim_test_data)), class(sim_test_data))
   tbl2 <- as.data.frame(tbl)
-  expect_equal(class(makeNumeric(tbl2)), class(tbl2))
+  expect_equal(class(cast_numeric(tbl2)), class(tbl2))
 
   # only converts the correct columns
-  new <- makeNumeric(tbl)
+  new <- cast_numeric(tbl)
   expect_named(new, names(tbl))
   expect_equal(new$id, tbl$id)
   expect_equal(new$num, tbl$num)
@@ -75,7 +75,7 @@ test_that("`makeNumeric()` data frame method", {
                c(character = 1, integer = 1, numeric = 6))
 
   # coerce.factor = FALSE)` is obeyed
-  new <- makeNumeric(tbl, coerce.factor = FALSE)
+  new <- cast_numeric(tbl, coerce.factor = FALSE)
   expect_equal(new$fact, tbl$fact)   # no change
   expect_equal(c(table(vapply(new, class, character(1)))),
                c(character = 1, factor = 1, integer = 1, numeric = 5))

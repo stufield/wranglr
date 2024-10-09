@@ -24,8 +24,8 @@
 #' @author Stu Field
 #' @examples
 #' scaled <- centerScaleData(sim_test_data)
-#' apply(stripMeta(scaled), 2, mean) |> sum()  # mean = 0
-#' apply(stripMeta(scaled), 2, sd)             # sd = 1
+#' apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
+#' apply(strip_meta(scaled), 2, sd)             # sd = 1
 #'
 #' # Pass parameters based on OTHER data
 #' idx   <- withr::with_seed(1,
@@ -38,8 +38,8 @@
 #' # However, it is preferred to pass `par_tbl` over `ref.data`
 #' #   by creating a `par_tbl` object based on `train`
 #' par <- tibble::tibble(AptName = SomaDataIO::getAnalytes(train),
-#'                       means   = colMeans(stripMeta(train)),
-#'                       sds     = apply(stripMeta(train), 2, sd))
+#'                       means   = colMeans(strip_meta(train)),
+#'                       sds     = apply(strip_meta(train), 2, sd))
 #' new2 <- centerScaleData(test, par_tbl = par)
 #' @export
 centerScaleData <- function(data, par_tbl = NULL, center = TRUE, scale = TRUE,
@@ -224,7 +224,7 @@ undoCenterScale <- function(data) {
 .genParTbl <- function(x) {
   tibble(
     AptName = getAnalytes(x),
-    means   = unname(colMeans(stripMeta(x), na.rm = TRUE)),
-    sds     = unname(apply(stripMeta(x), 2, stats::sd, na.rm = TRUE))
+    means   = unname(colMeans(strip_meta(x), na.rm = TRUE)),
+    sds     = unname(apply(strip_meta(x), 2, stats::sd, na.rm = TRUE))
   )
 }

@@ -53,7 +53,7 @@ createLogRatioAdat <- function(adat, subject.field, time.field,
     col2rn("UniqueId")
   if ( rm.baseline ) {
     pids <- unique(subject_vec) |> sort()
-    ret  <- dplyr::filter(ret, !!.time != pids[1L]) |> refactorData()
+    ret  <- dplyr::filter(ret, !!.time != pids[1L]) |> refactor_data()
     signal_done("Removing", value(nrow(adat) - nrow(ret)), "baseline samples.")
   }
   ret

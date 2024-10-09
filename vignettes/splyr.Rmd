@@ -35,8 +35,8 @@ data into convenient form for analysis.
 * `somaRecipe()`
 ```{r center-scale}
 scaled <- centerScaleData(sim_test_data)
-apply(stripMeta(scaled), 2, mean) |> sum()  # mean = 0
-apply(stripMeta(scaled), 2, sd)              # sd = 1
+apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
+apply(strip_meta(scaled), 2, sd)              # sd = 1
 
 # `somaRecipe()`
 rcp <- somaRecipe(sim_test_data)
@@ -46,21 +46,21 @@ rcp
 -----------
 
 ### Imputing Data
-* `imputeOutliers()`
+* `impute_outliers()`
 * `imputeNAs()`
 * `imputePredictors()`
 
 ```{r imputing}
-# Identify outliers (`SomaGlobals::getOutliers()`)
+# Identify outliers (`globalr::get_outliers()`)
 x <- withr::with_seed(1, rnorm(10))   # normal
 x <- c(x, 100)                        # add outlier
-getOutliers(x)                        # get index of the outlier
+get_outliers(x)                       # get index of the outlier
 
 # parameters stored in attributes (parametric only)
-attributes(getOutliers(x, type = "para"))
+attributes(get_outliers(x, type = "para"))
 
 # Impute 11th value
-imputeOutliers(x)
+impute_outliers(x)
 
 # Impute NAs
 x <- withr::with_seed(1, rnorm(6))
@@ -109,25 +109,25 @@ pivotLong(widelong)
 -----------
 
 ### Binding Data
-* `rbindIntersect()`
-* `rbindUnion()`
-```{r rbind}
+* `bind_intersect()`
+* `bind_union()`
+```{r bind}
 df1 <- data.frame(a = 1, b = 2, c = 3, row.names = "A")
 df2 <- data.frame(a = 4, b = 5, d = 6, row.names = "B")
 df3 <- data.frame(a = 7, b = 8, e = 9, row.names = "C")
 list_df  <- list(a = df1, b = df2, c = df3)
 list_df
 
-rbindIntersect(list_df)
+bind_intersect(list_df)
 
-rbindUnion(list_df)
+bind_union(list_df)
 ```
 
 -----------
 
 ### Stripping Data
-* `refactorData()`
-* `stripMeta()`
+* `refactor_data()`
+* `strip_meta()`
 ```{r strip}
 df <- data.frame(a = factor(c("a", "b")), b = 1:2)
 foo <- df[df$a == "a", ]
@@ -135,7 +135,7 @@ foo
 
 levels(foo$a)   # 2 levels! "b" is a ghost level
 
-bar <- refactorData(foo)
+bar <- refactor_data(foo)
 levels(bar$a)   # 1 level now
 ```
 

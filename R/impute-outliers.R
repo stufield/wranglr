@@ -9,20 +9,20 @@
 #'
 #' @family impute
 #' @param x A vector of values, approximating a Gaussian distribution and
-#' containing (possibly) outlier samples.
+#'   containing (possibly) outlier samples.
 #' @param n.sigma Numeric. Number of standard deviations from the mean
-#' a `n.sigma` threshold for outliers.
+#'   a `n.sigma` threshold for outliers.
 #' @return A vector of values approximating a Gaussian distribution with the
-#' outlier samples imputed back to the robust Gaussian fit.
+#'   outlier samples imputed back to the robust Gaussian fit.
 #' @author Stu Field
-#' @seealso [pnorm()], [qnorm()], [getOutliers()]
+#' @seealso [pnorm()], [qnorm()], [get_outliers()]
 #' @examples
 #' set.seed(101)
 #' vec  <- c(2, 2.5, rnorm(26, 15, 2), 25, 25.9)   # Gaussian with 4 outliers (2hi, 2lo)
-#' pars <- attributes(globalr::getOutliers(vec, n.sigma = 3, type = "para"))
+#' pars <- attributes(globalr::get_outliers(vec, n.sigma = 3, type = "para"))
 #' pars
 #'
-#' imputeOutliers(vec)
+#' impute_outliers(vec)
 #'
 #' # Plot what is happening:
 #' # original `vec` and critical 3*sd cutoffs in `red`
@@ -34,23 +34,23 @@
 #' )
 #' ggplot(data.frame(x = vec), aes(x = x)) +
 #'   stat_ecdf(color = "blue") +
-#'   stat_ecdf(data = data.frame(x = imputeOutliers(vec)),
+#'   stat_ecdf(data = data.frame(x = impute_outliers(vec)),
 #'             aes(x = x), color = "purple") +
 #'   geom_line(data = fit_data, aes(x = x, y = y),
 #'             colour = "black", linetype = "longdash") +
 #'   geom_vline(xintercept = pars$crit, colour = "red", linetype = "dashed") +
 #'   ggtitle("Outlier Cutoffs (3*sigma) in Red")
 #' @importFrom stats pnorm qnorm
-#' @importFrom globalr getOutliers
+#' @importFrom globalr get_outliers
 #' @export
-imputeOutliers <- function(x, n.sigma = 3) {
+impute_outliers <- function(x, n.sigma = 3) {
 
   if ( length(table(x)) < 5L ) {   # catch for non-continuous data
     return(x)
   }
 
   # parameters stored in attributes
-  idx   <- getOutliers(x, n.sigma = n.sigma, type = "parametric")
+  idx   <- get_outliers(x, n.sigma = n.sigma, type = "parametric")
   pars  <- attributes(idx)
   crit  <- pars$crit
   mu    <- pars$mu

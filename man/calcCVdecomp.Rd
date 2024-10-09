@@ -39,7 +39,7 @@ calcCVdecomp(dom_example)
 split_on <- sim_test_data$SiteId
 
 # split data
-site_split <- stripMeta(sim_test_data) |> data.frame() |>
+site_split <- strip_meta(sim_test_data) |> data.frame() |>
   lapply(split, f = split_on)
 
 # iterate over list/analytes; each contains multiple (4x) "runs"

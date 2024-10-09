@@ -86,8 +86,8 @@ library(help = splyr)
 * `somaRecipe()`
 ```{r center-scale}
 scaled <- centerScaleData(sim_test_data)
-apply(stripMeta(scaled), 2, mean) |> sum()  # mean = 0
-apply(stripMeta(scaled), 2, sd)             # sd = 1
+apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
+apply(strip_meta(scaled), 2, sd)             # sd = 1
 
 # `somaRecipe()`
 rcp <- somaRecipe(sim_test_data)
@@ -182,7 +182,7 @@ rbindUnion(list_df)
 
 ### Stripping Data
 * `refactorData()`
-* `stripMeta()`
+* `strip_meta()`
 ```{r strip}
 df <- data.frame(a = factor(c("a", "b")), b = 1:2)
 foo <- df[df$a == "a", ]
