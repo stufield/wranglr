@@ -129,11 +129,8 @@ somaBake <- function(x, data) {
   )
 
   if ( x$bridge_lgl ) {
-    oc   <- class(data)
     ref  <- setNames(x$bridge_ref, getSeqId(names(x$bridge_ref)))
-    # must be a 'soma_adat' for methods inside scaleAnalytes()
-    data <- scaleAnalytes(addClass(data, "soma_adat"), ref) |>
-      structure(class = oc)   # return to orig class
+    data <- scale_features(data, ref)
   }
 
   if ( x$log10_lgl ) {

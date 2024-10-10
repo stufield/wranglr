@@ -6,7 +6,7 @@ short_adat <- adat[, c(getMeta(adat), apts)] |> head(3L)
 
 # this is to ensure the S3 method is available and dispatched
 # otherwise the base::transform.data.frame() method will not
-# transform the analytes inside scaleAnalytes()
+# transform the analytes inside scale_features()
 
 test_that("the transform() S3 method exists in the namespace", {
   expect_no_error(getS3method("transform", "soma_adat"))
@@ -19,9 +19,9 @@ test_that("the transform() S3 method is listed in methods", {
 
 
 # Testing ----
-test_that("`scaleAnalytes()` returns identical adat when scalars are 1.0", {
+test_that("`scale_features()` returns identical adat when scalars are 1.0", {
   ref <- setNames(rep(1.0, length(apts)), getSeqId(apts))
-  a <- scaleAnalytes(short_adat, ref)
+  a <- scale_features(short_adat, ref)
   expect_equal(short_adat, a)
 })
 
@@ -30,7 +30,7 @@ test_that("specific analytes are scaled with non-1.0 values", {
   # re-order puts reference out of order
   # ensures SeqId matching
   ref <- ref[c(2, 3, 1L)]
-  a <- scaleAnalytes(short_adat, ref)
+  a <- scale_features(short_adat, ref)
   expect_s3_class(a, "soma_adat")
   expect_equal(a$seq.4487.88, short_adat$seq.4487.88 * 0.75)
   expect_equal(a$seq.4461.56, short_adat$seq.4461.56 * 1.10)
@@ -45,7 +45,7 @@ test_that("extra refernce analytes are ignored with a warning", {
   ref <- ref[c(2, 3, 1L)]
   ref <- c(ref, "1234-56" = 1.0)  # add 1 extra scalar
   expect_warning(
-    a <- scaleAnalytes(short_adat, ref),
+    a <- scale_features(short_adat, ref),
     "There are extra scaling values (1) in the reference.",
     fixed = TRUE
   )
@@ -55,8 +55,8 @@ test_that("extra refernce analytes are ignored with a warning", {
 test_that("missing analytes are skipped with a warning", {
   ref <- setNames(c(1.0, 1.0), getSeqId(getAnalytes(short_adat))[-2L])
   expect_warning(
-    b <- scaleAnalytes(short_adat, ref),
-    "Missing scalar value for (1) analytes. They will not be transformed.",
+    b <- scale_features(short_adat, ref),
+    "Missing scalar value for (1) features. They will not be transformed.",
     fixed = TRUE
   )
   expect_equal(short_adat, b)
@@ -64,11 +64,11 @@ test_that("missing analytes are skipped with a warning", {
 
 test_that("no matches returns identical object, with a 1 message & 2 warnings", {
   ref <- c("1234-56" = 1.555)
-  expect_snapshot( new <- scaleAnalytes(short_adat, ref) )
+  expect_snapshot( new <- scale_features(short_adat, ref) )
   expect_equal(short_adat, new)
 })
 
-test_that("`scaleAnalytes()` only accepts the `soma_adat` class", {
+test_that("`scale_features()` only accepts the `soma_adat` class", {
   bad_adat <- as.data.frame(short_adat)
-  expect_snapshot(scaleAnalytes(bad_adat), error = TRUE)
+  expect_snapshot(scale_features(bad_adat), error = TRUE)
 })
