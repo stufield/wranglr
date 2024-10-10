@@ -63,7 +63,7 @@ bind_intersect <- function(...) {
 #' bind_union(spl)
 #' bind_union(spl[[1L]], spl[[2L]])
 #' bind_union(spl[[1L]], spl[[2L]], spl[[3L]])
-#' @importFrom SomaDataIO col2rn getMeta rn2col
+#' @importFrom globalr col2rn rn2col
 #' @export
 bind_union <- function(...) {
   x <- .checkdots(...)
@@ -71,6 +71,7 @@ bind_union <- function(...) {
 }
 
 #' @noRd
+#' @importFrom SomaDataIO getMeta
 #' @param x A list of data frames.
 .bind_and_clean <- function(x) {
   out <- bind_rows(x, .id = "data") |> col2rn()

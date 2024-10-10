@@ -21,6 +21,7 @@
 #'
 #' # or with dplyr helper verbs ...
 #' distinctAt(df, ends_with("ie"))
+#' @importFrom globalr rm_rn
 #' @export
 distinct_at <- function(x, ...) {
   sel <- dplyr::select(x, ...)

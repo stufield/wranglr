@@ -629,7 +629,7 @@ test_that("`create_kfold()` returns expected results for repeats = 1", {
     split_objs <- .vfold_splits(data = data, k = k, breaks = breaks, depth = depth)
     split_objs$Repeat <- NA_integer_
     return_obj <- list(data = data, splits = split_objs)
-    structure(addClass(return_obj, "x_split"), breaks = breaks)
+    structure(add_class(return_obj, "x_split"), breaks = breaks)
   }
 
   # test that depth is properly understood
@@ -686,7 +686,7 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
     names(split_objs) <- seq_len(repeats)
     split_objs <- split_objs |> dplyr::bind_rows() |> tibble::tibble()
     return_obj <- list(data = data, splits = split_objs)
-    structure(addClass(return_obj, "x_split"), breaks = breaks)
+    structure(add_class(return_obj, "x_split"), breaks = breaks)
   }
 
   # each input is properly passed along

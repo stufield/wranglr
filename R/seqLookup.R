@@ -78,11 +78,12 @@ seqLookup <- function(seq, tbl = NULL) {
 #'
 #' # also works with naked-SeqIds
 #' seqify(SomaDataIO::getSeqId(svec))
-#' @importFrom SomaDataIO addClass is.apt
+#' @importFrom globalr add_class
+#' @importFrom SomaDataIO is.apt
 #' @export
 seqify <- function(x) {
   stopifnot("All values of `x` must be SeqIds." = all(is.apt(x)))
-  addClass(x, "seqId")
+  add_class(x, "seqId")
 }
 
 #' @importFrom globalr add_color signal_rule liter

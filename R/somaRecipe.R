@@ -34,7 +34,8 @@
 #'                    reg_response = abs,
 #'                    time = function(x) sqrt(x + pi))
 #'
-#' @importFrom SomaDataIO addClass getAnalytes
+#' @importFrom globalr add_class
+#' @importFrom SomaDataIO getAnalytes
 #' @export
 somaRecipe <- function(data, log10 = TRUE, center = TRUE, scale = TRUE,
                        bridge_ref = NULL, ...) {
@@ -59,7 +60,7 @@ somaRecipe <- function(data, log10 = TRUE, center = TRUE, scale = TRUE,
         dot_vars = names(dots)
   ) |>
   c(dots) |>
-  addClass("soma_recipe")
+  add_class("soma_recipe")
 }
 
 
@@ -190,7 +191,7 @@ is.baked <- function(data) {
 #'
 #' convertRecipe(rec)
 #' @importFrom tibble tibble enframe
-#' @importFrom SomaDataIO addClass
+#' @importFrom globalr add_class
 #' @export
 convertRecipe <- function(object) {
 
@@ -263,7 +264,7 @@ convertRecipe <- function(object) {
   ret$p        <- length(predictors)
   ret$par_tbl  <- pars
   ret$dot_vars <- character(0)
-  addClass(ret, c("converted_recipe", "soma_recipe"))
+  add_class(ret, c("converted_recipe", "soma_recipe"))
 }
 
 #' update a `soma_recipe` control object.

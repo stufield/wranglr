@@ -39,7 +39,7 @@ scale_features <- function(.data, scale_vec) {
     common  <- intersect(feats, stbl$feature)
     matches <- data.frame(data_name = common,
                           vec_name  = intersect(common, stbl$feature))
-    .data <- addClass(.data, "scale_df")
+    .data <- add_class(.data, "scale_df")
   }
   missing <- setdiff(feats, matches$data_name)
   extra   <- setdiff(stbl$feature, matches$vec_name)

@@ -72,8 +72,7 @@
 #' sample_two <- create_kfold(sim_test_data, k = 4L, repeats = 2L,
 #'                            breaks = list(time = 4L, status = NA))
 #'
-#' @importFrom globalr is.Integer len_one
-#' @importFrom SomaDataIO addClass
+#' @importFrom globalr is.Integer len_one add_class
 #' @export
 create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
@@ -114,7 +113,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   .call <- match.call()
 
   structure(
-    addClass(return_obj, "x_split"),
+    add_class(return_obj, "x_split"),
     k = k, repeats = repeats, breaks = breaks, call = .call
   )
 }
