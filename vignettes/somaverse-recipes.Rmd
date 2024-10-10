@@ -225,22 +225,22 @@ head(meta_sim[, meta_rcp$dot_vars]) |> as_tibble()
 # Underlying machinery
 
 The main underlying non-user-facing function to center and/or scale data is
-`centerScaleData()`, which was previously in common use throughout the
+`center_scale()`, which was previously in common use throughout the
 `somaverse`.
 
-## `centerScaleData()`
+## `center_scale()`
 
 ```{r center-scale-data}
-cs_data <- log10(train) |> centerScaleData()
+cs_data <- log10(train) |> center_scale()
 
 # check new class
-is.centerScaled(cs_data)
+is_center_scaled(cs_data)
 
 # get the parameter table
 pars <- attr(cs_data, "par_tbl")
 
 # center/scale test based on train parameters
-processed <- log10(test) |> centerScaleData(pars)
+processed <- log10(test) |> center_scale(pars)
 
 # yields same as "recipes" style workflow; but without the "baked" attribute
 # first remove "baked" then compare

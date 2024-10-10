@@ -31,10 +31,10 @@ data into convenient form for analysis.
 
 
 ### Transforming Data
-* `centerScaleData()`
+* `center_scale()`
 * `somaRecipe()`
 ```{r center-scale}
-scaled <- centerScaleData(sim_test_data)
+scaled <- center_scale(sim_test_data)
 apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
 apply(strip_meta(scaled), 2, sd)              # sd = 1
 
@@ -46,6 +46,7 @@ rcp
 -----------
 
 ### Imputing Data
+* `remove_outliers()`
 * `impute_outliers()`
 * `imputeNAs()`
 * `imputePredictors()`
@@ -80,30 +81,6 @@ tbl <- tibble::tribble(
     "c",         9,         7,            7.1,        7.1
 )
 imputePredictors(x, tbl)
-```
-
------------
-
-### Shaping Data
-* `pivotLong()`
-```{r pivot}
-widelong <- tibble::tibble(
-  subject_id    = c(1561L, 1561L, 1561L, 3358L, 3358L, 3358L),
-  ie            = c("IE1", "IE2", "IE3", "IE1", "IE2", "IE3"),
-  clin_var1_ie1 = c(93L, 93L, 93L, 56L, 56L, 56L),
-  clin_var1_ie2 = c(84L, 84L, 84L, 79L, 79L, 79L),
-  clin_var1_ie3 = c(89L, 89L, 89L, 68L, 68L, 68L),
-  clin_var2_ie1 = c(15L, 15L, 15L, 77L, 77L, 77L),
-  clin_var2_ie2 = c(99L, 99L, 99L, 92L, 92L, 92L),
-  clin_var2_ie3 = c(100L, 100L, 100L, 16L, 16L, 16L),
-  clin_var3_ie1 = c("N", "N", "N", "N", "N", "N"),
-  clin_var3_ie3 = c("N", "N", "N", "N", "N", "N"),
-  seq.15529.33  = c(31498.5, 20108.1, 11905.1, 5726.6, 46357.8, 47059.8)
-)
-widelong
-
-# run with default arguments
-pivotLong(widelong)
 ```
 
 -----------

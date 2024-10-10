@@ -145,25 +145,26 @@ center_scale.matrix <- function(data, par_tbl = NULL, center = TRUE,
 }
 
 
-#' @describeIn center_scale tests for presence of `par_tbl` entry in
-#' attributes and if it contains appropriate parameter information that
-#' can be used for centering or scaling data.
+#' @describeIn center_scale
+#'   tests for presence of `par_tbl` entry in attributes and
+#'   if it contains appropriate parameter information that
+#'   can be used for centering or scaling data.
 #' @examples
 #' # Logical test
-#' is.centerScaled(new)
+#' is_center_scaled(new)
 #' @export
-is.centerScaled <- function(data) {
+is_center_scaled <- function(data) {
   x <- attr(data, "par_tbl")
   scaled <- !is.null(x)
   scaled && .check_par_tbl(x)
 }
 
 
-#' @describeIn center_scale the inverse of `center_scale()`. Undo the
-#' transformation.
+#' @describeIn center_scale
+#'   the inverse of `center_scale()`. Undo the transformation.
 #' @examples
-#' # Example of `undoCenterScale()`; reverse above
-#' old <- undoCenterScale(new)
+#' # Example of `undo_center_scale()`; reverse above
+#' old <- undo_center_scale(new)
 #'
 #' # check values are reverted
 #' all.equal(test, old)
@@ -175,7 +176,7 @@ is.centerScaled <- function(data) {
 undo_center_scale <- function(data) {
   # do some checking
   # $par_tbl element added in `center_scale()`; required below
-  stopifnot(is.centerScaled(data))
+  stopifnot(is_center_scaled(data))
   apts    <- getAnalytes(data)
   par_tbl <- attr(data, "par_tbl") |> rearrange("AptName", apts)  # sync order
   stopifnot(.check_par_tbl(par_tbl))

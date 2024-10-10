@@ -106,7 +106,7 @@ test_that("`center_scale()` generates correct values when passing ref.data", {
   # test that `scaled` element removed; cannot double-undo
   expect_error(
     undo_center_scale(undo),
-    "is.centerScaled(data) is not TRUE", fixed = TRUE
+    "is_center_scaled(data) is not TRUE", fixed = TRUE
   )
 })
 
@@ -144,7 +144,7 @@ test_that("`center_scale()` generates correct values for non-soma_adat objects",
   )
 })
 
-test_that("`is.centerScaled()` unit test", {
-  expect_true(is.centerScaled(cs))
-  expect_false(is.centerScaled(data))
+test_that("`is_center_scaled()` unit test", {
+  expect_true(is_center_scaled(cs))
+  expect_false(is_center_scaled(data))
 })

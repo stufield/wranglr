@@ -2,7 +2,7 @@
 % Please edit documentation in R/center-scale.R
 \name{center_scale}
 \alias{center_scale}
-\alias{is.centerScaled}
+\alias{is_center_scaled}
 \alias{undo_center_scale}
 \title{Center and/or Scale Data}
 \usage{
@@ -14,7 +14,7 @@ center_scale(
   ref.data = deprecated()
 )
 
-is.centerScaled(data)
+is_center_scaled(data)
 
 undo_center_scale(data)
 }
@@ -50,12 +50,11 @@ matrix, should contain \emph{only} numeric columns (e.g. RFU data).
 }
 \section{Functions}{
 \itemize{
-\item \code{is.centerScaled()}: tests for presence of \code{par_tbl} entry in
-attributes and if it contains appropriate parameter information that
+\item \code{is_center_scaled()}: tests for presence of \code{par_tbl} entry in attributes and
+if it contains appropriate parameter information that
 can be used for centering or scaling data.
 
-\item \code{undo_center_scale()}: the inverse of \code{center_scale()}. Undo the
-transformation.
+\item \code{undo_center_scale()}: the inverse of \code{center_scale()}. Undo the transformation.
 
 }}
 \examples{
@@ -78,9 +77,9 @@ par <- tibble::tibble(AptName = SomaDataIO::getAnalytes(train),
                       sds     = apply(strip_meta(train), 2, sd))
 new2 <- center_scale(test, par_tbl = par)
 # Logical test
-is.centerScaled(new)
-# Example of `undoCenterScale()`; reverse above
-old <- undoCenterScale(new)
+is_center_scaled(new)
+# Example of `undo_center_scale()`; reverse above
+old <- undo_center_scale(new)
 
 # check values are reverted
 all.equal(test, old)
