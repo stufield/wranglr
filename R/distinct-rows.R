@@ -17,13 +17,13 @@
 #' })
 #' df
 #'
-#' distinctAt(df, a_ie, b_ie)
+#' distinct_rows(df, a_ie, b_ie)
 #'
 #' # or with dplyr helper verbs ...
-#' distinctAt(df, ends_with("ie"))
+#' distinct_rows(df, ends_with("ie"))
 #' @importFrom globalr rm_rn
 #' @export
-distinct_at <- function(x, ...) {
+distinct_rows <- function(x, ...) {
   sel <- dplyr::select(x, ...)
   rm_rn(x[!duplicated(sel), ])
 }
