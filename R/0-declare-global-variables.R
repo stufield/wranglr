@@ -8,13 +8,8 @@
 if ( getRversion() >= "2.15.1" ) {
   utils::globalVariables(
     c(".",
-      "AptName",
-      "aptname",
-      "Dilution",
-      "EnsemblGeneId",
-      "EntrezGeneSymbol",
       "group_var",
-      "HgncId",
+      "feature",
       "name",
       "List",
       "rangeLower",
@@ -22,17 +17,7 @@ if ( getRversion() >= "2.15.1" ) {
       "role",
       "sdLower",
       "sdUpper",
-      "SeqId",
-      "seqid",
-      "SampleType",
-      "SampleId",
-      "SlideId",
-      "Subarray",
-      "Target",
-      "TargetFullName",
-      "totalCV_Plasma",
-      "Type",
-      "UniProt"
+      "SeqId", "AptName", "Dilution", "EnsemblGeneId", "EntrezGeneSymbol", "HgncId", "Target", "TargetFullName", "Type", "aptname"  # remove one day
     )
   )
 }

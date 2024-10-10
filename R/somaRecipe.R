@@ -17,7 +17,7 @@
 #' @param log10 Logical. Should `data` be log10-transformed.
 #' @param bridge_ref Numeric. A vector of scale factors to bridge transform
 #'   the data *prior* to applying the remaining steps in the recipe.
-#'   They are passed to [scaleAnalytes()], and should be take the same
+#'   They are passed to [scale_features()], and should be take the same
 #'   format as the `scale_vec` argument. If `NULL` (default), no
 #'   bridging is performed.
 #' @param ... Optional arguments of the form `variable = function()`

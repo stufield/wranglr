@@ -36,7 +36,7 @@ should be scaled to have unit variance (\eqn{\sigma = 1}).}
 
 \item{bridge_ref}{Numeric. A vector of scale factors to bridge transform
 the data \emph{prior} to applying the remaining steps in the recipe.
-They are passed to \code{\link[=scaleAnalytes]{scaleAnalytes()}}, and should be take the same
+They are passed to \code{\link[=scale_features]{scale_features()}}, and should be take the same
 format as the \code{scale_vec} argument. If \code{NULL} (default), no
 bridging is performed.}
 
