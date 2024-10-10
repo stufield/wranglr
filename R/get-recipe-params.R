@@ -18,8 +18,8 @@
 #'  recipes::step_center(recipes::all_predictors()) |>
 #'  recipes::step_scale(recipes::all_predictors()) |>
 #'  recipes::prep(training = test)
-#' get_Recipe_Params(rec, "scale")
-#' get_Recipe_Params(rec, "center")
+#' get_recipe_params(rec, "scale")
+#' get_recipe_params(rec, "center")
 #'
 #' soma_rec <- somaRecipe(test)
 #' get_recipe_params(soma_rec, "scale")
