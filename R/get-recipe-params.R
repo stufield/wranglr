@@ -18,23 +18,23 @@
 #'  recipes::step_center(recipes::all_predictors()) |>
 #'  recipes::step_scale(recipes::all_predictors()) |>
 #'  recipes::prep(training = test)
-#' getRecipeParams(rec, "scale")
-#' getRecipeParams(rec, "center")
+#' get_Recipe_Params(rec, "scale")
+#' get_Recipe_Params(rec, "center")
 #'
 #' soma_rec <- somaRecipe(test)
-#' getRecipeParams(soma_rec, "scale")
-#' getRecipeParams(rec, "center")
-getRecipeParams <- function(recipe, param) {
+#' get_recipe_params(soma_rec, "scale")
+#' get_recipe_params(rec, "center")
+get_recipe_params <- function(recipe, param) {
   if ( !param %in% c("scale", "center") ) {
     stop("Method not implemented for param '", param,
          "'. Possible values are 'scale' and 'center'.", call. = FALSE)
   }
-  UseMethod("getRecipeParams")
+  UseMethod("get_recipe_params")
 }
 
 #' @noRd
 #' @export
-getRecipeParams.default <- function(recipe, param) {
+get_recipe_params.default <- function(recipe, param) {
   stop(
     "Couldn't find a S3 method for this class object: ", value(class(recipe)),
     call. = FALSE
@@ -44,7 +44,7 @@ getRecipeParams.default <- function(recipe, param) {
 #' @noRd
 #' @importFrom stats setNames
 #' @export
-getRecipeParams.recipe <- function(recipe, param = "scale") {
+get_recipe_params.recipe <- function(recipe, param = "scale") {
   stepnames <- vapply(recipe$steps, function(step) class(step)[1L], "")
   steps <- setNames(recipe$steps, stepnames)
 

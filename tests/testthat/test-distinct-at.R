@@ -9,10 +9,10 @@ df <- tibble::tibble(
   c    = runif(20)
 )
 
-tbl_data <- distinctAt(df, a_ie, b_ie)
+tbl_data <- distinct_at(df, a_ie, b_ie)
 
 # Testing ----
-test_that("distinctAt provides correct output", {
+test_that("`distinct_at()` provides correct output", {
   expect_s3_class(tbl_data, "tbl_df")
   expect_equal(dim(tbl_data), c(8, 3))
   expect_equal(data.frame(tbl_data),
@@ -31,16 +31,16 @@ test_that("distinctAt provides correct output", {
 })
 
 test_that("data frame returns a data.frame", {
-  df_data  <- distinctAt(data.frame(df), a_ie, b_ie)
+  df_data  <- distinct_at(data.frame(df), a_ie, b_ie)
   expect_equal(data.frame(tbl_data), df_data)
 })
 
 test_that("dplyr verbs functionality works", {
-  endsw_data <- distinctAt(df, dplyr::ends_with("ie"))
+  endsw_data <- distinct_at(df, dplyr::ends_with("ie"))
   expect_equal(tbl_data, endsw_data)
 })
 
 test_that("input is equal to output of previous call", {
-  new_data <- distinctAt(tbl_data, a_ie, b_ie)
+  new_data <- distinct_at(tbl_data, a_ie, b_ie)
   expect_equal(tbl_data, new_data)
 })

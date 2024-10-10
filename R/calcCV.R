@@ -23,7 +23,7 @@
 #'                     C = c(5409.4, 5353.6, 5398.0, 5631.2,
 #'                           5646.1, 5073.4, 5879.2, 5617.5))
 #' dom_example
-#' calcCVdecomp(dom_example)
+#' calcCV(dom_example)
 #'
 #' # Example 2 (dummy `sim_test_data` example)
 #' # Here, we will look at how the intra, inter, and total variance.
@@ -37,10 +37,10 @@
 #'   lapply(split, f = split_on)
 #'
 #' # iterate over list/analytes; each contains multiple (4x) "runs"
-#' coeffVar <- lapply(site_split, calcCVdecomp)
+#' coeffVar <- lapply(site_split, calcCV)
 #' coeffVar <- do.call(rbind, coeffVar) |> data.frame()
 #' @export
-calcCVdecomp <- function(x) {
+calcCV <- function(x) {
   if ( inherits(x, "data.frame") ) {
     stop("Please recast data.frame `x` as a list of vectors.",
          call. = FALSE)

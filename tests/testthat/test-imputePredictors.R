@@ -65,12 +65,12 @@ test_that("trips warnings when RFU space may be incorrect", {
     expect_warning("scaled!")
 
   expect_warning(
-    .check_rfu_space(centerScaleData(sample.adat, scale = FALSE)),
+    .check_rfu_space(center_scale(sample.adat, scale = FALSE)),
     "Most imputation tables assume scaled data"
   )
 
   expect_warning(
-    .check_rfu_space(centerScaleData(sample.adat, center = FALSE)),
+    .check_rfu_space(center_scale(sample.adat, center = FALSE)),
     "Most imputation tables assume centered data"
   )
 })

@@ -11,7 +11,7 @@
 #'   \item scale
 #' }
 #'
-#' @inheritParams centerScaleData
+#' @inheritParams center_scale
 #' @param data A `soma_adat` class object to use as a template for
 #'   the pre-processing steps.
 #' @param log10 Logical. Should `data` be log10-transformed.
@@ -151,9 +151,9 @@ somaBake <- function(x, data) {
   }
 
   if ( x$scale_lgl || x$center_lgl ) {
-    data <- centerScaleData(data, par_tbl = x$par_tbl,
-                            center = x$center_lgl,
-                            scale = x$scale_lgl)
+    data <- center_scale(data, par_tbl = x$par_tbl,
+                         center = x$center_lgl,
+                         scale = x$scale_lgl)
   }
   structure(data, baked = TRUE)
 }
@@ -237,11 +237,11 @@ convertRecipe <- function(object) {
       logstep <- which(steps == "step_log")
       ret$log10_cols <- unname(object$steps[[logstep]]$columns)
     } else if ( step == "step_center" ) {
-      df_mu <- enframe(getRecipeParams(object, "center"),
+      df_mu <- enframe(get_recipe_params(object, "center"),
                        name = "AptName", value = "means")
       pars <- left_join(pars, df_mu, by = "AptName")
     } else if ( step == "step_scale" ) {
-      df_sds <- enframe(getRecipeParams(object, "scale"),
+      df_sds <- enframe(get_recipe_params(object, "scale"),
                         name = "AptName", value = "sds")
       pars <- left_join(pars, df_sds, by = "AptName")
     }
@@ -281,7 +281,7 @@ update.soma_recipe <- function(object, ...) {
 #' @noRd
 #' @importFrom tibble deframe
 #' @export
-getRecipeParams.soma_recipe <- function(recipe, param = "scale") {
+get_recipe_params.soma_recipe <- function(recipe, param = "scale") {
   param_name <- ifelse(param == "scale", "sds", "means")
   deframe(recipe$par_tbl[, c("AptName", param_name)])
 }

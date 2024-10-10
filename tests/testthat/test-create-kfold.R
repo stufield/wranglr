@@ -31,10 +31,10 @@ expect_idx <- function(func, args) {
   args$idx <- integer()
   expect_error(do.call(func, args), msg)
 
-  args$idx <- c(-1, 2, 3, 4)
+  args$idx <- c(-1L, 2L, 3L, 4L)
   expect_error(do.call(func, args), msg)
 
-  args$idx <- c(0, 2, 3, 4)
+  args$idx <- c(0L, 2L, 3L, 4L)
   expect_error(do.call(func, args), msg)
 
   succeed()
@@ -481,11 +481,11 @@ test_that("`.getStrataIndices` returns expected results for data.frame strata", 
 test_that("`.vfold_splits()` returns expected errors", {
   expect_error(
     .vfold_splits(k = 10L, breaks = NULL, depth = 20L),
-    "`data` must be an object of class `data.frame` or `soma_adat`."
+    "`data` must be an object of class `data.frame`."
   )
   expect_error(
     .vfold_splits(sim_test_data$time, k = 10L, breaks = NULL, depth = 20L),
-    "`data` must be an object of class `data.frame` or `soma_adat`."
+    "`data` must be an object of class `data.frame`."
   )
 
   expect_positive_integer_scalar(".vfold_splits",
@@ -592,11 +592,11 @@ test_that("`.vfold_splits()` returns expected results", {
 test_that("`create_kfold()` returns expected errors", {
   expect_error(
     create_kfold(k = 10L, strata = NULL, breaks = 4L),
-    "`data` must be an object of class `data.frame` or `soma_adat`."
+    "`data` must be an object of class `data.frame`."
   )
   expect_error(
     create_kfold(sim_test_data$time),
-    "`data` must be an object of class `data.frame` or `soma_adat`."
+    "`data` must be an object of class `data.frame`."
   )
 
   expect_positive_integer_scalar("create_kfold",

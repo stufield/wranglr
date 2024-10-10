@@ -23,7 +23,7 @@
 #'   are modified for non-`matrix` objects.
 #' @author Stu Field
 #' @examples
-#' scaled <- centerScaleData(sim_test_data)
+#' scaled <- center_scale(sim_test_data)
 #' apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
 #' apply(strip_meta(scaled), 2, sd)             # sd = 1
 #'
@@ -33,23 +33,23 @@
 #' )
 #' train <- sim_test_data[idx, ]
 #' test  <- sim_test_data[-idx, ]
-#' new   <- centerScaleData(test, ref.data = train)
+#' new   <- center_scale(test, ref.data = train)
 #'
 #' # However, it is preferred to pass `par_tbl` over `ref.data`
 #' #   by creating a `par_tbl` object based on `train`
 #' par <- tibble::tibble(AptName = SomaDataIO::getAnalytes(train),
 #'                       means   = colMeans(strip_meta(train)),
 #'                       sds     = apply(strip_meta(train), 2, sd))
-#' new2 <- centerScaleData(test, par_tbl = par)
+#' new2 <- center_scale(test, par_tbl = par)
 #' @export
-centerScaleData <- function(data, par_tbl = NULL, center = TRUE, scale = TRUE,
+center_scale <- function(data, par_tbl = NULL, center = TRUE, scale = TRUE,
                             ref.data = deprecated()) {
-  UseMethod("centerScaleData")
+  UseMethod("center_scale")
 }
 
 #' @noRd
 #' @export
-centerScaleData.default <- function(data, par_tbl = NULL, center = TRUE,
+center_scale.default <- function(data, par_tbl = NULL, center = TRUE,
                                     scale = TRUE, ref.data = deprecated()) {
   stop("No S3 method could be found for object of class: ",
        value(class(data)), call. = FALSE)
@@ -60,14 +60,14 @@ centerScaleData.default <- function(data, par_tbl = NULL, center = TRUE,
 #' @importFrom purrr pmap
 #' @importFrom SomaDataIO getAnalytes
 #' @export
-centerScaleData.soma_adat <- function(data, par_tbl = NULL, center = TRUE,
+center_scale.soma_adat <- function(data, par_tbl = NULL, center = TRUE,
                                       scale = TRUE, ref.data = deprecated()) {
 
   if ( is_present(ref.data) ) {
     deprecate_warn(
       "4.2.0",
-      "splyr::centerScaleData(ref.data =)",
-      "splyr::centerScaleData(par_tbl =)",
+      "splyr::center_scale(ref.data =)",
+      "splyr::center_scale(par_tbl =)",
       details = "Passing 'ref.data =' is now discouraged."
     )
   }
@@ -85,7 +85,7 @@ centerScaleData.soma_adat <- function(data, par_tbl = NULL, center = TRUE,
   } else {
     # if par_tbl IS passed, must check its format
     if ( !.check_par_tbl(par_tbl) ) {
-      stop("Please check the `par_tbl` passed to `centerScaleData()`.",
+      stop("Please check the `par_tbl` passed to `center_scale()`.",
            call. = FALSE)
     }
     # ensure data and par_tbl are sync'd
@@ -119,19 +119,19 @@ centerScaleData.soma_adat <- function(data, par_tbl = NULL, center = TRUE,
 
 #' @noRd
 #' @export
-centerScaleData.tr_data <- centerScaleData.soma_adat
+center_scale.tr_data <- center_scale.soma_adat
 
 #' @noRd
 #' @export
-centerScaleData.data.frame <- centerScaleData.soma_adat
+center_scale.data.frame <- center_scale.soma_adat
 
 #' @noRd
 #' @export
-centerScaleData.tbl_df <- centerScaleData.soma_adat
+center_scale.tbl_df <- center_scale.soma_adat
 
 #' @noRd
 #' @export
-centerScaleData.matrix <- function(data, par_tbl = NULL, center = TRUE,
+center_scale.matrix <- function(data, par_tbl = NULL, center = TRUE,
                                    scale = TRUE, ref.data = deprecated()) {
   if ( !is.null(ref.data) ) {
     if ( center ) {
@@ -145,7 +145,7 @@ centerScaleData.matrix <- function(data, par_tbl = NULL, center = TRUE,
 }
 
 
-#' @describeIn centerScaleData tests for presence of `par_tbl` entry in
+#' @describeIn center_scale tests for presence of `par_tbl` entry in
 #' attributes and if it contains appropriate parameter information that
 #' can be used for centering or scaling data.
 #' @examples
@@ -159,7 +159,7 @@ is.centerScaled <- function(data) {
 }
 
 
-#' @describeIn centerScaleData the inverse of `centerScaleData()`. Undo the
+#' @describeIn center_scale the inverse of `center_scale()`. Undo the
 #' transformation.
 #' @examples
 #' # Example of `undoCenterScale()`; reverse above
@@ -172,9 +172,9 @@ is.centerScaled <- function(data) {
 #' @importFrom purrr pmap
 #' @importFrom SomaDataIO getAnalytes
 #' @export
-undoCenterScale <- function(data) {
+undo_center_scale <- function(data) {
   # do some checking
-  # $par_tbl element added in `centerScaleData()`; required below
+  # $par_tbl element added in `center_scale()`; required below
   stopifnot(is.centerScaled(data))
   apts    <- getAnalytes(data)
   par_tbl <- attr(data, "par_tbl") |> rearrange("AptName", apts)  # sync order

@@ -1,4 +1,4 @@
-#' k-Fold Partitioning
+#' Create k-Fold Partitioning
 #'
 #' Adaptation of the `rsample::vfold_cv()` function and its utilities. Modified
 #'   to remove testing and class structures not required for local usage and to
@@ -40,13 +40,13 @@
 #'   structure: `[0, 0.25]`, `(0.25, 0.75]`, and `(0.75, 1.0]`.
 #'    **Note:** the lowest boundary is always taken as inclusive.
 #'
-#' @param data An object of class `data.frame` or `soma_adat`. The data to be subset.
-#' @param k Integer. The number of partitions of the data set.
-#' @param repeats Integer. The number of times to repeat the k-fold partitioning.
-#' @param breaks Named list or `NULL`. If `NULL`, no stratification is performed.
-#'    If a named list, must be of length 1 or 2, where the name of the *ith* element
+#' @param data A `data.frame` class object. The data to be subset.
+#' @param k `integer(1)`. The number of partitions of the data set.
+#' @param repeats `integer(1)`The number of times to repeat the k-fold partitioning.
+#' @param breaks A *named* list or `NULL`. If `NULL`, no stratification is performed.
+#'    If a named list, must be of length 1 or 2, where the name of the *i^th* element
 #'    indicates the column header of `data` containing the *ith* stratification
-#'    variable and the value of the *ith* element specifies the stratification
+#'    variable and the value of the *i^th* element specifies the stratification
 #'    structure for that variable. See Details for further information.
 #' @param ... Variables to be passed to stratification step. Currently limited
 #'   to `depth`. The number of stratification bins are based on
@@ -78,7 +78,7 @@
 create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   stopifnot(
-    "`data` must be an object of class `data.frame` or `soma_adat`." =
+    "`data` must be an object of class `data.frame`." =
       !missing(data) && is.data.frame(data),
     "`k` must be a positive integer." = is.Integer(k) && is.vector(k) &&
       len_one(k) && k > 0.0,
@@ -93,8 +93,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   # user can currently only pass `depth` through ...
   # potentially expand this to allow for n.unique
   # both are used by the stratification step
-  args  <- list(...)
-  depth <- args$depth %||% 20L
+  args    <- list(...)
+  depth   <- args$depth %||% 20L
   repeats <- as.integer(round(repeats, 0L))
 
   splits <- replicate(repeats,
@@ -125,7 +125,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   and post-processes the stratification result into a tibble.
 #'
 #' @noRd
-#' @param data An object of class `data.frame` or `soma_adat`. The data to be subset.
+#' @param data A `data.frame` class object. The data to be subset.
 #' @param k Integer. The number of partitions of the data set.
 #' @param breaks `NULL` or a list of length 1 or 2. See
 #'   description section of `create_kfolds()` for further details.
@@ -145,7 +145,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   # local testing of only those variables used in this function
   # we do not test those that are merely passed to other functions
   stopifnot(
-    "`data` must be an object of class `data.frame` or `soma_adat`." =
+    "`data` must be an object of class `data.frame`." =
       !missing(data) && is.data.frame(data),
     "`k` must be a positive integer." = is.Integer(k) &&
       is.vector(k) && len_one(k) && k > 0.0,
@@ -160,7 +160,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   if ( !is.null(strata) ) {
     # .getStrataIndices expects strata to be a data.frame of values
-    # as.data.frame removes possible soma_adat class
+    # as.data.frame removes possible added classes to base data.frame class
     strata <- tryCatch(as.data.frame(data[, strata, drop = FALSE]),
                        error = function(e) {
                          stop("Unable to retrieve stratification variable(s) ",
@@ -436,7 +436,7 @@ is.x_split <- function(x) {
 #' @param i An integer or `NULL`. If an integer, the split for which the
 #'   analysis or assessment data is to be retrieved.
 #' @return [analysis()]: A list ... each element containing an object of
-#'   class `data.frame` or `soma_adat`.
+#'   class `data.frame`.
 #' @examples
 #' # retrieve analysis data for 2nd split
 #' an_2 <- analysis(sample_no_strat, 2L)
@@ -469,7 +469,7 @@ analysis <- function(object, i = NULL) {
 #'
 #' @rdname create_kfold
 #' @return [assessment()]: A list ... each element containing an object of
-#'   class `data.frame` or `soma_adat`.
+#'   class `data.frame`.
 #' @examples
 #' # retrieve assessment data for 2nd split
 #' ass_2 <- assessment(sample_no_strat, 2L)

@@ -12,7 +12,7 @@ bind_union(...)
 }
 \arguments{
 \item{...}{Data frames to combine. Can also be a \emph{list} of data frames
-to combine, typically \code{soma_adat} objects.}
+to combine.}
 }
 \value{
 A single data frame with the total number of rows =

@@ -21,13 +21,13 @@ rec <-  recipes::recipe(~ ., data = dplyr::select(train,  -sample_id)) |>
 
 soma_rec <- splyr::somaRecipe(train)
 
-test_that("getRecipeParams returns sds when `param = 'scale'`", {
+test_that("`get_recipe_params()` returns sds when `param = 'scale'`", {
   sds_manual <- apply(as.matrix(train[apts]), 2, function(col) {
     sd(log10(col))
   })
 
-  expect_silent(sds_rec <- getRecipeParams(rec, "scale"))
-  expect_silent(sds_soma <- getRecipeParams(soma_rec, "scale"))
+  expect_silent(sds_rec <- get_recipe_params(rec, "scale"))
+  expect_silent(sds_soma <- get_recipe_params(soma_rec, "scale"))
 
   expect_named(sds_rec, apts)
   expect_vector(sds_rec, ptype = numeric(), size = length(apts))
@@ -37,13 +37,13 @@ test_that("getRecipeParams returns sds when `param = 'scale'`", {
 
 
 
-test_that("getRecipeParams returns means when `param = 'center'`", {
+test_that("`get_recipe_params()` returns means when `param = 'center'`", {
   means_manual <- apply(as.matrix(train[apts]), 2, function(col) {
     mean(log10(col))
   })
 
-  expect_silent(means_rec <- getRecipeParams(rec, "center"))
-  expect_silent(means_soma <- getRecipeParams(soma_rec, "center"))
+  expect_silent(means_rec <- get_recipe_params(rec, "center"))
+  expect_silent(means_soma <- get_recipe_params(soma_rec, "center"))
 
   expect_named(means_rec, apts)
   expect_vector(means_rec, ptype = numeric(), size = length(apts))
@@ -53,20 +53,20 @@ test_that("getRecipeParams returns means when `param = 'center'`", {
 
 })
 
-test_that("getRecipeParams gives errors/warnings/info based on input", {
+test_that("`get_recipe_params()` gives errors/warnings/info based on input", {
   expect_error(
-    getRecipeParams(rec, "mean"),
+    get_recipe_params(rec, "mean"),
     "Method not implemented for param 'mean'")
 
   rec_nostep <- recipes::recipe(~ ., data = dplyr::select(train, -sample_id)) |>
     recipes::step_log(recipes::all_predictors(), base = 10)
 
   expect_warning(
-    out <- getRecipeParams(rec_nostep, "center"),
+    out <- get_recipe_params(rec_nostep, "center"),
     "'recipe' has no 'center' step"
   )
   expect_null(out)
 
-  expect_error(getRecipeParams(rec), 'argument "param" is missing')
-  expect_error(getRecipeParams(train, "center"), "Couldn't find a S3 method")
+  expect_error(get_recipe_params(rec), 'argument "param" is missing')
+  expect_error(get_recipe_params(train, "center"), "Couldn't find a S3 method")
 })

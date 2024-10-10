@@ -6,8 +6,8 @@ dom_example <- list(A = c(5785.1, 5005.6, 5686.3, 5990.8,
                     C = c(5409.4, 5353.6, 5398.0, 5631.2,
                           5646.1, 5073.4, 5879.2, 5617.5))
 
-test_that("CVdecomp returns the correct values for the Dom set example", {
-  cv <- calcCVdecomp(dom_example)
+test_that("`calcCV()` returns the correct values for the Dom set example", {
+  cv <- calcCV(dom_example)
   expect_type(cv, "double")
   expect_equal(cv, c(Intra = 0.050656603606919,
                      Inter = 0.00576366233711441,

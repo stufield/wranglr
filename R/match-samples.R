@@ -16,10 +16,10 @@
 #' train <- withr::with_seed(1, dplyr::sample_n(df, 15))
 #' new   <- withr::with_seed(2, dplyr::sample_n(df, 15))
 #' intersect(train$SampleId, new$SampleId)    # there are some overlapping
-#' dfs   <- matchSamples(train, new)
+#' dfs   <- match_samples(train, new)
 #' @importFrom globalr value
 #' @export
-matchSamples <- function(x, y, idcol = "SampleId") {
+match_samples <- function(x, y, idcol = "SampleId") {
   xname <- deparse(substitute(x))
   yname <- deparse(substitute(y))
 

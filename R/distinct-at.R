@@ -21,9 +21,8 @@
 #'
 #' # or with dplyr helper verbs ...
 #' distinctAt(df, ends_with("ie"))
-#' @importFrom SomaDataIO rm_rn
 #' @export
-distinctAt <- function(x, ...) {
+distinct_at <- function(x, ...) {
   sel <- dplyr::select(x, ...)
   rm_rn(x[!duplicated(sel), ])
 }

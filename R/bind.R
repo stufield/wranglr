@@ -14,7 +14,7 @@
 #'
 #' @name bind
 #' @param ... Data frames to combine. Can also be a _list_ of data frames
-#'   to combine, typically `soma_adat` objects.
+#'   to combine.
 #' @return A single data frame with the total number of rows =
 #'   `sum(sapply(..., nrow))`.
 #' @note For [bind_intersect()], columns are combined on their _intersect_ only.

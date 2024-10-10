@@ -7,12 +7,12 @@ data <- withr::with_seed(101,
     seq.2929.5 = rnorm(10, mean = 2000, sd = 25),
     row.names  = LETTERS[1:10]
   )) |> dress_adat()
-cs   <- centerScaleData(data)
+cs   <- center_scale(data)
 apts <- getAnalytes(data)
 
 
 # Testing -----
-test_that("`centerScaleData()` unit test", {
+test_that("`center_scale()` unit test", {
   expect_s3_class(cs, "soma_adat")
   expect_equal(dim(cs), dim(data))
   expect_equal(names(cs), names(data))
@@ -57,7 +57,7 @@ test_that("`centerScaleData()` unit test", {
 })
 
 
-test_that("`centerScaleData()` generates correct values when passing ref.data", {
+test_that("`center_scale()` generates correct values when passing ref.data", {
   set.seed(1)
   idx   <- sample(seq_len(nrow(data)), 5)
   train <- data[ idx, ]
@@ -65,7 +65,7 @@ test_that("`centerScaleData()` generates correct values when passing ref.data", 
   tbl <- tibble::tibble(AptName = getAnalytes(train),
                         means   = unname(colMeans(strip_meta(train))),
                         sds     = unname(apply(strip_meta(train), 2, sd)))
-  new  <- centerScaleData(test, tbl)
+  new  <- center_scale(test, tbl)
   true <- data.frame(
     row.names = c("C", "E", "F", "H", "J"),
     sample_id = c("c", "e", "f", "h", "j"),
@@ -92,54 +92,54 @@ test_that("`centerScaleData()` generates correct values when passing ref.data", 
 
   # processing via `ref.data =` produces same result
   expect_warning(
-    new2 <- centerScaleData(test, ref.data = train),
-    "The `ref.data` argument of `centerScaleData()` is deprecated as of",
+    new2 <- center_scale(test, ref.data = train),
+    "The `ref.data` argument of `center_scale()` is deprecated as of",
     fixed = TRUE
   )
   expect_equal(new, new2)
 
-  # check that `undoCenterScale()` reverses the center/scaling; back to `test`
-  undo <- undoCenterScale(new)
+  # check that `undo_center_scale()` reverses the center/scaling; back to `test`
+  undo <- undo_center_scale(new)
   expect_s3_class(undo, "soma_adat")
   expect_equal(undo, test)
 
   # test that `scaled` element removed; cannot double-undo
   expect_error(
-    undoCenterScale(undo),
+    undo_center_scale(undo),
     "is.centerScaled(data) is not TRUE", fixed = TRUE
   )
 })
 
-test_that("`centerScaleData()` generates correct values for non-soma_adat objects", {
+test_that("`center_scale()` generates correct values for non-soma_adat objects", {
   # data.frame
-  x <- centerScaleData(data.frame(data))
+  x <- center_scale(data.frame(data))
   expect_s3_class(x, "data.frame")
   expect_equal(attributes(x)$scaled, attributes(cs)$scaled)
   expect_equal(x, data.frame(cs), ignore_attr = TRUE)
   # tibble
-  x <- centerScaleData(tibble::as_tibble(data))
+  x <- center_scale(tibble::as_tibble(data))
   expect_s3_class(x, "tbl_df")
   expect_equal(attributes(x)$scaled, attributes(cs)$scaled)
   expect_equal(x, data.frame(cs), ignore_attr = TRUE)
   # matrix
-  y <- centerScaleData(as.matrix(data[, apts]))   # must pre-select numeric cols
+  y <- center_scale(as.matrix(data[, apts]))   # must pre-select numeric cols
   expect_true(is.matrix(y))                       # for S3 matrix method
   expect_equal(y, as.matrix(cs[, apts]), ignore_attr = TRUE)
   # default
   expect_error(
-    centerScaleData(1:10L),
+    center_scale(1:10L),
     "No S3 method could be found for object of class: 'integer'"
   )
   expect_error(
-    centerScaleData(1.5),
+    center_scale(1.5),
     "No S3 method could be found for object of class: 'numeric'"
   )
   expect_error(
-    centerScaleData(letters),
+    center_scale(letters),
     "No S3 method could be found for object of class: 'character'"
   )
   expect_error(
-    centerScaleData(data, center = FALSE, scale = FALSE),
+    center_scale(data, center = FALSE, scale = FALSE),
     "At least 1 of 'center' or 'scale' must be `TRUE`."
   )
 })

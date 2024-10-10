@@ -37,7 +37,7 @@ test_that("the controller script generates the correct recipe object", {
   expect_true(rcp$scale_lgl)
   expect_equal(rcp$n, n)
   expect_equal(rcp$p, 2L)
-  expect_true(.check_par_tbl(rcp$par_tbl))    # check from 'centerScaleData.R'
+  expect_true(.check_par_tbl(rcp$par_tbl))    # check from `center-scale.R`
   expect_equal(rcp$par_tbl$AptName, apts)
 })
 
@@ -69,7 +69,7 @@ test_that("bake double-logging trips error", {
   )
 })
 
-test_that("SomaScan recipe-bake workflow is same as centerScaleData()", {
+test_that("SomaScan recipe-bake workflow is same as center_scale()", {
   x   <- log10(train)
   tbl <- tibble::tibble(
     AptName = getAnalytes(x),
@@ -78,7 +78,7 @@ test_that("SomaScan recipe-bake workflow is same as centerScaleData()", {
   )
   bkd <- somaBake(rcp, test)
   attr(bkd, "baked") <- NULL    # 'baked' attribute differs; rm to compare
-  expect_equal(bkd, centerScaleData(log10(test), tbl))
+  expect_equal(bkd, center_scale(log10(test), tbl))
 })
 
 # Testing convert ----
