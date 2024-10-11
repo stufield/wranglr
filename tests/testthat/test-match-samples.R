@@ -62,13 +62,14 @@ test_that("`match_samples()` throws errors/warnings as appropriate", {
                fixed = TRUE)
 
   # idcol does not exist in dfs
-  expect_warning( # expect both error and warning
-    expect_error(
-      match_samples(train, new, idcol = "sample_id"),
-      "`train` and `new` have no samples in common with idcol"
-    ),
-    "Unknown or uninitialised column: 'sample_id'"
-  )
+  expect_error(
+    match_samples(train, new, idcol = "sample_id"),
+    "`train` and `new` have no samples in common with idcol 'sample_id'"
+  ) |>
+   expect_warning(
+     "Unknown or uninitialised column: 'sample_id'",
+     regexp = NA
+   )
 
   # duplicated sample IDs
   expect_error(match_samples(bind_rows(train, train), new),

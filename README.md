@@ -279,7 +279,7 @@ levels(bar$a)   # 1 level now
 <!-- end list -->
 
 ``` r
-seqs <- withr::with_seed(101, sample(SomaDataIO::getAnalytes(sample.adat), 10L))
+seqs <- withr::with_seed(101, sample(glpbalr:::getAnalytes(sample.adat), 10L))
 seqs
 #>  [1] "seq.4545.53" "seq.2682.68" "seq.5004.69" "seq.3115.64" "seq.4801.13"
 #>  [6] "seq.3554.24" "seq.3204.2"  "seq.3209.69" "seq.3469.74" "seq.4792.51"
@@ -318,7 +318,7 @@ seqify(seqs)
 
 # Pass `apt.data` from appropriate ADAT
 # to reconstitute those missing analytes
-ad <- SomaDataIO::getAnalyteInfo(sample.adat)
+ad <- globalr:::getAnalyteInfo(sample.adat)
 seqLookup(seqs, ad)
 #> # A tibble: 10 × 8
 #>    seq       SeqId EntrezGeneSymbol Target TargetFullName Type  Dilution UniProt

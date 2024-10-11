@@ -54,13 +54,13 @@ test_that("catches trips are error/warn when triggered", {
 
 test_that("trips warnings when RFU space may be incorrect", {
   # all 3 warnings
-  .check_rfu_space(sample.adat) |>
+  .check_rfu_space(data.frame(a = c(500, 501), b = c(1000, 2000))) |>
     expect_warning("log-transformed!") |>
     expect_warning("centered!") |>
     expect_warning("scaled!")
 
   # not centered; not scaled
-  .check_rfu_space(log10(sample.adat)) |>
+  .check_rfu_space(data.frame(a = c(4.5, 4.7), b = c(2.1, 2.9))) |>
     expect_warning("centered!") |>
     expect_warning("scaled!")
 

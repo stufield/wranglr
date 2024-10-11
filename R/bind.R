@@ -71,7 +71,6 @@ bind_union <- function(...) {
 }
 
 #' @noRd
-#' @importFrom SomaDataIO getMeta
 #' @param x A list of data frames.
 .bind_and_clean <- function(x) {
   out <- bind_rows(x, .id = "data") |> col2rn()

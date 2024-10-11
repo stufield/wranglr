@@ -4,7 +4,7 @@
 \name{splyr-package}
 \alias{splyr}
 \alias{splyr-package}
-\title{splyr: Manipulate and Wrangle SomaScan Data}
+\title{splyr: Manipulate and Wrangle Data}
 \description{
 The splyr package contains the general functions necessary to manipulate internal R representations of `*.adat` files and wrangle those data into convenient form for analysis.
 }

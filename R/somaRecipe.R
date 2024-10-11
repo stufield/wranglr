@@ -35,7 +35,6 @@
 #'                    time = function(x) sqrt(x + pi))
 #'
 #' @importFrom globalr add_class
-#' @importFrom SomaDataIO getAnalytes
 #' @export
 somaRecipe <- function(data, log10 = TRUE, center = TRUE, scale = TRUE,
                        bridge_ref = NULL, ...) {
@@ -55,7 +54,7 @@ somaRecipe <- function(data, log10 = TRUE, center = TRUE, scale = TRUE,
       center_lgl = center,
        scale_lgl = scale,
                n = nrow(data),
-               p = getAnalytes(data, n = TRUE),
+               p = length(getAnalytes(data)),
          par_tbl = .genParTbl(data),
         dot_vars = names(dots)
   ) |>
@@ -285,11 +284,4 @@ update.soma_recipe <- function(object, ...) {
 get_recipe_params.soma_recipe <- function(recipe, param = "scale") {
   param_name <- ifelse(param == "scale", "sds", "means")
   deframe(recipe$par_tbl[, c("AptName", param_name)])
-}
-
-#' @noRd
-#' @export
-getAnalytes.soma_recipe <- function(x, n = FALSE, rm.controls = FALSE) {
-  vec <- x$par_tbl$AptName
-  getAnalytes(vec, n = n, rm.controls = rm.controls)
 }

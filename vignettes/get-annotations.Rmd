@@ -112,7 +112,7 @@ to select RFU columns by name from an adat, you need to convert
 This can be achieved via `seqid2apt()`:
 
 ```{r AptNames}
-black_anon_apts <- SomaDataIO::seqid2apt(black_sids)
+black_anon_apts <- globalr:::seqid2apt(black_sids)
 head(black_anon_apts, 10L)
 ```
 
@@ -149,7 +149,7 @@ anno <- getAnnotations()    # anno is a tibble; so can use filter()
 bad_apts <- anno |> 
   dplyr::filter(List == "blacklist" | List == "graylist") |>  # filter rows
   dplyr::pull(SeqId) |>          # get SeqIds
-  SomaDataIO::matchSeqIds(SomaDataIO::getAnalytes(data), order.by.x = FALSE) # keep order of `data`
+  globalr:::matchSeqIds(globalr:::getAnalytes(data), order.by.x = FALSE) # keep order of `data`
 bad_apts
 
 data_nice <- dplyr::select(data, -any_of(bad_apts))

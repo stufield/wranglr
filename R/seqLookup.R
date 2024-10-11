@@ -25,18 +25,18 @@
 #'   table corresponding to the original `soma_adat` prior to
 #'   the menu change (see `Examples`). There are 2 ways to generate a
 #'   "time-capsuled" annotations table:
-#'      1. via [getAnalyteInfo()]
+#'      1. via `getAnalyteInfo()`
 #'      1. via `attr(adat, "Col.Meta")`
 #'
 #' @family Annotations
 #' @param x,seq Character. A vector of `SeqIds`, `AptNames`, or `Aptamers`, all
 #'   containing `SeqId`s.
 #' @param tbl A tibble containing analyte (annotation) data.
-#'   Typically generated via calls to [getAnalyteInfo()].
+#'   Typically generated via calls to `getAnalyteInfo()`.
 #' @return For [seqLookup()], a tibble, a subset of `tbl`,
 #'   corresponding to the rows whose `SeqIds` match the values in `seq`.
 #' @author Stu Field
-#' @seealso  [getAnnotations()], [getAnalyteInfo()], [left_join()]
+#' @seealso  [getAnnotations()], [left_join()]
 #' @examples
 #' svec <- c("seq.2981.9", "seq.5073.30", "seq.4834.61", "seq.5006.71",
 #'           "seq.3213.65", "seq.3352.80", "seq.4429.51", "seq.2447.7")
@@ -50,7 +50,6 @@
 #' seqLookup(svec, tbl)
 #'
 #' @importFrom tibble tibble
-#' @importFrom SomaDataIO getSeqId
 #' @export
 seqLookup <- function(seq, tbl = NULL) {
   if ( !is.null(tbl) ) {
@@ -77,12 +76,11 @@ seqLookup <- function(seq, tbl = NULL) {
 #' seqify(svec)
 #'
 #' # also works with naked-SeqIds
-#' seqify(SomaDataIO::getSeqId(svec))
+#' seqify(globalr:::getSeqId(svec))
 #' @importFrom globalr add_class
-#' @importFrom SomaDataIO is.apt
 #' @export
 seqify <- function(x) {
-  stopifnot("All values of `x` must be SeqIds." = all(is.apt(x)))
+  stopifnot("All values of `x` must be SeqIds." = all(globalr:::is.apt(x)))
   add_class(x, "seqId")
 }
 

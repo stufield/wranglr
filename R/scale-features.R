@@ -12,7 +12,6 @@
 #' new  <- scale_features(mtcars, ref)
 #' new
 #' @importFrom tibble enframe deframe
-#' @importFrom SomaDataIO getAnalytes getSeqIdMatches getSeqId is.soma_adat
 #' @export
 scale_features <- function(.data, scale_vec) {
 
@@ -20,28 +19,22 @@ scale_features <- function(.data, scale_vec) {
     paste0("\033[90m", encodeString(x, quote = "`"), "\033[39m")
   }
 
-  oc <- class(.data)
-
   stopifnot(
     "`scale_vec` must be a named numeric vector." =
       !is.null(scale_vec) && is.numeric(scale_vec),
     "`.data` must be a `data.frame`." = is.data.frame(.data)
   )
 
-  stbl <- enframe(scale_vec, "feature")
-
-  if ( is.soma_adat(.data) ) {
-    feats <- getAnalytes(.data)
-    matches <- getSeqIdMatches(feats, stbl$feature) |> # order matters; apts 1st
-      setNames(c("data_name", "vec_name"))
-  } else {
-    feats   <- names(.data)
-    common  <- intersect(feats, stbl$feature)
-    matches <- data.frame(data_name = common,
-                          vec_name  = intersect(common, stbl$feature))
-    .data <- add_class(.data, "scale_df")
+  stbl    <- enframe(scale_vec, "feature")
+  feats   <- names(vapply(.data, is.numeric, NA))
+  common  <- intersect(feats, stbl$feature)
+  matches <- data.frame(df_name  = common,
+                        vec_name = intersect(common, stbl$feature))
+  if ( nrow(matches) == 0L ) {
+    warning("No matches in `scale_vec` ... returning original data", call. = FALSE)
+    return(.data)
   }
-  missing <- setdiff(feats, matches$data_name)
+  missing <- setdiff(feats, matches$df_name)
   extra   <- setdiff(stbl$feature, matches$vec_name)
 
   if ( length(missing) > 0L ) {
@@ -67,9 +60,11 @@ scale_features <- function(.data, scale_vec) {
   svec <- svec[matches$vec_name]  # order reference to data
 
   # apply svec scalars by column
-  new <- transform(.data[, matches$data_name, drop = FALSE], unname(svec))
-  .data[, matches$data_name] <- data.frame(new, row.names = NULL)
-  structure(.data, class = oc)
+  new <- .data[, matches$df_name, drop = FALSE] |>
+    add_class("scale_df") |>
+    transform(unname(svec))
+  .data[, matches$df_name] <- data.frame(new, row.names = NULL)
+  .data
 }
 
 

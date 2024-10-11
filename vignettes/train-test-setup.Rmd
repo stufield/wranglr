@@ -42,7 +42,7 @@ In most analyses, you typically start with a raw original data set that
 you want to split randomly into training and test sets.
 
 ```{r raw-data}
-raw <- SomaDataIO::rn2col(head(mtcars, 10L), "CarModel") |>
+raw <- globalr::rn2col(head(mtcars, 10L), "CarModel") |>
   dplyr::mutate(id = dplyr::row_number()) |> # set up identifier variable for the join
   tibble::as_tibble()
 raw

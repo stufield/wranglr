@@ -7,15 +7,19 @@
 #' @return A `data.matrix` object containing only the
 #'   data matrix of RFU values for the features.
 #' @author Stu Field
-#' @seealso [data.matrix()], [getAnalytes()]
+#' @seealso [data.matrix()]
 #' @examples
 #' dim(sim_test_data)
 #' class(sim_test_data)
 #'
 #' strip_meta(sim_test_data) |> dim()
 #' strip_meta(sim_test_data) |> class()
-#' @importFrom SomaDataIO getAnalytes
 #' @export
 strip_meta <- function(data) {
-  data.matrix(data[, getAnalytes(data)])
+  if ( inherits(data, "soma_adat") ) {
+    data.matrix(data[, getAnalytes(data)])
+  } else {
+    idx <- vapply(data, is.numeric, NA)
+    data.matrix(data[, idx])
+  }
 }

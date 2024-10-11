@@ -30,7 +30,6 @@
 #' @importFrom stats mad median setNames
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr nest unnest pivot_wider
-#' @importFrom SomaDataIO getAnalytes
 #' @export
 createSummaryTable <- function(adat, group.var, .funs = c("min",
                                                           "median",

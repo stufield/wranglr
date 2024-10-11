@@ -74,7 +74,7 @@ cs <- function(.x) {    # .x = numeric vector
 
 new <- log10(sim_test_data) |>
   purrr::modify_at(
-    SomaDataIO::getAnalytes(sim_test_data), # just features
+    globalr:::getAnalytes(sim_test_data),   # just features
     cs)                                     # center/scale
 
 # check means of feature data
@@ -99,7 +99,7 @@ rcp <- recipe(sim_test_data) |>
 
 rcp_data <- bake(rcp, sim_test_data)    # bake its own recipe
 
-SomaDataIO::diffAdats(new, rcp_data)
+globalr:::diffAdats(new, rcp_data)
 ```
 
 The two objects are *NOT* the same ... significant modifications have occurred
@@ -245,7 +245,7 @@ processed <- log10(test) |> center_scale(pars)
 # yields same as "recipes" style workflow; but without the "baked" attribute
 # first remove "baked" then compare
 attr(soma_data, "baked") <- NULL
-SomaDataIO::diffAdats(processed, soma_data)
+globalr:::diffAdats(processed, soma_data)
 ```
 
 
@@ -255,7 +255,7 @@ You can simply undo any center/scaling that has occurred via `undoCenterScale()`
 
 ```{r undo, error = TRUE}
 old <- undoCenterScale(processed)
-SomaDataIO::diffAdats(old, log10(test))
+globalr:::diffAdats(old, log10(test))
 
 # Safe-guards are in place so that you cannot double-undo:
 # `par_tbl` entry is removed from attributes

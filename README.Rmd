@@ -201,7 +201,7 @@ levels(bar$a)   # 1 level now
 * `seqify()`
 * `lookupAnnotations()`
 ```{r seqLookup}
-seqs <- withr::with_seed(101, sample(SomaDataIO::getAnalytes(sample.adat), 10L))
+seqs <- withr::with_seed(101, sample(globalr:::getAnalytes(sample.adat), 10L))
 seqs
 
 # NAs for those analytes dropped from menu
@@ -211,7 +211,7 @@ seqify(seqs)
 
 # Pass `apt.data` from appropriate ADAT
 # to reconstitute those missing analytes
-ad <- SomaDataIO::getAnalyteInfo(sample.adat)
+ad <- globalr:::getAnalyteInfo(sample.adat)
 seqLookup(seqs, ad)
 
 # OR: on the fly

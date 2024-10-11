@@ -32,7 +32,6 @@ getAnnotations <- function(api = FALSE, path = "annotations_graph/api") {
 #' live dynamic annotations from the Graph DB API.
 #' @importFrom purrr transpose
 #' @importFrom tidyr unnest
-#' @importFrom SomaDataIO seqid2apt
 #' @export
 getAnnotationsAPI <- function(path = "annotations_graph/api") {
   url  <- httr::modify_url("https://umbrella.somalogic.io", path = path)

@@ -7,10 +7,10 @@
 refactor_data(data)
 }
 \arguments{
-\item{data}{A \code{soma_adat} object containing RFU and meta data.}
+\item{data}{A \code{data.frame} object containing feature and clinical data.}
 }
 \value{
-A \code{soma_adat} object, identical as the
+A \code{data.frame} object, identical as the
 original except the factor levels in factor class columns
 have been refactored to remove "ghost levels".
 }
@@ -32,7 +32,7 @@ new2$Sex
 levels(new2$Sex)
 }
 \seealso{
-\code{\link[=getMeta]{getMeta()}}, \code{\link[=factor]{factor()}}, \code{\link[=droplevels]{droplevels()}}
+\code{\link[=factor]{factor()}}, \code{\link[=droplevels]{droplevels()}}
 }
 \author{
 Stu Field

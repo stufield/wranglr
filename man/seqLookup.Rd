@@ -11,7 +11,7 @@ seqify(x)
 }
 \arguments{
 \item{tbl}{A tibble containing analyte (annotation) data.
-Typically generated via calls to \code{\link[=getAnalyteInfo]{getAnalyteInfo()}}.}
+Typically generated via calls to \code{getAnalyteInfo()}.}
 
 \item{x, seq}{Character. A vector of \code{SeqIds}, \code{AptNames}, or \code{Aptamers}, all
 containing \code{SeqId}s.}
@@ -49,7 +49,7 @@ analytes can be retrieved by explicitly passing an annotations
 table corresponding to the original \code{soma_adat} prior to
 the menu change (see \code{Examples}). There are 2 ways to generate a
 "time-capsuled" annotations table:
-1. via \code{\link[=getAnalyteInfo]{getAnalyteInfo()}}
+1. via \code{getAnalyteInfo()}
 1. via \code{attr(adat, "Col.Meta")}
 }
 \examples{
@@ -71,10 +71,10 @@ class(seqify(svec))
 seqify(svec)
 
 # also works with naked-SeqIds
-seqify(SomaDataIO::getSeqId(svec))
+seqify(globalr:::getSeqId(svec))
 }
 \seealso{
-\code{\link[=getAnnotations]{getAnnotations()}}, \code{\link[=getAnalyteInfo]{getAnalyteInfo()}}, \code{\link[=left_join]{left_join()}}
+\code{\link[=getAnnotations]{getAnnotations()}}, \code{\link[=left_join]{left_join()}}
 
 Other Annotations: 
 \code{\link{getAnnotations}()},

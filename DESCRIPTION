@@ -1,6 +1,6 @@
 Type: Package
 Package: splyr
-Title: Manipulate and Wrangle SomaScan Data
+Title: Manipulate and Wrangle Data
 Version: 0.0.1
 Authors@R: c(
     person(given = "Stu",
@@ -19,7 +19,6 @@ Depends:
 Imports:
     lifecycle,
     purrr,
-    SomaDataIO,
     globalr,
     tibble,
     tidyr

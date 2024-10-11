@@ -2,10 +2,10 @@
 # Setup -------
 data <- withr::with_seed(101,
   data.frame(
-    sample_id  = letters[1:10],
+    sample_id  = letters[1:10L],
     seq.1212.1 = rnorm(10, mean = 1000, sd = 25),
     seq.2929.5 = rnorm(10, mean = 2000, sd = 25),
-    row.names  = LETTERS[1:10]
+    row.names  = LETTERS[1:10L]
   )) |> dress_adat()
 cs   <- center_scale(data)
 apts <- getAnalytes(data)
@@ -18,7 +18,7 @@ test_that("`center_scale()` unit test", {
   expect_equal(names(cs), names(data))
   expect_equal(getAnalytes(cs), apts)
   expect_equal(sum(apply(cs[, apts], 2, mean)), 0)
-  expect_equal(sum(apply(cs[, apts], 2, sd)), getAnalytes(data, n = TRUE))
+  expect_equal(sum(apply(cs[, apts], 2, sd)), length(getAnalytes(data)))
   true <- data.frame(
     row.names = c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J"),
     sample_id = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
@@ -35,8 +35,8 @@ test_that("`center_scale()` unit test", {
 
   # attributes are correctly attached
   atts <- attributes(cs)
-  expect_named(atts, c("names", "class", "row.names", "Header.Meta",
-                       "Col.Meta", "file_specs", "row_meta",
+  expect_named(atts, c("names", "row.names", "Header.Meta",
+                       "Col.Meta", "file_specs", "row_meta", "class",
                        "par_tbl", "center_lgl", "scale_lgl"))
   expect_s3_class(atts$par_tbl, "tbl_df")
   expect_true(.check_par_tbl(atts$par_tbl))

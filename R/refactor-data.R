@@ -4,12 +4,12 @@
 #' removing the "ghost" levels that remain after
 #' subsetting a factored column in a data frame.
 #'
-#' @param data A `soma_adat` object containing RFU and meta data.
-#' @return A `soma_adat` object, identical as the
+#' @param data A `data.frame` object containing feature and clinical data.
+#' @return A `data.frame` object, identical as the
 #'   original except the factor levels in factor class columns
 #'   have been refactored to remove "ghost levels".
 #' @author Stu Field
-#' @seealso [getMeta()], [factor()], [droplevels()]
+#' @seealso [factor()], [droplevels()]
 #' @examples
 #' sim_test_data$Sex <- factor(sim_test_data$gender)
 #' sim_test_data$Sex

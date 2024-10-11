@@ -37,7 +37,7 @@
 #'
 #' # However, it is preferred to pass `par_tbl` over `ref.data`
 #' #   by creating a `par_tbl` object based on `train`
-#' par <- tibble::tibble(AptName = SomaDataIO::getAnalytes(train),
+#' par <- tibble::tibble(AptName = globalr:::getAnalytes(train),
 #'                       means   = colMeans(strip_meta(train)),
 #'                       sds     = apply(strip_meta(train), 2, sd))
 #' new2 <- center_scale(test, par_tbl = par)
@@ -58,7 +58,6 @@ center_scale.default <- function(data, par_tbl = NULL, center = TRUE,
 #' @noRd
 #' @importFrom lifecycle is_present deprecated deprecate_warn
 #' @importFrom purrr pmap
-#' @importFrom SomaDataIO getAnalytes
 #' @export
 center_scale.soma_adat <- function(data, par_tbl = NULL, center = TRUE,
                                       scale = TRUE, ref.data = deprecated()) {
@@ -171,7 +170,6 @@ is_center_scaled <- function(data) {
 #'
 #' @importFrom stats sd
 #' @importFrom purrr pmap
-#' @importFrom SomaDataIO getAnalytes
 #' @export
 undo_center_scale <- function(data) {
   # do some checking

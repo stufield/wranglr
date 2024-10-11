@@ -72,7 +72,7 @@ new   <- center_scale(test, ref.data = train)
 
 # However, it is preferred to pass `par_tbl` over `ref.data`
 #   by creating a `par_tbl` object based on `train`
-par <- tibble::tibble(AptName = SomaDataIO::getAnalytes(train),
+par <- tibble::tibble(AptName = globalr:::getAnalytes(train),
                       means   = colMeans(strip_meta(train)),
                       sds     = apply(strip_meta(train), 2, sd))
 new2 <- center_scale(test, par_tbl = par)

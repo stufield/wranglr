@@ -79,8 +79,4 @@ test_that("`cast_numeric()` data frame method", {
   expect_equal(new$fact, tbl$fact)   # no change
   expect_equal(c(table(vapply(new, class, character(1)))),
                c(character = 1, factor = 1, integer = 1, numeric = 5))
-
-  # test on `getAnalyteInfo()`
-  ad <- SomaDataIO::getAnalyteInfo(sample.adat)
-  expect_equal(c(table(vapply(ad, class, ""))), c(character = 13, numeric = 3))
 })

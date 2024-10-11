@@ -50,8 +50,8 @@ rename(mtcars, !!! key) |> head()
 names(sim_test_data)
 
 # create map (named vector)
-key <- SomaDataIO::getAnalytes(sim_test_data)  
-names(key) <- SomaDataIO::getSeqId(key)   # re-name `seq.XXXX` -> SeqIds
+key <- globalr:::getAnalytes(sim_test_data)  
+names(key) <- globalr:::getSeqId(key)   # re-name `seq.XXXX` -> SeqIds
 key <- c(key, RID = "id")     # id -> RID
 key
 

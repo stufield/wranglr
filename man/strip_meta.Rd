@@ -25,7 +25,7 @@ strip_meta(sim_test_data) |> dim()
 strip_meta(sim_test_data) |> class()
 }
 \seealso{
-\code{\link[=data.matrix]{data.matrix()}}, \code{\link[=getAnalytes]{getAnalytes()}}
+\code{\link[=data.matrix]{data.matrix()}}
 }
 \author{
 Stu Field
