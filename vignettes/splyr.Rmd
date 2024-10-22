@@ -8,8 +8,8 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-library(splyr)
 library(globalr)
+library(splyr)
 sim_test_data <- splyr::sim_test_data
 sample.adat <- splyr:::sample.adat
 knitr::opts_chunk$set(
@@ -29,10 +29,11 @@ data into convenient form for analysis.
 
 ## Useful functions in `splyr`
 
-
 ### Transforming Data
+
 * `center_scale()`
 * `somaRecipe()`
+
 ```{r center-scale}
 scaled <- center_scale(sim_test_data)
 apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
@@ -46,6 +47,7 @@ rcp
 -----------
 
 ### Imputing Data
+
 * `remove_outliers()`
 * `impute_outliers()`
 * `imputeNAs()`
@@ -123,7 +125,7 @@ levels(bar$a)   # 1 level now
 * `seqify()`
 * `lookupAnnotations()`
 ```{r seqLookup}
-seqs <- withr::with_seed(101, sample(globalr:::getAnalytes(sample.adat), 10))
+seqs <- withr::with_seed(101, sample(names(sample.adat), 10))
 seqs
 
 # NAs for those analytes dropped from menu
@@ -133,9 +135,8 @@ seqify(seqs)
 
 # Pass `apt.data` from appropriate ADAT
 # to reconstitute those missing analytes
-ad <- globalr:::getAnalyteInfo(sample.adat)
-seqLookup(seqs, ad)
+seqLookup(seqs, splyr:::apt_data)
 
 # OR: on the fly
-seqLookup(seqs, attributes(sample.adat)$Col.Meta)
+seqLookup(seqs, attr(sample.adat, "Col.Meta"))
 ```

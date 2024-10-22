@@ -60,20 +60,16 @@ scale_features <- function(.data, scale_vec) {
   svec <- svec[matches$vec_name]  # order reference to data
 
   # apply svec scalars by column
-  new <- .data[, matches$df_name, drop = FALSE] |>
-    add_class("scale_df") |>
-    transform(unname(svec))
+  new <- .data[, matches$df_name, drop = FALSE] |> .transform(unname(svec))
   .data[, matches$df_name] <- data.frame(new, row.names = NULL)
   .data
 }
 
 
-# This is a shim for data.frame class
-# but without stepping on the existing one
-# Simply create a dummy class and a method for it
-transform.scale_df <- function(`_data`, v, dim = 2L, ...) {
+# do not use the generic transform()
+.transform <- function(.data, v, dim = 2L, ...) {
   stopifnot(dim %in% 1:2L)
-  x <- `_data`
+  x <- .data
   if ( dim == 2L ) {
     stopifnot(length(v) == ncol(x))
     t(t(x) * v)

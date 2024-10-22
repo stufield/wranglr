@@ -14,7 +14,6 @@ NULL
 
   # this is to register the internal S3 methods
   # this avoids having to export the methods in the NAMESPACE file
-  register_s3_method("splyr", "transform", "scale_df")
   invisible()
 }
 

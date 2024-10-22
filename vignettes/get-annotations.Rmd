@@ -11,7 +11,6 @@ vignette: >
 
 ```{r setup, include = FALSE}
 library(splyr)
-sample.adat <- splyr:::sample.adat
 knitr::opts_chunk$set(
   collapse = TRUE, 
   comment = "#>",
@@ -62,64 +61,13 @@ not the `seqId` associated with a gene symbol. That is, given a list of
 SeqIds (which are formatted number-number), return the `EntrezGeneSymbol`
 and `Target`.
 
-* `getSeqId()`:
-This generates `SeqIds` from aptamer names. The aptamer names can be 
-either the 'old version' - which is `EntrezGeneSymbol` concatenated
-with `SeqIds`, or the 'new version', called 'anonymous aptamer names'. 
-These are in the format `seq.XXXX.XX`. The resulting seq-IDs are in 
-the format `XXXX-XX`.
-
 
 
 ----------------------
 
 
-## Examples
-
-For the Applied Modeling group, the most common usage of `getAnnotations()`
-is to obtain the black and/or gray list and getting them into a format that 
-can be used to select columns of adats. Here are the steps to do that.
-
-### Get the "blacklist"
-
-Get all rows from the `umbrella_annotations` object with 
-`List == "black"` (this function is actually matching on _any_ of the 
-annotations columns, but the only one that should contain the 
-pattern `"black"` is the List column). You don't need to call 
-`getAnnotations()` before you call this function.:
-
-
-```{r blacklist}
-black <- lookupAnnotations("black")
-```
-
-Grab the `SeqIds` from this list:
-
-```{r getSeqIds-black}
-black_sids <- dplyr:::pull(black, "SeqId")
-head(black_sids, 10L)
-```
-
-Now you have a list of all of the `SeqIds` on the black list. 
-To use these names to select/deselect columns in an ADAT, you must convert
-to Anonymous-Aptamer names, `AptNames`, i.e. `seq.XXXX.XX` format.
-
-### Convert blacklist to "anonymous" AptNames
-Anonymous-Aptamer names are in the format `seq.XXXX.XX`. If you want 
-to select RFU columns by name from an adat, you need to convert
-`SeqIds` into this format. 
-
-This can be achieved via `seqid2apt()`:
-
-```{r AptNames}
-black_anon_apts <- globalr:::seqid2apt(black_sids)
-head(black_anon_apts, 10L)
-```
-
---------------
-
-
 ### `SeqIds` by regular expression
+
 If you want to look for other information about the aptamers, you can 
 search for particular patterns within any of the other columns as well.
 Say for some reason you know you want all the entries with 
@@ -135,23 +83,5 @@ Resulting in:
 seq999
 ```
 
-Note that the `999` can be anywhere in the name, not just at the beginning.
+**Note:** the `999` can be anywhere in the name, not just at the beginning.
 
-
-## Subsetting an ADAT by blacklist
-A sample workflow for subsetting a `soma_adat` object by black/gray lists:
-
-```{r subset-black}
-data <- sample.adat
-dim(data)
-
-anno <- getAnnotations()    # anno is a tibble; so can use filter()
-bad_apts <- anno |> 
-  dplyr::filter(List == "blacklist" | List == "graylist") |>  # filter rows
-  dplyr::pull(SeqId) |>          # get SeqIds
-  globalr:::matchSeqIds(globalr:::getAnalytes(data), order.by.x = FALSE) # keep order of `data`
-bad_apts
-
-data_nice <- dplyr::select(data, -any_of(bad_apts))
-dim(data_nice)
-```

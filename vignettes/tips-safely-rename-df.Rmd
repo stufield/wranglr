@@ -1,0 +1,80 @@
+---
+title: "Safely Rename Data Frames"
+author: "Stu Field"
+description: >
+  How to safely and reliably rename variable names of a
+  data frame in R.
+output:
+  rmarkdown::html_vignette:
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Safely Rename Data Frames}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(splyr)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+
+Renaming variables/features of a data frame (or `tibble`) 
+is a common task in data science. Doing so *safely* is often a struggle.
+This can be achieved *safely* via the `dplyr::rename()` function via 2
+steps:
+
+1. Set up the mapping in either a named vector
+1. Apply the `dplyr::rename()` function via `!!!` syntax
+1. Alternatively, roll-your-own `rename()` function
+
+* **Note**: all entries in the mapping (i.e. key) object *must* be
+  present as `names` in the data frame object.
+
+
+## Example with `mtcars`
+
+```{r rename-df}
+# Create map/key of the names to map
+key <- c(MPG = "mpg", CARB = "carb")   # named vector
+key
+
+# rename `mtcars`
+rename(mtcars, !!! key) |> head()
+```
+
+------------------
+
+
+## Alternative to `dplyr`
+If you prefer to avoid the `dplyr` import/dependency, you can achieve a
+similar result with similar syntax by writing your own renaming function:
+
+```{r rename2}
+rename2 <- function (.data, ...) {
+  map <- c(...)
+  loc <- setNames(match(map, names(.data), nomatch = 0L), names(map))
+  loc <- loc[loc > 0L]
+  newnames <- names(.data)
+  newnames[loc] <- names(loc)
+  setNames(.data, newnames)
+}
+```
+
+Now, with *similar* syntax (but cannot use `!!!`):
+
+```{r rename-usage}
+# rename `mtcars` in-line
+rename2(mtcars, MPG = "mpg", CARB = "carb") |>
+  head()
+
+# rename `mtcars` via named `key`
+rename2(mtcars, key) |>
+  head()
+```
+
