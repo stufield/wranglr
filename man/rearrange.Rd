@@ -28,7 +28,7 @@ rather than a variable contained in \code{tbl}.
 \details{
 This function is meant to act as a working solution to
 the lack of row names inherent to tibble objects, yet
-still plays nice with "tidyverse" syntax.
+still plays nice with \code{tidyverse} syntax.
 
 Values in \code{x} that are not in \code{tbl[[var]]}
 are silently dropped. Values in \code{tbl[[var]]} that are
@@ -39,16 +39,16 @@ creating extra rows in \code{tbl}, whereas duplicates
 in \code{var} are maintained.
 }
 \examples{
-df <- tibble::tibble(name = letters[1:4], x = 1:4, y = rnorm(4))
+df <- tibble::tibble(name = letters[1:4L], x = 1:4, y = rnorm(4))
 df
 
-rearrange(df, "name", c("c","b","d"))
+rearrange(df, "name", c("c", "b", "d"))
 
 rearrange(df, "name", "d")
 
-rearrange(df, "name", c("a","c","z"))  # "z" is dropped
+rearrange(df, "name", c("a", "c", "z"))  # "z" is ignored
 
-rearrange(df, "name", c("a","c","c"))  # duplicate "c" is dropped
+rearrange(df, "name", c("a", "c", "c"))  # duplicate "c" is dropped
 }
 \seealso{
 \code{\link[=match]{match()}}

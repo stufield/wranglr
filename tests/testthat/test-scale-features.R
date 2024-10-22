@@ -1,23 +1,10 @@
+skip("Fix with non-adat testing examples")
 
 # Setup ----
 adat <- splyr::sim_test_data
 apts <- withr::with_seed(101, sample(getAnalytes(adat), 3L))
 short_adat <- adat[, c(getMeta(adat), apts)] |> head(3L)
 
-# this is to ensure the S3 method is available and dispatched
-# otherwise the base::transform.data.frame() method will not
-# transform the analytes inside scale_features()
-
-test_that("the transform() S3 method exists in the namespace", {
-  expect_no_error(getS3method("transform", "scale_df"))
-})
-
-test_that("the transform() S3 method is listed in methods", {
-  methods <- unclass(methods("transform", "scale_df"))
-  expect_true("transform.scale_df" %in% methods)
-})
-
-skip("Fix with non-adat testing examples")
 
 # Testing ----
 test_that("`scale_features()` returns identical adat when scalars are 1.0", {

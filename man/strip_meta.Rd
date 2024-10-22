@@ -4,18 +4,20 @@
 \alias{strip_meta}
 \title{Strip Meta Data}
 \usage{
-strip_meta(data)
+strip_meta(data, feat = NULL)
 }
 \arguments{
-\item{data}{A \code{soma_adat} object containing RFU feature data.}
+\item{data}{A \code{data.frame} object containing feature data.}
+
+\item{feat}{A vector of column names corresponding to the features.}
 }
 \value{
 A \code{data.matrix} object containing only the
-data matrix of RFU values for the features.
+data matrix of values for the features.
 }
 \description{
-Strips the (clinical) meta data from a \code{soma_adat} object
-and returns a data matrix of only the RFU data.
+Strips the, non-feature (clinical), meta data from a \code{data.frame} object
+and returns a data matrix of only the feature data.
 }
 \examples{
 dim(sim_test_data)

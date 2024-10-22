@@ -4,98 +4,72 @@
 #' to a `soma_adat`, tibble, data frame, or matrix object, but if a
 #' matrix, should contain *only* numeric columns (e.g. RFU data).
 #'
-#' @param data A `soma_adat`, tibble, data frame, or matrix object with
-#'   named RFU data to center and/or scale.
+#' @param data A tibble, data frame, or matrix object with
+#'   named data variables to center and/or scale.
 #' @param par_tbl A tibble containing the mean and standard deviations
-#'   to use in processing the data. Must also contain an `AptName` column
+#'   to use in processing the data. Must also contain an `feature` column
 #'   to synchronize the features with their corresponding scaling parameters.
 #'   If `NULL`, a parameter table is generated based on `data`,
 #'   i.e. `data` is its own reference.
+#' @param feat A vector indicating which variables to center/scale.
 #' @param center Logical. Indicating whether the variables
 #'   should be shifted to be zero centered (\eqn{\mu = 0}).
 #' @param scale Logical. Indicating whether the variables
 #'   should be scaled to have unit variance (\eqn{\sigma = 1}).
-#' @param ref.data Discouraged. Now preferred to pass `par_tbl`, however
-#'   maintained for backward compatibility. A data set used to
-#'   calculate `par_tbl`, i.e. vectors of means and standard deviations
-#'   will be calculated from *this* data set and applied to `data`.
 #' @return A center/scaled object of the same class as `data`. Only features
-#'   are modified for non-`matrix` objects.
+#'   specified in `feat` are modified.
 #' @author Stu Field
 #' @examples
-#' scaled <- center_scale(sim_test_data)
-#' apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
-#' apply(strip_meta(scaled), 2, sd)             # sd = 1
+#' scaled <- center_scale(mtcars)
+#' apply(strip_meta(scaled), 2, mean) |> sum()  # mean ~ 0
+#' apply(strip_meta(scaled), 2, sd)             # sd ~ 1
 #'
-#' # Pass parameters based on OTHER data
-#' idx   <- withr::with_seed(1,
-#'   sample(1:nrow(sim_test_data), size = nrow(sim_test_data) / 2)
+#' idx <- withr::with_seed(1,
+#'   sample(1:nrow(mtcars), size = nrow(mtcars) / 2)
 #' )
-#' train <- sim_test_data[idx, ]
-#' test  <- sim_test_data[-idx, ]
-#' new   <- center_scale(test, ref.data = train)
+#' train <- mtcars[idx, ]
+#' test  <- mtcars[-idx, ]
 #'
-#' # However, it is preferred to pass `par_tbl` over `ref.data`
-#' #   by creating a `par_tbl` object based on `train`
-#' par <- tibble::tibble(AptName = globalr:::getAnalytes(train),
-#'                       means   = colMeans(strip_meta(train)),
-#'                       sds     = apply(strip_meta(train), 2, sd))
-#' new2 <- center_scale(test, par_tbl = par)
+#' # Pass `par_tbl` as reference
+#' ft <- c("disp", "hp", "drat")
+#' par <- tibble::tibble(feature = ft,
+#'                       means   = colMeans(strip_meta(train, ft)),
+#'                       sds     = apply(strip_meta(train, ft), 2, sd))
+#' cs <- center_scale(test, par_tbl = par)
 #' @export
-center_scale <- function(data, par_tbl = NULL, center = TRUE, scale = TRUE,
-                            ref.data = deprecated()) {
+center_scale <- function(data, par_tbl = NULL, feat = NULL,
+                         center = TRUE, scale = TRUE) {
   UseMethod("center_scale")
 }
 
 #' @noRd
 #' @export
-center_scale.default <- function(data, par_tbl = NULL, center = TRUE,
-                                    scale = TRUE, ref.data = deprecated()) {
+center_scale.default <- function(data, par_tbl = NULL, feat = NULL,
+                                 center = TRUE, scale = TRUE) {
   stop("No S3 method could be found for object of class: ",
        value(class(data)), call. = FALSE)
 }
 
 #' @noRd
-#' @importFrom lifecycle is_present deprecated deprecate_warn
 #' @importFrom purrr pmap
 #' @export
-center_scale.soma_adat <- function(data, par_tbl = NULL, center = TRUE,
-                                      scale = TRUE, ref.data = deprecated()) {
+center_scale.data.frame <- function(data, par_tbl = NULL, feat = NULL,
+                                    center = TRUE, scale = TRUE) {
 
-  if ( is_present(ref.data) ) {
-    deprecate_warn(
-      "4.2.0",
-      "splyr::center_scale(ref.data =)",
-      "splyr::center_scale(par_tbl =)",
-      details = "Passing 'ref.data =' is now discouraged."
-    )
-  }
-
-  if ( is_present(ref.data) && !is.null(par_tbl) ) {
-    stop("You cannot pass both `ref.data` AND `par_tbl`.", call. = FALSE)
-  }
-
-  if ( is_present(ref.data) ) {
-    # if ref.data IS passed -> use it
-    par_tbl <- .genParTbl(ref.data)
-  } else if ( is.null(par_tbl) ) {
-    # generate par_tbl on-the-fly ref.data not passed
-    par_tbl <- .genParTbl(data)
+  if ( is.null(par_tbl) ) {
+    par_tbl <- .genParTbl(data, feat)  # generate par_tbl on-the-fly
   } else {
-    # if par_tbl IS passed, must check its format
     if ( !.check_par_tbl(par_tbl) ) {
       stop("Please check the `par_tbl` passed to `center_scale()`.",
            call. = FALSE)
     }
     # ensure data and par_tbl are sync'd
     # if user passed, could be out of order
-    par_tbl <- rearrange(par_tbl, "AptName", getAnalytes(data))
+    par_tbl <- rearrange(par_tbl, "feature", names(data))
   }
 
-  apts <- par_tbl$AptName
-  pars <- list(data  = data[, apts],
-               means = par_tbl$means,
-               sds   = par_tbl$sds)
+  feats <- par_tbl$feature
+  pars  <- list(data = data[, feats], means = par_tbl$means, sds = par_tbl$sds)
 
   if ( center && scale ) {
     ret_data <- pmap(pars, function(data, means, sds) (data - means) / sds)
@@ -106,7 +80,7 @@ center_scale.soma_adat <- function(data, par_tbl = NULL, center = TRUE,
   } else {
     stop("At least 1 of 'center' or 'scale' must be `TRUE`.", call. = FALSE)
   }
-  data[, apts] <- as.data.frame(ret_data) # replace un-scaled -> scaled
+  data[, feats] <- as.data.frame(ret_data) # replace un-scaled -> scaled
 
   if ( !(center && scale) ) {
     par_tbl$means <- 0
@@ -118,27 +92,22 @@ center_scale.soma_adat <- function(data, par_tbl = NULL, center = TRUE,
 
 #' @noRd
 #' @export
-center_scale.tr_data <- center_scale.soma_adat
+center_scale.tr_data <- center_scale.data.frame
 
 #' @noRd
 #' @export
-center_scale.data.frame <- center_scale.soma_adat
-
-#' @noRd
-#' @export
-center_scale.tbl_df <- center_scale.soma_adat
+center_scale.soma_adat <- center_scale.data.frame
 
 #' @noRd
 #' @export
 center_scale.matrix <- function(data, par_tbl = NULL, center = TRUE,
-                                   scale = TRUE, ref.data = deprecated()) {
-  if ( !is.null(ref.data) ) {
-    if ( center ) {
-      center <- colMeans(data, na.rm = TRUE)
-    }
-    if ( scale ) {
-      scale  <- apply(data, 2, stats::sd, na.rm = TRUE)
-    }
+                                scale = TRUE) {
+  stop("The `matrix` method needs work. Please try again later.", call. = FALSE)
+  if ( center ) {
+    center <- colMeans(data, na.rm = TRUE)
+  }
+  if ( scale ) {
+    scale <- apply(data, 2, stats::sd, na.rm = TRUE)
   }
   scale(data, center = center, scale = scale)
 }
@@ -171,17 +140,24 @@ is_center_scaled <- function(data) {
 #' @importFrom stats sd
 #' @importFrom purrr pmap
 #' @export
-undo_center_scale <- function(data) {
+undo_center_scale <- function(data, feat = NULL) {
   # do some checking
   # $par_tbl element added in `center_scale()`; required below
-  stopifnot(is_center_scaled(data))
-  apts    <- getAnalytes(data)
-  par_tbl <- attr(data, "par_tbl") |> rearrange("AptName", apts)  # sync order
-  stopifnot(.check_par_tbl(par_tbl))
+  stopifnot(
+    "Must perform `undo` on previously center/scaled data." =
+      is_center_scaled(data)
+  )
+  par_tbl <- attr(data, "par_tbl")
+  feats   <- par_tbl$feature
+  par_tbl <- rearrange(par_tbl, "feature", names(data)) # sync order
+  stopifnot(
+    "Something wrong with `par_tbl`. Please check `attr(data, \"par_tbl\"')`." =
+      .check_par_tbl(par_tbl)
+  )
   center  <- attr(data, "center_lgl")
   scale   <- attr(data, "scale_lgl")
   pars    <- as.list(par_tbl)  # convert list
-  pars$data <- data[, apts]    # add `data`
+  pars$data <- data[, feats]    # add `data`
 
   if ( center && scale ) {
     ret_data <- pmap(pars, function(data, means, sds, ...) data * sds + means)
@@ -196,7 +172,7 @@ undo_center_scale <- function(data) {
     )
   }
 
-  data[, apts] <- data.frame(ret_data)  # replace un-scaled -> scaled data
+  data[, feats] <- data.frame(ret_data)  # replace un-scaled -> scaled data
   # remove scaling parameters so you cannot 'double' undo
   structure(data, par_tbl = NULL, center_lgl = NULL, scale_lgl = NULL)
 }
@@ -205,8 +181,8 @@ undo_center_scale <- function(data) {
 #' checking function for the parameter table format
 #' @noRd
 .check_par_tbl <- function(x) {
-  # a tibble with AptName present
-  a <- inherits(x, "tbl_df") && ("AptName" %in% names(x))
+  # a tibble with feature present
+  a <- inherits(x, "tbl_df") && ("feature" %in% names(x))
   # must have at least 1 present
   b <- "means" %in% names(x) || "sds" %in% names(x)
   # if present -> must be double; don't fail if absent; `b` above covers that
@@ -220,10 +196,11 @@ undo_center_scale <- function(data) {
 #' means and standard deviations.
 #' @importFrom tibble tibble
 #' @noRd
-.genParTbl <- function(x) {
+.genParTbl <- function(x, feat = NULL) {
+  m <- strip_meta(x, feat)
   tibble(
-    AptName = getAnalytes(x),
-    means   = unname(colMeans(strip_meta(x), na.rm = TRUE)),
-    sds     = unname(apply(strip_meta(x), 2, stats::sd, na.rm = TRUE))
+    feature = colnames(m),
+    means   = unname(colMeans(m, na.rm = TRUE)),
+    sds     = unname(apply(m, 2, stats::sd, na.rm = TRUE))
   )
 }

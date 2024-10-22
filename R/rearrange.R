@@ -9,7 +9,7 @@
 #'
 #' This function is meant to act as a working solution to
 #' the lack of row names inherent to tibble objects, yet
-#' still plays nice with "tidyverse" syntax.
+#' still plays nice with `tidyverse` syntax.
 #'
 #' Values in `x` that are not in `tbl[[var]]`
 #' are silently dropped. Values in `tbl[[var]]` that are
@@ -23,24 +23,27 @@
 #' @param var Character. The variable name (column).
 #' @param x A vector of values used to sort and match.
 #' @return A reordered, and possibly filtered, object of the
-#' same class as `tbl`.
+#'   same class as `tbl`.
 #' @author Stu Field
 #' @seealso [match()]
 #' @examples
-#' df <- tibble::tibble(name = letters[1:4], x = 1:4, y = rnorm(4))
+#' df <- tibble::tibble(name = letters[1:4L], x = 1:4, y = rnorm(4))
 #' df
 #'
-#' rearrange(df, "name", c("c","b","d"))
+#' rearrange(df, "name", c("c", "b", "d"))
 #'
 #' rearrange(df, "name", "d")
 #'
-#' rearrange(df, "name", c("a","c","z"))  # "z" is dropped
+#' rearrange(df, "name", c("a", "c", "z"))  # "z" is ignored
 #'
-#' rearrange(df, "name", c("a","c","c"))  # duplicate "c" is dropped
+#' rearrange(df, "name", c("a", "c", "c"))  # duplicate "c" is dropped
 #' @export
 rearrange <- function(tbl, var, x) {
   stopifnot(
-    inherits(tbl, "data.frame"), var %in% names(tbl)
+    inherits(tbl, "data.frame"),
+    var %in% names(tbl)
   )
-  tbl[match(unique(x), tbl[[var]], nomatch = 0), ]
+  .get_idx <- function(.x) which(match(tbl[[var]], .x, nomatch = 0) > 0)
+  ids <- lapply(unique(x), .get_idx)
+  tbl[unlist(ids), ]
 }

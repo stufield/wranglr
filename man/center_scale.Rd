@@ -6,42 +6,33 @@
 \alias{undo_center_scale}
 \title{Center and/or Scale Data}
 \usage{
-center_scale(
-  data,
-  par_tbl = NULL,
-  center = TRUE,
-  scale = TRUE,
-  ref.data = deprecated()
-)
+center_scale(data, par_tbl = NULL, feat = NULL, center = TRUE, scale = TRUE)
 
 is_center_scaled(data)
 
-undo_center_scale(data)
+undo_center_scale(data, feat = NULL)
 }
 \arguments{
-\item{data}{A \code{soma_adat}, tibble, data frame, or matrix object with
-named RFU data to center and/or scale.}
+\item{data}{A tibble, data frame, or matrix object with
+named data variables to center and/or scale.}
 
 \item{par_tbl}{A tibble containing the mean and standard deviations
-to use in processing the data. Must also contain an \code{AptName} column
+to use in processing the data. Must also contain an \code{feature} column
 to synchronize the features with their corresponding scaling parameters.
 If \code{NULL}, a parameter table is generated based on \code{data},
 i.e. \code{data} is its own reference.}
+
+\item{feat}{A vector indicating which variables to center/scale.}
 
 \item{center}{Logical. Indicating whether the variables
 should be shifted to be zero centered (\eqn{\mu = 0}).}
 
 \item{scale}{Logical. Indicating whether the variables
 should be scaled to have unit variance (\eqn{\sigma = 1}).}
-
-\item{ref.data}{Discouraged. Now preferred to pass \code{par_tbl}, however
-maintained for backward compatibility. A data set used to
-calculate \code{par_tbl}, i.e. vectors of means and standard deviations
-will be calculated from \emph{this} data set and applied to \code{data}.}
 }
 \value{
 A center/scaled object of the same class as \code{data}. Only features
-are modified for non-\code{matrix} objects.
+specified in \code{feat} are modified.
 }
 \description{
 A function to center and/or scale a data matrix (RFU table). Can be applied
@@ -58,24 +49,22 @@ can be used for centering or scaling data.
 
 }}
 \examples{
-scaled <- center_scale(sim_test_data)
-apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
-apply(strip_meta(scaled), 2, sd)             # sd = 1
+scaled <- center_scale(mtcars)
+apply(strip_meta(scaled), 2, mean) |> sum()  # mean ~ 0
+apply(strip_meta(scaled), 2, sd)             # sd ~ 1
 
-# Pass parameters based on OTHER data
-idx   <- withr::with_seed(1,
-  sample(1:nrow(sim_test_data), size = nrow(sim_test_data) / 2)
+idx <- withr::with_seed(1,
+  sample(1:nrow(mtcars), size = nrow(mtcars) / 2)
 )
-train <- sim_test_data[idx, ]
-test  <- sim_test_data[-idx, ]
-new   <- center_scale(test, ref.data = train)
+train <- mtcars[idx, ]
+test  <- mtcars[-idx, ]
 
-# However, it is preferred to pass `par_tbl` over `ref.data`
-#   by creating a `par_tbl` object based on `train`
-par <- tibble::tibble(AptName = globalr:::getAnalytes(train),
-                      means   = colMeans(strip_meta(train)),
-                      sds     = apply(strip_meta(train), 2, sd))
-new2 <- center_scale(test, par_tbl = par)
+# Pass `par_tbl` as reference
+ft <- c("disp", "hp", "drat")
+par <- tibble::tibble(feature = ft,
+                      means   = colMeans(strip_meta(train, ft)),
+                      sds     = apply(strip_meta(train, ft), 2, sd))
+cs <- center_scale(test, par_tbl = par)
 # Logical test
 is_center_scaled(new)
 # Example of `undo_center_scale()`; reverse above
