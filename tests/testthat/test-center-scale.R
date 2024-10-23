@@ -14,7 +14,7 @@ feats <- c("seq.1212.1", "seq.2929.5","foo")
 
 # Testing -----
 test_that("`center_scale()` unit test default feat (all numerics)", {
-  expect_s3_class(cs, "data.frame")
+  expect_s3_class(cs, "cs_trans")
   expect_equal(dim(cs), dim(data))
   expect_equal(names(cs), names(data))
   expect_equal(sum(apply(cs[, feats], 2, mean)), 0)
@@ -81,7 +81,7 @@ test_that("`undo_center_scale()` generates correct values", {
   # check that `undo_center_scale()` reverses the center/scaling; back to `data`
   undo <- undo_center_scale(cs)
   expect_s3_class(undo, class(data))
-  expect_equal(undo, data)
+  expect_equal(undo, data, ignore_attr = TRUE)   # class will differ; `cs_trans`
 
   # test that `scaled` element removed; cannot double-undo
   expect_error(

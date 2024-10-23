@@ -71,7 +71,7 @@ class(seqify(svec))
 seqify(svec)
 
 # also works with naked-SeqIds
-seqify(globalr:::getSeqId(svec))
+seqify(getSeqId(svec))
 }
 \seealso{
 \code{\link[=getAnnotations]{getAnnotations()}}, \code{\link[=left_join]{left_join()}}

@@ -9,10 +9,9 @@
 #' @return A named numeric vector with means (`step = 'center'`) or standard
 #' deviations (`step = scale'`). Names correspond to recipe predictors.
 #' @author Amy Zhang
-#' @export
 #' @examples
 #' test <- sim_test_data
-#' apts <- globalr:::getAnalytes(test)
+#' apts <- splyr:::getAnalytes(test)
 #' rec <-  recipes::recipe(~ ., data = dplyr::select(test, dplyr::all_of(apts))) |>
 #'  recipes::step_log(recipes::all_predictors(), base = 10) |>
 #'  recipes::step_center(recipes::all_predictors()) |>
@@ -21,9 +20,10 @@
 #' get_recipe_params(rec, "scale")
 #' get_recipe_params(rec, "center")
 #'
-#' soma_rec <- somaRecipe(test)
+#' soma_rec <- create_recipe(test)
 #' get_recipe_params(soma_rec, "scale")
 #' get_recipe_params(rec, "center")
+#' @export
 get_recipe_params <- function(recipe, param) {
   if ( !param %in% c("scale", "center") ) {
     stop("Method not implemented for param '", param,

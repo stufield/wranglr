@@ -49,17 +49,21 @@
 #' tbl <- splyr:::apt_data
 #' seqLookup(svec, tbl)
 #'
-#' @importFrom tibble tibble
+#' @importFrom tibble tibble as_tibble
 #' @export
 seqLookup <- function(seq, tbl = NULL) {
+  .getSeqId <- function(x) {
+    sub("^seq\\.", "", x) |> sub(pattern = "\\.", replacement = "-")
+  }
+
   if ( !is.null(tbl) ) {
-    lookup <- dplyr::ungroup(tbl)
-    lookup$SeqId <- getSeqId(lookup$SeqId, trim.version = TRUE)
+    lookup <- as_tibble(tbl)
+    lookup$SeqId <- .getSeqId(lookup$SeqId)
   } else {
     lookup <- getAnnotations(api = FALSE)
   }
   vars <- intersect(c("UniProt", "List", "Reason"), names(lookup))
-  tibble(seq = seq, SeqId = getSeqId(seq, TRUE)) |>
+  tibble(seq = seq, SeqId = .getSeqId(seq)) |>
     left_join(lookup, by = "SeqId") |>
     select(seq, SeqId, EntrezGeneSymbol, Target,
            TargetFullName, Type, Dilution, !!vars)
@@ -76,7 +80,7 @@ seqLookup <- function(seq, tbl = NULL) {
 #' seqify(svec)
 #'
 #' # also works with naked-SeqIds
-#' seqify(globalr:::getSeqId(svec))
+#' seqify(getSeqId(svec))
 #' @importFrom globalr add_class
 #' @export
 seqify <- function(x) {

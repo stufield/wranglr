@@ -26,6 +26,7 @@
 #'     "c",         9,         7,            7.1,        7.1
 #' )
 #' imputePredictors(x, tbl)
+#' @importFrom globalr is.logspace
 #' @export
 imputePredictors <- function(data, extrm_vals) {
 

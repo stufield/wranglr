@@ -21,7 +21,7 @@ recipe.
 }
 \examples{
 test <- sim_test_data
-apts <- globalr:::getAnalytes(test)
+apts <- splyr:::getAnalytes(test)
 rec <-  recipes::recipe(~ ., data = dplyr::select(test, dplyr::all_of(apts))) |>
  recipes::step_log(recipes::all_predictors(), base = 10) |>
  recipes::step_center(recipes::all_predictors()) |>
@@ -30,7 +30,7 @@ rec <-  recipes::recipe(~ ., data = dplyr::select(test, dplyr::all_of(apts))) |>
 get_recipe_params(rec, "scale")
 get_recipe_params(rec, "center")
 
-soma_rec <- somaRecipe(test)
+soma_rec <- create_recipe(test)
 get_recipe_params(soma_rec, "scale")
 get_recipe_params(rec, "center")
 }

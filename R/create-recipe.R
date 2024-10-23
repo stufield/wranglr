@@ -1,77 +1,85 @@
-#' Pre-processing SomaScan Data
+#' Pre-processing Analysis Data
 #'
 #' Relative too the \pkg{recipes} package, the [recipes::recipe()] and
 #' [recipes::prep()] functions are combined.
 #'
 #' The order of recipe steps is *always*:
 #' \enumerate{
-#'   \item bridging (if `bridge_ref` passed)
 #'   \item log10-transform
 #'   \item center
 #'   \item scale
 #' }
 #'
 #' @inheritParams center_scale
-#' @param data A `soma_adat` class object to use as a template for
+#' @param data A `data.frame` object to use as a template for
 #'   the pre-processing steps.
-#' @param log10 Logical. Should `data` be log10-transformed.
-#' @param bridge_ref Numeric. A vector of scale factors to bridge transform
-#'   the data *prior* to applying the remaining steps in the recipe.
-#'   They are passed to [scale_features()], and should be take the same
-#'   format as the `scale_vec` argument. If `NULL` (default), no
-#'   bridging is performed.
+#' @param log10 Logical. Should features in `data` be log10-transformed?
 #' @param ... Optional arguments of the form `variable = function()`
 #'   specifying the function to be applied to the specified column.
 #'   Anonymous functions can be used but they should take a vector
-#'   input and return a vector of equal length. See Examples.
+#'   input and return a vector of equal length. See Examples. If also
+#'   center/scaling, the `...` transformation takes place *before*
+#'   the center-scale step.
+#' @return A `rcp` class object containing information for the recipe steps.
 #' @examples
 #' # create a pre-processing recipe
-#' rcp <- somaRecipe(sim_test_data)
+#' rcp <- create_recipe(mtcars)
+#' rcp
 #'
-#' # additional processing of meta data variables
-#' rcp2 <- somaRecipe(sim_test_data,
-#'                    SiteId = factor,
-#'                    reg_response = abs,
-#'                    time = function(x) sqrt(x + pi))
+#' rcp2 <- create_recipe(mtcars,
+#'                       feat = c("mpg", "disp", "drat", "wt"),
+#'                       disp = abs,
+#'                       hp   = log10,
+#'                       qsec = function(x) round(x / 10))
 #'
-#' @importFrom globalr add_class
 #' @export
-somaRecipe <- function(data, log10 = TRUE, center = TRUE, scale = TRUE,
-                       bridge_ref = NULL, ...) {
-  if ( log10 ) {
-    data <- log10(data)
-    columns <- getAnalytes(data)
-  } else {
-    columns <- NA_character_
+create_recipe <- function(data, feat = NULL, log10 = TRUE, center = TRUE,
+                          scale = TRUE, ...) {
+
+  feat <- feat %||% names(which(vapply(data, is.numeric, NA)))
+  dots <- rlang::dots_list(...)
+
+  if ( length(dots) > 0L ) {
+    data <- .apply_dot_funcs(data, dots)   # this happens first
   }
 
-  dots <- rlang::dots_list(...)
+  if ( log10 ) {
+    data[, feat] <- log10(data[, feat])
+  }
+
   list(     call = as.list(match.call(envir = baseenv())),
-      bridge_lgl = !is.null(bridge_ref),
-      bridge_ref = bridge_ref %||% NA_real_,
+      features   = feat,
        log10_lgl = log10,
-      log10_cols = columns,
       center_lgl = center,
        scale_lgl = scale,
                n = nrow(data),
-               p = length(getAnalytes(data)),
-         par_tbl = .genParTbl(data),
+               p = length(feat),
+         par_tbl = .genParTbl(data, feat),
         dot_vars = names(dots)
   ) |>
   c(dots) |>
-  add_class("soma_recipe")
+  structure(class = c("rcp", "list"))
+}
+
+# helper function to apply functions for `...`
+# to the data modified in place during bake and prep
+.apply_dot_funcs <- function(data, dots) {
+  for ( i in names(dots) ) {
+    .f <- dots[[i]]
+    data[[i]] <- .f(data[[i]])
+  }
+  data
 }
 
 
-#' S3 method for `soma_recipe` object
+#' S3 method for `rcp` object
 #' @noRd
 #' @importFrom globalr pad signal_rule signal_done
 #' @importFrom globalr signal_todo value liter symbl add_style
 #' @export
-print.soma_recipe <- function(x, ...) {
+print.rcp <- function(x, ...) {
   writeLines(
-    signal_rule("SomaScan pre-processing recipe", lty = "double",
-                line_col = "magenta")
+    signal_rule("Pre-processing recipe", lty = "double", line_col = "magenta")
   )
   cat("\n")
   line3 <- paste0(rep.int(symbl$line, 3L), collapse = "")
@@ -86,8 +94,6 @@ print.soma_recipe <- function(x, ...) {
 
   cat(line3, "Steps:\n")
 
-  .pad22("Bridging") |> paste0(ifelse(x$bridge_lgl, tick, cross)) |>
-    signal_todo()
   .pad22("log10-transformed") |> paste0(ifelse(x$log10_lgl, tick, cross)) |>
     signal_todo()
   .pad22("Centered (mean = 0)") |> paste0(ifelse(x$center_lgl, tick, cross)) |>
@@ -110,57 +116,49 @@ print.soma_recipe <- function(x, ...) {
 }
 
 
-#' @describeIn somaRecipe executes the recipe instructions defined during
-#'   via [somaRecipe()].
-#' @param x A `soma_recipe` class object with instructions for pre-processing.
-#' @param data A `soma_adat` class object to be pre-process according
-#'   to `x`.
+#' @describeIn create_recipe
+#'   executes the recipe instructions defined during via [create_recipe()].
+#' @param x A `rcp` class object with instructions for pre-processing.
+#' @param data A `data.frame` to be pre-processed according to `x`.
 #' @examples
 #' # apply recipe to orig/own data set
-#' new_data <- somaBake(rcp, sim_test_data)
+#' new_data <- bake_recipe(rcp, mtcars)
 #'
-#' @importFrom globalr is.logspace
 #' @export
-somaBake <- function(x, data) {
+bake_recipe <- function(x, data) {
 
   stopifnot(
-    "`x` must be a 'soma_recipe' object."  = inherits(x, "soma_recipe"),
+    "`x` must be a 'rcp' object."          = inherits(x, "rcp"),
     "`.check_par_tbl(x$par_tbl)` failed."  = .check_par_tbl(x$par_tbl)
   )
 
-  if ( x$bridge_lgl ) {
-    ref  <- setNames(x$bridge_ref, getSeqId(names(x$bridge_ref)))
-    data <- scale_features(data, ref)
+  # modify `...` variables in place
+  # this must happen *first*
+  if ( length(x$dot_vars) > 0L ) {
+    data <- .apply_dot_funcs(data, x[x$dot_vars])
   }
 
   if ( x$log10_lgl ) {
-    if ( is.logspace(data) ) {
-      warning("Double-logging danger! The `data` is already in log-space.",
-              call. = FALSE)
-    }
-    columns <- x$log10_cols
+    columns <- x$features
+    stopifnot("Features missing in `data`." = all(columns %in% names(data)))
     for ( col in columns ) {
       data[[col]] <- log10(data[[col]])
     }
   }
 
-  # modify `...` variables in place
-  for ( i in x$dot_vars ) {
-    .fn <- x[[i]]
-    data[[i]] <- .fn(data[[i]])
-  }
-
   if ( x$scale_lgl || x$center_lgl ) {
-    data <- center_scale(data, par_tbl = x$par_tbl,
-                         center = x$center_lgl,
-                         scale = x$scale_lgl)
+    data <- center_scale(data,
+                         par_tbl = x$par_tbl,
+                         feat    = columns,
+                         center  = x$center_lgl,
+                         scale   = x$scale_lgl)
   }
   structure(data, baked = TRUE)
 }
 
-#' @describeIn somaRecipe tests for presence of `baked` entry in
-#'   attributes, indicating that these data have already been baked via
-#'   [somaBake()].
+#' @describeIn create_recipe
+#'   tests for presence of `baked` entry in attributes, indicating that
+#'   the data have already been baked via [bake_recipe()].
 #' @examples
 #' # Logical test
 #' is.baked(new_data)
@@ -170,8 +168,9 @@ is.baked <- function(data) {
   isTRUE(attr(data, "baked"))
 }
 
-#' @describeIn somaRecipe converts an existing recipe object from the
-#'   \pkg{recipes} package into a `soma_recipe` object. Note that *all*
+#' @describeIn create_recipe
+#'   converts an existing recipe object from the
+#'   \pkg{recipes} package into a `rcp` object. Note that *all*
 #'   conversions and not possible and the intended use case is for 3 step
 #'   conversion:
 #'   * log10-transform
@@ -188,13 +187,13 @@ is.baked <- function(data) {
 #'   step_scale(all_predictors()) |>
 #'   prep()
 #'
-#' convertRecipe(rec)
+#' convert_recipe(rec)
 #' @importFrom tibble tibble enframe
 #' @importFrom globalr add_class
 #' @export
-convertRecipe <- function(object) {
+convert_recipe <- function(object) {
 
-  if ( inherits(object, "soma_recipe") ) {
+  if ( inherits(object, "rcp") ) {
     return(object)
   }
 
@@ -211,39 +210,27 @@ convertRecipe <- function(object) {
   steps <- vapply(object$steps, function(.x) class(.x)[1L], "")
   idx   <- match(steps, "step_scale", nomatch = 0)
 
-  # if 2 step_scale steps and first is in pos 1
-  bridge_lgl <- sum(idx) == 2 && idx[1L] == 1
-  # assume 1st step_scale is a bridge step
-  # invert because scale is division
-  bridge_ref <- 1 / object$steps[[1L]]$sds %||% NA_real_
-
-  if ( bridge_lgl ) {
-    object$steps[[1L]] <- NULL  # remove the bridging step
-    steps <- steps[-1L]         # remove bridge step
-  }
-
   ret$call <- match.call()
-  ret$bridge_lgl <- bridge_lgl
-  ret$bridge_ref <- bridge_ref
+  ret$features   <- predictors
   ret$log10_lgl  <- "step_log" %in% steps
-  ret$log10_cols <- NA_character_   # set default; update below
   ret$center_lgl <- "step_center" %in% steps
   ret$scale_lgl  <- "step_scale" %in% steps
 
-  pars <- tibble(AptName = predictors)
+  pars <- tibble(feature = predictors)
 
   for ( step in steps ) {
     if ( step == "step_log" ) {
       logstep <- which(steps == "step_log")
-      ret$log10_cols <- unname(object$steps[[logstep]]$columns)
+      # this step doesn't do much yet
+      feats <- unname(object$steps[[logstep]]$columns)
     } else if ( step == "step_center" ) {
       df_mu <- enframe(get_recipe_params(object, "center"),
-                       name = "AptName", value = "means")
-      pars <- left_join(pars, df_mu, by = "AptName")
+                       name = "feature", value = "means")
+      pars <- left_join(pars, df_mu, by = "feature")
     } else if ( step == "step_scale" ) {
       df_sds <- enframe(get_recipe_params(object, "scale"),
-                        name = "AptName", value = "sds")
-      pars <- left_join(pars, df_sds, by = "AptName")
+                        name = "feature", value = "sds")
+      pars <- left_join(pars, df_sds, by = "feature")
     }
   }
 
@@ -263,13 +250,13 @@ convertRecipe <- function(object) {
   ret$p        <- length(predictors)
   ret$par_tbl  <- pars
   ret$dot_vars <- character(0)
-  add_class(ret, c("converted_recipe", "soma_recipe"))
+  structure(ret, class = c("converted_recipe", "rcp", "list"))
 }
 
-#' update a `soma_recipe` control object.
+#' update a `rcp` control object.
 #' @noRd
 #' @export
-update.soma_recipe <- function(object, ...) {
+update.rcp <- function(object, ...) {
   # this needs work; sgf
   .dots <- list(...)
   for ( i in names(.dots) ) {
@@ -281,7 +268,7 @@ update.soma_recipe <- function(object, ...) {
 #' @noRd
 #' @importFrom tibble deframe
 #' @export
-get_recipe_params.soma_recipe <- function(recipe, param = "scale") {
+get_recipe_params.rcp <- function(recipe, param = "scale") {
   param_name <- ifelse(param == "scale", "sds", "means")
-  deframe(recipe$par_tbl[, c("AptName", param_name)])
+  deframe(recipe$par_tbl[, c("feature", param_name)])
 }

@@ -14,7 +14,7 @@ Description: The splyr package contains the general functions
     files and wrangle those data into convenient form for analysis.
 License: GPL-3 | file LICENSE
 Depends:
-    R (>= 4.4.1),
+    R (>= 4.4.0),
     dplyr (>= 1.0.3)
 Imports:
     lifecycle,
@@ -28,12 +28,12 @@ Suggests:
     knitr,
     lintr,
     lobstr,
-    randomForest,
     recipes,
     rlang,
     rmarkdown,
     spelling,
     testthat,
+    waldo,
     withr
 VignetteBuilder:
     knitr

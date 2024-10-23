@@ -28,6 +28,7 @@
 #' x2 <- remove_outliers(x, y)       # final row removed
 #' x2
 #' @importFrom tibble tibble
+#' @importFrom globalr is.logspace
 #' @export
 remove_outliers <- function(x, y = NULL, type = "nonparametric", ...) {
 

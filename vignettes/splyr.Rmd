@@ -32,15 +32,15 @@ data into convenient form for analysis.
 ### Transforming Data
 
 * `center_scale()`
-* `somaRecipe()`
+* `create_recipe()`
 
-```{r center-scale}
-scaled <- center_scale(sim_test_data)
+```{r center-scale-recipe}
+scaled <- center_scale(mtcars)               # all numeric features
 apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
-apply(strip_meta(scaled), 2, sd)              # sd = 1
+apply(strip_meta(scaled), 2, sd)             # sd = 1
 
-# `somaRecipe()`
-rcp <- somaRecipe(sim_test_data)
+# `create_recipe()`
+rcp <- create_recipe(mtcars, feat = c("mpg", "disp", "drat", "wt"))
 rcp
 ```
 
@@ -90,6 +90,7 @@ imputePredictors(x, tbl)
 ### Binding Data
 * `bind_intersect()`
 * `bind_union()`
+
 ```{r bind}
 df1 <- data.frame(a = 1, b = 2, c = 3, row.names = "A")
 df2 <- data.frame(a = 4, b = 5, d = 6, row.names = "B")
@@ -107,6 +108,7 @@ bind_union(list_df)
 ### Stripping Data
 * `refactor_data()`
 * `strip_meta()`
+
 ```{r strip}
 df <- data.frame(a = factor(c("a", "b")), b = 1:2)
 foo <- df[df$a == "a", ]
@@ -124,6 +126,7 @@ levels(bar$a)   # 1 level now
 * `seqLookup()`
 * `seqify()`
 * `lookupAnnotations()`
+
 ```{r seqLookup}
 seqs <- withr::with_seed(101, sample(names(sample.adat), 10))
 seqs

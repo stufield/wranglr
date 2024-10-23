@@ -66,9 +66,9 @@ par <- tibble::tibble(feature = ft,
                       sds     = apply(strip_meta(train, ft), 2, sd))
 cs <- center_scale(test, par_tbl = par)
 # Logical test
-is_center_scaled(new)
+is_center_scaled(cs)
 # Example of `undo_center_scale()`; reverse above
-old <- undo_center_scale(new)
+old <- undo_center_scale(cs)
 
 # check values are reverted
 all.equal(test, old)

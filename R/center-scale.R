@@ -87,7 +87,13 @@ center_scale.data.frame <- function(data, par_tbl = NULL, feat = NULL,
     par_tbl$sds   <- 1
   }
 
-  structure(data, par_tbl = par_tbl, center_lgl = center, scale_lgl = scale)
+  structure(
+    data,
+    par_tbl = par_tbl,
+    center_lgl = center,
+    scale_lgl = scale,
+    class = c("cs_trans", class(data))
+  )
 }
 
 #' @noRd
@@ -100,8 +106,8 @@ center_scale.soma_adat <- center_scale.data.frame
 
 #' @noRd
 #' @export
-center_scale.matrix <- function(data, par_tbl = NULL, center = TRUE,
-                                scale = TRUE) {
+center_scale.matrix <- function(data, par_tbl = NULL, feat = NULL,
+                                center = TRUE, scale = TRUE) {
   stop("The `matrix` method needs work. Please try again later.", call. = FALSE)
   if ( center ) {
     center <- colMeans(data, na.rm = TRUE)
@@ -119,12 +125,12 @@ center_scale.matrix <- function(data, par_tbl = NULL, center = TRUE,
 #'   can be used for centering or scaling data.
 #' @examples
 #' # Logical test
-#' is_center_scaled(new)
+#' is_center_scaled(cs)
 #' @export
 is_center_scaled <- function(data) {
-  x <- attr(data, "par_tbl")
-  scaled <- !is.null(x)
-  scaled && .check_par_tbl(x)
+  cs  <- inherits(data, "cs_trans")
+  tbl <- !is.null(attr(data, "par_tbl"))
+  cs && tbl && .check_par_tbl(attr(data, "par_tbl"))
 }
 
 
@@ -132,7 +138,7 @@ is_center_scaled <- function(data) {
 #'   the inverse of `center_scale()`. Undo the transformation.
 #' @examples
 #' # Example of `undo_center_scale()`; reverse above
-#' old <- undo_center_scale(new)
+#' old <- undo_center_scale(cs)
 #'
 #' # check values are reverted
 #' all.equal(test, old)
@@ -148,12 +154,12 @@ undo_center_scale <- function(data, feat = NULL) {
       is_center_scaled(data)
   )
   par_tbl <- attr(data, "par_tbl")
-  feats   <- par_tbl$feature
-  par_tbl <- rearrange(par_tbl, "feature", names(data)) # sync order
   stopifnot(
     "Something wrong with `par_tbl`. Please check `attr(data, \"par_tbl\"')`." =
       .check_par_tbl(par_tbl)
   )
+  feats   <- par_tbl$feature
+  par_tbl <- rearrange(par_tbl, "feature", names(data)) # sync order
   center  <- attr(data, "center_lgl")
   scale   <- attr(data, "scale_lgl")
   pars    <- as.list(par_tbl)  # convert list

@@ -1,0 +1,242 @@
+---
+title: "Pre-processing data via `create_recipe`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Pre-processing data via `create_recipe`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+library(splyr)
+library(recipes)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+
+# Introduction
+
+Standard data transformations are common in preparing data for analysis.
+Among the most common are:
+
+* log-transformation
+* centering with mean zero
+* scaling to unit variance (`sd = 1`)
+
+which are the typical data preparation steps for proteomic RFU data.
+
+Numerous tools exist in the `R` ecosystem, including some relatively new
+packages, e.g. the [recipes](https://recipes.tidymodels.org) package, however
+comes with significant implementation costs:
+
+1. `recipes` is in its infancy, still in a zero-point release (currently
+   v`r packageVersion('recipes')`). As such, development is expected to
+   be ongoing, resulting in likely interface changes and other underlying
+   changes that would impact end-users. This represents a significant
+   challenge to create a stable, production environment.
+1. `recipes` is designed with a broader use case in mind than proteomic data.
+   As such, numerous trade-offs and generalizations must be made to
+   accommodate various data sets it would be required to act upon.
+1. Many of its assumptions about data format, e.g. feature data vs meta data,
+   and whether certain features are present in both the training set and test
+   set are in direct conflict with existing workflows.
+1. `recipes` stores large portions of objects inside the object. While
+   this may be appropriate for smaller, low-dimensional data, proteomic data
+   with ~5000 features (stretch-goal of > 10k) quickly becomes
+   unmanageable and results in extremely large objects that must be saved
+   and incorporated into our production environments for reproducibility.
+
+Given this considerable technical overhead in adopting `recipes` as our
+primary data transformation tool, and the relatively simple transformations
+that proteomic data requires, the technical costs of incorporating `recipes`
+into production level workflows do not seem to balance the solutions
+it overcomes.
+
+
+# Base example
+
+We start with a typical pre-processing that can be achieved via
+`dplyr::mutate()` and `splyr` S3 dplyr-methods tools.
+Combined with the function `log10()`, pre-processing can
+be as simple as the following:
+
+```{r center-scale}
+features <- c("mpg", "disp", "drat", "wt")
+cs <- function(.x) {     # .x = numeric vector
+  out <- log10(.x)       # log10
+  out <- out - mean(out) # center
+  out / sd(out)          # scale
+}
+
+# log10/center/scale features
+mt_mod <- mtcars
+for ( i in features ) {
+  mt_mod[[i]] <- cs(mt_mod[[i]])
+}
+
+# check means of feature data
+apply(strip_meta(mt_mod, features), 2, mean) |> sum()  # mean = 0
+
+# check sd of feature data
+apply(strip_meta(mt_mod, features), 2, sd)
+```
+
+
+## Preprocessing via `recipes`
+
+Of course the same result can be achieved via the `recipes` package, however
+not without some unintended consequences and type conversions:
+
+```{r recipes}
+rcp <- recipe(mtcars) |>
+  step_log(all_of(features), base = 10) |>
+  step_center(all_of(features)) |>
+  step_scale(all_of(features)) |>
+  prep()
+
+rcp_data <- bake(rcp, mtcars)    # bake its own recipe
+
+waldo::compare(mt_mod, rcp_data)
+```
+
+The two objects are *NOT* the same ... significant modifications have occurred
+and perhaps most significantly, it is done so invisibly:
+
+
+# An alternative workflow
+
+The vast majority of proteomics pre-processing involves 3 main steps:
+
+1. log10-transformation
+1. center to $\mu = 0$
+1. scale to $\sigma = 1$
+
+where this pre-processing is first applied to a training set and therefore
+must also be applied to the test set. The new recipe ecosystem
+defaults are set up to accommodate this workflow.
+
+The goal is to provide users with the most beneficial aspects of `recipes`
+without the imposed costs of stepping into the `recipes` ecosystem. We
+will introduce 2 new user-facing functions:
+
+* `create_recipe()`
+* `bake_recipe()`
+
+First, create train/test sets:
+
+```{r workflow}
+n      <- 5L
+train  <- head(mtcars, -n)
+test   <- tail(mtcars, n)
+```
+
+Set up the `rcp` processing controller object (as in `recipes`),
+however it combines the `recipes::recipe()` and `recipes::prep()`
+into one step:
+
+```{r rcp-objects}
+# use the defaults: log10 -> center -> scale
+# add some modifications on-the-fly: sqrt(), log10(), function(x)
+rcp_ <- create_recipe(train,
+                      feat = c("mpg", "disp", "drat", "wt"),
+                      disp = sqrt,
+                      hp   = log,
+                      qsec = function(x) round(x / 10, 1L))
+
+# new class object
+class(rcp_)
+
+# S3 print
+rcp_
+
+# the recipe contains a processing parameter table
+rcp_$par_tbl
+```
+
+Compared to a `recipe` class object, a `rcp` is much smaller
+and accomplishes the same task:
+
+```{r size}
+lobstr::obj_size(rcp)
+
+lobstr::obj_size(rcp_)
+```
+
+Now apply the recipe in the familiar "bake" style:
+
+```{r bake-it}
+baked_test <- bake_recipe(rcp_, test)
+
+# convenient to know if data has been "baked"
+is.baked(baked_test)
+
+baked_test
+```
+
+
+## What about non-Feature variables?
+
+In the above example 3 variables have been processed via the `...` mechanism.
+Arguments should be passed `...` in the form `variable = function()`
+You may also pass anonymous functions "on-the-fly", where functions should
+take a vector input and return a vector of the same length.
+It is important to realize that these transformations take place *before*
+the center-scale transformation in the case where features *and*
+"dot"-mechanism variables are processed.
+
+* `disp`: was square rooted (prior to log > center > scale)
+* `hp`: log_e-transformed
+* `qseq`: anonymous function divide by 10 and round to 1 dp
+
+```{r dots}
+# the 'additional' modified variables
+rcp_$dot_vars
+
+# compare modified meta data
+head(test[, rcp_$dot_vars]) |> as_tibble()
+
+head(baked_test[, rcp_$dot_vars]) |> as_tibble()
+```
+
+
+-------------
+
+
+# Underlying machinery
+
+The main underlying non-user-facing function to center and/or scale data is
+`center_scale()`.
+
+## `center_scale()`
+
+```{r center-scale-data}
+cs_data <- log10(train) |> center_scale()
+
+# check new class
+is_center_scaled(cs_data)
+
+# get the parameter table
+pars <- attr(cs_data, "par_tbl")
+
+# center/scale test based on train parameters
+test_mod <- log10(test) |> center_scale(pars)
+```
+
+
+## Revert with `undo_center_scale()`
+
+You can simply undo any center/scaling that has occurred
+via `undo_center_scale()`.
+
+```{r undo, error = TRUE}
+old <- undo_center_scale(test_mod)
+
+# Safe-guards are in place so that you cannot double-undo:
+#   `par_tbl` entry is removed from attributes
+undo_center_scale(old)
+```
