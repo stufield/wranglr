@@ -14,7 +14,7 @@
 #' See [getAnnotations()] for details.
 #' Alternatively, the user can explicitly pass an annotations table of
 #' of their choice.
-#' The [seqify()] function adds a `seqId` class attribute allowing
+#' The [seqify()] function adds a `seq` class attribute allowing
 #' for a convenient S3 print method intended for interactive use.
 #'
 #' @details
@@ -22,76 +22,79 @@
 #'   they will be absent from the default lookup table,
 #'   resulting in `NA` for that row. But not all is lost! Dropped
 #'   analytes can be retrieved by explicitly passing an annotations
-#'   table corresponding to the original `soma_adat` prior to
+#'   table corresponding to the original data prior to
 #'   the menu change (see `Examples`). There are 2 ways to generate a
 #'   "time-capsuled" annotations table:
 #'      1. via `getAnalyteInfo()`
-#'      1. via `attr(adat, "Col.Meta")`
+#'      1. via `attr(data, "Col.Meta")`
 #'
 #' @family Annotations
-#' @param x,seq Character. A vector of `SeqIds`, `AptNames`, or `Aptamers`, all
-#'   containing `SeqId`s.
+#' @param x,seq Character. A vector of `SeqIds`, `AptNames`, or
+#'   `Aptamers`, strings containing `SeqId`s.
 #' @param tbl A tibble containing analyte (annotation) data.
-#'   Typically generated via calls to `getAnalyteInfo()`.
 #' @return For [seqLookup()], a tibble, a subset of `tbl`,
 #'   corresponding to the rows whose `SeqIds` match the values in `seq`.
 #' @author Stu Field
 #' @seealso  [getAnnotations()], [left_join()]
 #' @examples
-#' svec <- c("seq.2981.9", "seq.5073.30", "seq.4834.61", "seq.5006.71",
-#'           "seq.3213.65", "seq.3352.80", "seq.4429.51", "seq.2447.7")
+#' svec <- c("seq.2981.9", "seq.5073.30", "seq.4429.51", "seq.2447.7")
 #' svec
 #'
 #' seqLookup(svec)
 #'
-#' # user can pass 'known' set of annotations
-#' # Note: the NAs are now replaced with accurate info
-#' tbl <- splyr:::apt_data
-#' seqLookup(svec, tbl)
+#' # can pass 'known' set of annotations
+#' #   note: the NAs are now replaced with updated info
+#' seqLookup(svec, tbl = splyr:::apt_data)
 #'
 #' @importFrom tibble tibble as_tibble
 #' @export
 seqLookup <- function(seq, tbl = NULL) {
   .getSeqId <- function(x) {
-    sub("^seq\\.", "", x) |> sub(pattern = "\\.", replacement = "-")
+    sub("^seq\\.", "", x) |>
+      sub(pattern = "\\.", replacement = "-")
   }
-
-  if ( !is.null(tbl) ) {
+  if ( is.null(tbl) ) {
+    lookup <- getAnnotations(api = FALSE)
+  } else {
     lookup <- as_tibble(tbl)
     lookup$SeqId <- .getSeqId(lookup$SeqId)
-  } else {
-    lookup <- getAnnotations(api = FALSE)
   }
-  vars <- intersect(c("UniProt", "List", "Reason"), names(lookup))
+  add_vars <- c("UniProt", "List", "Reason")
   tibble(seq = seq, SeqId = .getSeqId(seq)) |>
     left_join(lookup, by = "SeqId") |>
     select(seq, SeqId, EntrezGeneSymbol, Target,
-           TargetFullName, Type, Dilution, !!vars)
+           TargetFullName, Type, Dilution, any_of(add_vars))
 }
 
-#' Convert to `seqId` object
-#' @name seqLookup
-#' @return For `seqify()`, an object of class `seqId`.
+#' @describeIn seqLookup
+#'   Convert to `seq` object
+#' @return For `seqify()`, an object of class `seq`.
 #' @examples
-#' # print method for class `seqId`
-#' class(seqify(svec))
+#' # print method for class `seq`
+#' seqify(svec) |> class()
 #'
 #' # works with anonymous-AptNames
 #' seqify(svec)
 #'
 #' # also works with naked-SeqIds
-#' seqify(getSeqId(svec))
-#' @importFrom globalr add_class
+#' vec <- sub("^seq\\.", "", svec) |>
+#'   sub(pattern = "\\.", replacement = "-")
+#' vec
+#'
+#' seqify(vec)
 #' @export
 seqify <- function(x) {
-  stopifnot("All values of `x` must be SeqIds." = all(globalr:::is.apt(x)))
-  add_class(x, "seqId")
+  stopifnot("All values of `x` must be SeqIds." = all(is.apt(x)))
+  structure(x, class = c("seq", "character"))
 }
 
-#' @importFrom globalr add_color signal_rule liter
+
+
+
 #' @noRd
+#' @importFrom globalr add_color signal_rule liter
 #' @export
-print.seqId <- function(x, ...) {
+print.seq <- function(x, ...) {
   tbl   <- seqLookup(as.character(x))
   symb1 <- add_color("\u25b6", "cyan")
   symb2 <- add_color("  \u276F  ", "cyan")

@@ -10,17 +10,16 @@ seqLookup(seq, tbl = NULL)
 seqify(x)
 }
 \arguments{
-\item{tbl}{A tibble containing analyte (annotation) data.
-Typically generated via calls to \code{getAnalyteInfo()}.}
+\item{tbl}{A tibble containing analyte (annotation) data.}
 
-\item{x, seq}{Character. A vector of \code{SeqIds}, \code{AptNames}, or \code{Aptamers}, all
-containing \code{SeqId}s.}
+\item{x, seq}{Character. A vector of \code{SeqIds}, \code{AptNames}, or
+\code{Aptamers}, strings containing \code{SeqId}s.}
 }
 \value{
 For \code{\link[=seqLookup]{seqLookup()}}, a tibble, a subset of \code{tbl},
 corresponding to the rows whose \code{SeqIds} match the values in \code{seq}.
 
-For \code{seqify()}, an object of class \code{seqId}.
+For \code{seqify()}, an object of class \code{seq}.
 }
 \description{
 Conveniently look up "annotation" information such as:
@@ -38,7 +37,7 @@ accessed via a static internal object.
 See \code{\link[=getAnnotations]{getAnnotations()}} for details.
 Alternatively, the user can explicitly pass an annotations table of
 of their choice.
-The \code{\link[=seqify]{seqify()}} function adds a \code{seqId} class attribute allowing
+The \code{\link[=seqify]{seqify()}} function adds a \code{seq} class attribute allowing
 for a convenient S3 print method intended for interactive use.
 }
 \details{
@@ -46,32 +45,39 @@ If historical analytes have been dropped from the menu
 they will be absent from the default lookup table,
 resulting in \code{NA} for that row. But not all is lost! Dropped
 analytes can be retrieved by explicitly passing an annotations
-table corresponding to the original \code{soma_adat} prior to
+table corresponding to the original data prior to
 the menu change (see \code{Examples}). There are 2 ways to generate a
 "time-capsuled" annotations table:
 1. via \code{getAnalyteInfo()}
-1. via \code{attr(adat, "Col.Meta")}
+1. via \code{attr(data, "Col.Meta")}
 }
+\section{Functions}{
+\itemize{
+\item \code{seqify()}: Convert to \code{seq} object
+
+}}
 \examples{
-svec <- c("seq.2981.9", "seq.5073.30", "seq.4834.61", "seq.5006.71",
-          "seq.3213.65", "seq.3352.80", "seq.4429.51", "seq.2447.7")
+svec <- c("seq.2981.9", "seq.5073.30", "seq.4429.51", "seq.2447.7")
 svec
 
 seqLookup(svec)
 
-# user can pass 'known' set of annotations
-# Note: the NAs are now replaced with accurate info
-tbl <- splyr:::apt_data
-seqLookup(svec, tbl)
+# can pass 'known' set of annotations
+#   note: the NAs are now replaced with updated info
+seqLookup(svec, tbl = splyr:::apt_data)
 
-# print method for class `seqId`
-class(seqify(svec))
+# print method for class `seq`
+seqify(svec) |> class()
 
 # works with anonymous-AptNames
 seqify(svec)
 
 # also works with naked-SeqIds
-seqify(getSeqId(svec))
+vec <- sub("^seq\\\\.", "", svec) |>
+  sub(pattern = "\\\\.", replacement = "-")
+vec
+
+seqify(vec)
 }
 \seealso{
 \code{\link[=getAnnotations]{getAnnotations()}}, \code{\link[=left_join]{left_join()}}
