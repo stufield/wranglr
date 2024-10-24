@@ -48,6 +48,7 @@ test_that("`match_samples()` works with different sample ID inputs", {
 test_that("`match_samples()` throws errors/warnings as appropriate", {
   # no samples in common
   train_diffid <- mutate(train, SampleId = paste0("a", SampleId))
+
   expect_error(
     match_samples(train_diffid, new),
     "`train_diffid` and `new` have no samples in common")
@@ -58,20 +59,26 @@ test_that("`match_samples()` throws errors/warnings as appropriate", {
     "`data.frame(SampleId = 51:100)` have no samples in common", fixed = TRUE)
 
   # if not data.frame
-  expect_error(match_samples(1:50, 25:76), "is.data.frame(x) is not TRUE",
-               fixed = TRUE)
-
-  # idcol does not exist in dfs
   expect_error(
-    match_samples(train, new, idcol = "sample_id"),
-    "`train` and `new` have no samples in common with idcol 'sample_id'"
-  ) |>
-   expect_warning(
-     "Unknown or uninitialised column: 'sample_id'",
-     regexp = NA
-   )
+    match_samples(1:50, data.frame(a = 1)),
+    "`x` must be a `data.frame`"
+  )
+
+  expect_error(
+    match_samples(data.frame(a = 1), 25:76),
+    "`y` must be a `data.frame`"
+  )
+
+  # if `idcol` does not exist in either df
+  #   expect an error (1)
+  expect_error(
+    match_samples(train, new, idcol = "foo_id"),
+    "`idcol` must be a variable in `x`"
+  )
 
   # duplicated sample IDs
-  expect_error(match_samples(bind_rows(train, train), new),
-               "Duplicate sample IDs exist")
+  expect_error(
+    match_samples(bind_rows(train, train), new),
+    "Duplicate sample IDs exist"
+  )
 })

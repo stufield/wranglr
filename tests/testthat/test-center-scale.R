@@ -1,4 +1,3 @@
-
 # Setup -------
 data <- withr::with_seed(101,
   data.frame(
@@ -9,7 +8,7 @@ data <- withr::with_seed(101,
     row.names  = LETTERS[1:10L]
   ))
 cs    <- center_scale(data)
-feats <- c("seq.1212.1", "seq.2929.5","foo")
+feats <- c("seq.1212.1", "seq.2929.5", "foo")
 
 
 # Testing -----

@@ -7,7 +7,7 @@
 match_samples(x, y, idcol = "SampleId")
 }
 \arguments{
-\item{x, y}{The \code{soma_adat} or \code{data.frame} objects to match together.}
+\item{x, y}{The, two, \code{data.frame} objects to match against each other.}
 
 \item{idcol}{Character. The name of the column in both \code{x} and \code{y}
 to use for matching and ordering the rows of the data frames.}
@@ -17,14 +17,17 @@ A named list with \code{x} and \code{y}, matched and ordered
 based on \code{idcol}.
 }
 \description{
-Given two data frames, this function matches their rows based on the
-intersection of sample IDs in \code{idcol}. The returned data frames are ordered by
-\code{idcol}. Rows that do not have intersecting \code{idcol} values are excluded.
+Given two data frames, this function matches their rows
+based on the intersection of sample IDs in \code{idcol}.
+The returned data frames are ordered by \code{idcol}.
+Rows that do not have intersecting \code{idcol} values are excluded.
 }
 \examples{
 df    <- head(sim_test_data, 25L)
-train <- withr::with_seed(1, dplyr::sample_n(df, 15))
-new   <- withr::with_seed(2, dplyr::sample_n(df, 15))
-intersect(train$SampleId, new$SampleId)    # there are some overlapping
-dfs   <- match_samples(train, new)
+train <- withr::with_seed(1, dplyr::sample_n(df, 15L))
+new   <- withr::with_seed(2, dplyr::sample_n(df, 15L))
+intersect(train$SampleId, new$SampleId)    # there are overlapping IDs
+
+dfs <- match_samples(train, new)
+dfs
 }
