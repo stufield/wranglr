@@ -21,12 +21,12 @@
 #' @author Stu Field
 #' @seealso [mad()], [median()], [sd()], [min()], [max()]
 #' @examples
-#' createSummaryTable(sim_test_data)
-#' createSummaryTable(sim_test_data, gender)
+#' createSummaryTable(sim_adat)
+#' createSummaryTable(sim_adat, gender)
 #'
 #' # Arbitrary 3 groupings
-#' sim_test_data$Group <- sample(1:3, nrow(sim_test_data), replace = TRUE)
-#' createSummaryTable(sim_test_data, "Group")
+#' sim_adat$Group <- sample(1:3, nrow(sim_adat), replace = TRUE)
+#' createSummaryTable(sim_adat, "Group")
 #' @importFrom stats mad median setNames
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr nest unnest pivot_wider

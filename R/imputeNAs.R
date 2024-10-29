@@ -13,7 +13,7 @@
 #' @author Stu Field
 #' @seealso [median()], [modify_if()]
 #' @examples
-#' adat <- sim_test_data
+#' adat <- sim_adat
 #' imputeNAs(adat)   # 'soma_adat' S3
 #'
 #' imputeNAs(adat$seq.3032.11)  # 'numeric' method; chosen at random

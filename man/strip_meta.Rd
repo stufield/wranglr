@@ -20,11 +20,11 @@ Strips the, non-feature (clinical), meta data from a \code{data.frame} object
 and returns a data matrix of only the feature data.
 }
 \examples{
-dim(sim_test_data)
-class(sim_test_data)
+dim(sim_adat)
+class(sim_adat)
 
-strip_meta(sim_test_data) |> dim()
-strip_meta(sim_test_data) |> class()
+strip_meta(sim_adat) |> dim()
+strip_meta(sim_adat) |> class()
 }
 \seealso{
 \code{\link[=data.matrix]{data.matrix()}}

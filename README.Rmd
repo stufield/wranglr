@@ -23,7 +23,6 @@ lintage <- sprintf(
   "https://img.shields.io/badge/lints-%s-%s.svg?style=flat&logo=gitlab",
   lints, ifelse(lints < 25, "success", ifelse(lints < 50, "yellow", "critical"))
 )
-sim_test_data <- splyr::sim_test_data
 sample.adat <- splyr:::sample.adat
 ```
 
@@ -85,12 +84,12 @@ library(help = splyr)
 * `centerScaleData()`
 * `somaRecipe()`
 ```{r center-scale}
-scaled <- centerScaleData(sim_test_data)
+scaled <- centerScaleData(sim_adat)
 apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
 apply(strip_meta(scaled), 2, sd)             # sd = 1
 
 # `somaRecipe()`
-rcp <- somaRecipe(sim_test_data)
+rcp <- somaRecipe(sim_adat)
 rcp
 ```
 

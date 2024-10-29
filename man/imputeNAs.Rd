@@ -21,7 +21,7 @@ Must be a numeric. Objects of \code{factor} or \code{character} class
 are not allowed.
 }
 \examples{
-adat <- sim_test_data
+adat <- sim_adat
 imputeNAs(adat)   # 'soma_adat' S3
 
 imputeNAs(adat$seq.3032.11)  # 'numeric' method; chosen at random

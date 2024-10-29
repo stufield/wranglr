@@ -1,13 +1,13 @@
-#' Simulated Test Data
+#' Simulated Data Object
 #'
 #' Simulates SomaScan data by randomly generating data for various
-#' Bioinformatics `POC` related analyses. Feature names will be randomly
-#' generated to have "*SOMAmer-like*" names so that downstream tools will
+#' Bioinformatics related analyses and unit tests. Feature names are randomly
+#' generated to have **seq.xxxx.xx** format so that downstream tools will
 #' function seamlessly. Model types this data can support:
 #'   * Binary classification
 #'   * Continuous regression
 #'   * Survival
-#' @format The format of `sim_test_data` (100 x 47) is:
+#' @format The format of `sim_adat` (100 x 47) is:
 #' \describe{
 #' \item{id}{A sample `id` number.}
 #' \item{class_response}{The classification response variable.}
@@ -26,7 +26,7 @@
 #' \item{NormScale_1}{Random continuous data in \verb{[0.4, 2.5]}.}
 #' }
 #'
-#' General features of the data (see `attributes(sim_test_data)`):
+#' General features of the data (see `attributes(sim_adat)`):
 #'   * 5 significant classification analytes
 #'   * 5 significant regression analytes
 #'   * 5 significant survival analytes
@@ -35,5 +35,5 @@
 #'   * `PGAM` (`seq.3896.5` for sample handling
 #' @author Stu Field
 #' @examples
-#' sim_test_data
-"sim_test_data"
+#' sim_adat
+"sim_adat"

@@ -62,14 +62,14 @@
 #'
 #' @examples
 #' # no stratification
-#' sample_no_strat <- create_kfold(sim_test_data, k = 4L, repeats = 2L)
+#' sample_no_strat <- create_kfold(sim_adat, k = 4L, repeats = 2L)
 #'
 #' # stratification on 1 discrete variable
-#' sample_one <- create_kfold(sim_test_data, k = 4L, repeats = 2L,
+#' sample_one <- create_kfold(sim_adat, k = 4L, repeats = 2L,
 #'                            breaks = list(status = NA))
 #'
 #' # stratification on 2 variables; 1 continuous + 1 discrete
-#' sample_two <- create_kfold(sim_test_data, k = 4L, repeats = 2L,
+#' sample_two <- create_kfold(sim_adat, k = 4L, repeats = 2L,
 #'                            breaks = list(time = 4L, status = NA))
 #'
 #' @importFrom globalr is.Integer len_one add_class

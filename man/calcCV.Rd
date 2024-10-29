@@ -31,15 +31,15 @@ dom_example <- list(A = c(5785.1, 5005.6, 5686.3, 5990.8,
 dom_example
 calcCV(dom_example)
 
-# Example 2 (dummy `sim_test_data` example)
+# Example 2 (dummy `sim_adat` example)
 # Here, we will look at how the intra, inter, and total variance.
-# We assume `sim_test_data` contains *only* calibrator samples
+# We assume `sim_adat` contains *only* calibrator samples
 # and assume the `SiteId` represents "runs", then `lapply()` over
 # each analyte, calculating the `CVdecomp` for each and store in a data frame.
-split_on <- sim_test_data$SiteId
+split_on <- sim_adat$SiteId
 
 # split data
-site_split <- strip_meta(sim_test_data) |> data.frame() |>
+site_split <- strip_meta(sim_adat) |> data.frame() |>
   lapply(split, f = split_on)
 
 # iterate over list/analytes; each contains multiple (4x) "runs"

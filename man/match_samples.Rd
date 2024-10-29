@@ -23,7 +23,7 @@ The returned data frames are ordered by \code{idcol}.
 Rows that do not have intersecting \code{idcol} values are excluded.
 }
 \examples{
-df    <- head(sim_test_data, 25L)
+df    <- head(sim_adat, 25L)
 train <- withr::with_seed(1, dplyr::sample_n(df, 15L))
 new   <- withr::with_seed(2, dplyr::sample_n(df, 15L))
 intersect(train$SampleId, new$SampleId)    # there are overlapping IDs

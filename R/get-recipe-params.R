@@ -10,7 +10,7 @@
 #' deviations (`step = scale'`). Names correspond to recipe predictors.
 #' @author Amy Zhang
 #' @examples
-#' test <- sim_test_data
+#' test <- sim_adat
 #' apts <- splyr:::getAnalytes(test)
 #' rec <-  recipes::recipe(~ ., data = dplyr::select(test, dplyr::all_of(apts))) |>
 #'  recipes::step_log(recipes::all_predictors(), base = 10) |>

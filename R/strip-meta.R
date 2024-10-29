@@ -10,11 +10,11 @@
 #' @author Stu Field
 #' @seealso [data.matrix()]
 #' @examples
-#' dim(sim_test_data)
-#' class(sim_test_data)
+#' dim(sim_adat)
+#' class(sim_adat)
 #'
-#' strip_meta(sim_test_data) |> dim()
-#' strip_meta(sim_test_data) |> class()
+#' strip_meta(sim_adat) |> dim()
+#' strip_meta(sim_adat) |> class()
 #' @export
 strip_meta <- function(data, feat = NULL) {
   if ( inherits(data, "soma_adat") ) {

@@ -10,7 +10,6 @@ vignette: >
 ```{r setup, include = FALSE}
 library(globalr)
 library(splyr)
-sim_test_data <- splyr::sim_test_data
 sample.adat <- splyr:::sample.adat
 knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>"

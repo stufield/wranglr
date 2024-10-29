@@ -55,7 +55,7 @@ test_that("`cast_numeric()` data frame method", {
 
   # maintains same class
   expect_equal(class(cast_numeric(tbl)), class(tbl))
-  expect_equal(class(cast_numeric(sim_test_data)), class(sim_test_data))
+  expect_equal(class(cast_numeric(sim_adat)), class(sim_adat))
   tbl2 <- as.data.frame(tbl)
   expect_equal(class(cast_numeric(tbl2)), class(tbl2))
 
