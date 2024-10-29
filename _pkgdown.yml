@@ -119,11 +119,5 @@ reference:
     contents:
     - objects
 
-  - title: Deprecated
-    desc: >
-      Functions that have been deprecated in the current SomaPlyr release.
-    contents:
-    - SomaPlyr-deprecated
-
 news:
   - one_page: true
