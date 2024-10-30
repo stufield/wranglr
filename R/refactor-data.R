@@ -21,7 +21,7 @@
 #' new2 <- refactor_data(new)
 #' new2$Sex
 #' levels(new2$Sex)
-#' @importFrom globalr signal_info value
+#' @importFrom helpr signal_info value
 #' @export
 refactor_data <- function(data) {
   lgl <- vapply(data[ getMeta(data)], is.factor, NA, USE.NAMES = TRUE)

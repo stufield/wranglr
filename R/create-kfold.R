@@ -72,7 +72,7 @@
 #' sample_two <- create_kfold(sim_adat, k = 4L, repeats = 2L,
 #'                            breaks = list(time = 4L, status = NA))
 #'
-#' @importFrom globalr is.Integer len_one add_class
+#' @importFrom helpr is.Integer len_one add_class
 #' @export
 create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
@@ -139,7 +139,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   the fold designation for each split. And `Repeat` indicates the repeat
 #'   number (if applicable).
 #' @importFrom tibble tibble
-#' @importFrom globalr is.Integer len_one
+#' @importFrom helpr is.Integer len_one
 .vfold_splits <- function(data, k = 10L, breaks = NULL, depth = 20L) {
   # local testing of only those variables used in this function
   # we do not test those that are merely passed to other functions
@@ -201,7 +201,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   where `n = length(x)`. If `x` is numeric, there must be at least 40 rows in
 #'   the data set (when `depth = 20`) to conduct stratified sampling.
 #' @return A factor vector indicating the stratum for each `x`.
-#' @importFrom globalr has_length is.Integer len_one value
+#' @importFrom helpr has_length is.Integer len_one value
 #' @importFrom stats na.omit quantile
 .make_strata <- function(x, breaks = 4, n.unique = 5, depth = 20) {
   stopifnot(
@@ -296,7 +296,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'
 #' @return A list containing the selected indices for each fold. These are
 #'   intended to be the "assessment" sample.
-#' @importFrom globalr has_length is.Integer len_one
+#' @importFrom helpr has_length is.Integer len_one
 .getStrataIndices_one <- function(strata, breaks, k, idx, depth, ...) {
   # local testing of only those variables used in this function
   # we do not test those that are merely passed to other functions
@@ -380,7 +380,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' @param ... Inputs passed on to stratification functions. Must contain `depth`.
 #' @return A list, each element providing the indices of the assessment data for
 #'   a single fold.
-#' @importFrom globalr has_length is.Integer len_one value
+#' @importFrom helpr has_length is.Integer len_one value
 .getStrataIndices <- function(strata, k, idx, breaks, ...) {
   stopifnot(
     "All inputs must be provided." = !missing(strata) && !missing(k) &&
@@ -443,7 +443,7 @@ is.x_split <- function(x) {
 #' # retrieve analysis data for all splits
 #' an_all <- analysis(sample_no_strat)
 #'
-#' @importFrom globalr is.Integer len_one
+#' @importFrom helpr is.Integer len_one
 #' @export
 analysis <- function(object, i = NULL) {
   stopifnot(
@@ -475,7 +475,7 @@ analysis <- function(object, i = NULL) {
 #'
 #' # retrieve assessment data for all splits
 #' ass_all <- assessment(sample_no_strat)
-#' @importFrom globalr is.Integer len_one
+#' @importFrom helpr is.Integer len_one
 #' @export
 assessment <- function(object, i = NULL) {
   stopifnot(
@@ -496,7 +496,7 @@ assessment <- function(object, i = NULL) {
 
 #' S3 method for `x_split` object
 #' @noRd
-#' @importFrom globalr signal_rule value add_color
+#' @importFrom helpr signal_rule value add_color
 #' @export
 print.x_split <- function(x, ...) {
   writeLines(

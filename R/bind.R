@@ -63,7 +63,7 @@ bind_intersect <- function(...) {
 #' bind_union(spl)
 #' bind_union(spl[[1L]], spl[[2L]])
 #' bind_union(spl[[1L]], spl[[2L]], spl[[3L]])
-#' @importFrom globalr col2rn rn2col
+#' @importFrom helpr col2rn rn2col
 #' @export
 bind_union <- function(...) {
   x <- .checkdots(...)

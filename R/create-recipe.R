@@ -74,8 +74,8 @@ create_recipe <- function(data, feat = NULL, log10 = TRUE, center = TRUE,
 
 #' S3 method for `rcp` object
 #' @noRd
-#' @importFrom globalr pad signal_rule signal_done
-#' @importFrom globalr signal_todo value liter symbl add_style
+#' @importFrom helpr pad signal_rule signal_done
+#' @importFrom helpr signal_todo value liter symbl add_style
 #' @export
 print.rcp <- function(x, ...) {
   writeLines(
@@ -189,7 +189,7 @@ is.baked <- function(data) {
 #'
 #' convert_recipe(rec)
 #' @importFrom tibble tibble enframe
-#' @importFrom globalr add_class
+#' @importFrom helpr add_class
 #' @export
 convert_recipe <- function(object) {
 

@@ -15,7 +15,7 @@
 #' @return A sub- or re-sampled data frame that is smaller or larger than
 #'   `data` with equal class size.
 #' @examples
-#' xtab <- globalr::cross_tab
+#' xtab <- helpr::cross_tab
 #'
 #' # original class distribution
 #' xtab(mtcars, vs)

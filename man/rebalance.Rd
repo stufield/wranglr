@@ -28,7 +28,7 @@ Implements up- or down-sampling for analyses
 with binary class imbalances.
 }
 \examples{
-xtab <- globalr::cross_tab
+xtab <- helpr::cross_tab
 
 # original class distribution
 xtab(mtcars, vs)

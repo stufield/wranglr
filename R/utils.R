@@ -7,8 +7,8 @@
   }
 }
 
-is.apt <- getFromNamespace("is.apt", "globalr")
-seqid2apt <- getFromNamespace("seqid2apt", "globalr")
-getAnalytes <- getFromNamespace("getAnalytes", "globalr")
-getMeta <- getFromNamespace("getMeta", "globalr")
+is.apt <- getFromNamespace("is.apt", "helpr")
+seqid2apt <- getFromNamespace("seqid2apt", "helpr")
+getAnalytes <- getFromNamespace("getAnalytes", "helpr")
+getMeta <- getFromNamespace("getMeta", "helpr")
 

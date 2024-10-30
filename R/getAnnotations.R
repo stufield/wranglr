@@ -16,7 +16,7 @@
 #' @examples
 #' getAnnotations()
 #' @author Stu Field
-#' @importFrom globalr signal_oops value
+#' @importFrom helpr signal_oops value
 #' @importFrom tibble as_tibble
 #' @export
 getAnnotations <- function(api = FALSE, path = "annotations_graph/api") {

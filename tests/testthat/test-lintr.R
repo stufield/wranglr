@@ -1,7 +1,7 @@
 
 test_that("splyr is in style compliance", {
-  globalr::skip_on_jenkins()  # don't run in Jenkins
-  globalr::skip_on_check()    # don't run in devtools::check()
+  helpr::skip_on_jenkins()  # don't run in Jenkins
+  helpr::skip_on_check()    # don't run in devtools::check()
   skip_on_covr()     # don't run if in 'covr'
   skip_if_not_installed("lintr")
   skip_if_not(packageVersion("lintr") >= "3.0.2")

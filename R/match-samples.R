@@ -18,7 +18,7 @@
 #'
 #' dfs <- match_samples(train, new)
 #' dfs
-#' @importFrom globalr value
+#' @importFrom helpr value
 #' @export
 match_samples <- function(x, y, idcol = "SampleId") {
   xname <- deparse(substitute(x))

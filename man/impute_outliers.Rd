@@ -29,7 +29,7 @@ to the 3*sigma value of the Gaussian.
 \examples{
 set.seed(101)
 vec  <- c(2, 2.5, rnorm(26, 15, 2), 25, 25.9)   # Gaussian with 4 outliers (2hi, 2lo)
-pars <- attributes(globalr::get_outliers(vec, n.sigma = 3, type = "para"))
+pars <- attributes(helpr::get_outliers(vec, n.sigma = 3, type = "para"))
 pars
 
 impute_outliers(vec)

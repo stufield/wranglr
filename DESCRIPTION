@@ -18,7 +18,7 @@ Depends:
     dplyr (>= 1.0.3)
 Imports:
     purrr,
-    globalr,
+    helpr,
     tibble,
     tidyr
 Suggests:

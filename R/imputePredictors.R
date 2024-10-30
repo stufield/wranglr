@@ -26,7 +26,7 @@
 #'     "c",         9,         7,            7.1,        7.1
 #' )
 #' imputePredictors(x, tbl)
-#' @importFrom globalr is.logspace
+#' @importFrom helpr is.logspace
 #' @export
 imputePredictors <- function(data, extrm_vals) {
 
@@ -73,7 +73,7 @@ imputePredictors <- function(data, extrm_vals) {
 
 #' Check the extreme values table properties pre-imputation.
 #' @param x the imputation table.
-#' @importFrom globalr value
+#' @importFrom helpr value
 #' @noRd
 .check_extrm_vals <- function(x) {
   if ( !inherits(x, "tbl_df") ) {

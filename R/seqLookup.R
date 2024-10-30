@@ -92,7 +92,7 @@ seqify <- function(x) {
 
 
 #' @noRd
-#' @importFrom globalr add_color signal_rule liter
+#' @importFrom helpr add_color signal_rule liter
 #' @export
 print.seq <- function(x, ...) {
   tbl   <- seqLookup(as.character(x))

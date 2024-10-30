@@ -40,7 +40,7 @@ from the median \emph{and} a specified number of fold-changes from
 the median (i.e. \code{fold.crit}; e.g. 5x).\cr
 \strong{Note:} \code{n.sigma} is ignored.
 \item The parametric case: the mean and standard deviation are
-calculated robustly via \code{\link[globalr:fit_gauss]{fit_gauss()}}. Outliers
+calculated robustly via \code{\link[helpr:fit_gauss]{fit_gauss()}}. Outliers
 are defined as measurements falling \emph{outside} +/- \code{n.sigma}*\eqn{\sigma}
 from the the estimated \eqn{\mu}.\cr
 \strong{Note:} \code{mad.crit} and \code{fold.crit} are ignored.

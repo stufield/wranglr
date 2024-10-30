@@ -31,7 +31,7 @@
 #'
 #' table(imputeNAs(x)) |> sort() |> tail()
 #' @importFrom stats median
-#' @importFrom globalr value
+#' @importFrom helpr value
 #' @export
 imputeNAs <- function(x) UseMethod("imputeNAs")
 

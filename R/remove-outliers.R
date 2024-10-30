@@ -11,8 +11,8 @@
 #'   analysis on values in `x`. If _not_ `NULL`, either a numeric vector (RFU)
 #'   or character vector (e.g. class names) ordered in the same order as `x`
 #'   indicating the pairing.
-#' @inherit globalr::get_outliers details
-#' @inheritParams globalr::get_outliers
+#' @inherit helpr::get_outliers details
+#' @inheritParams helpr::get_outliers
 #' @param ... Additional arguments passed to [get_outliers()].
 #' @return A `tibble` with columns `x` and `y` representing each
 #'   numeric vector pair with statistical outliers removed.
@@ -28,7 +28,7 @@
 #' x2 <- remove_outliers(x, y)       # final row removed
 #' x2
 #' @importFrom tibble tibble
-#' @importFrom globalr is.logspace
+#' @importFrom helpr is.logspace
 #' @export
 remove_outliers <- function(x, y = NULL, type = "nonparametric", ...) {
 
