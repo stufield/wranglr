@@ -8,12 +8,15 @@
 #'   for a particular analyte. The entries of the vectors should be replicates
 #'   of intra-run assay variation. **Important!**: be sure to remove any `NAs`,
 #'   if present, beforehand.
+#'
 #' @return A named vector of the CV decomposition for the replicates.
 #' @author Stu Field, Dom Zichi, Eduardo Tabacman
-#' @seealso [calcSS()]
+#'
+#' @seealso [calc_ss()]
+#'
 #' @references Calculation follows the method laid out
 #'   by Dom Zichi, _Decomposition of Assay Variance_, 13 August 2011.
-#' @keywords CV decomposition intra-class correlation coefficient
+#'
 #' @examples
 #' # Example 1 (Dom's example)
 #' dom_example <- list(A = c(5785.1, 5005.6, 5686.3, 5990.8,
@@ -23,13 +26,14 @@
 #'                     C = c(5409.4, 5353.6, 5398.0, 5631.2,
 #'                           5646.1, 5073.4, 5879.2, 5617.5))
 #' dom_example
-#' calcCV(dom_example)
+#' calc_cv(dom_example)
 #'
 #' # Example 2 (dummy `sim_adat` example)
-#' # Here, we will look at how the intra, inter, and total variance.
-#' # We assume `sim_adat` contains *only* calibrator samples
-#' # and assume the `SiteId` represents "runs", then `lapply()` over
-#' # each analyte, calculating the `CVdecomp` for each and store in a data frame.
+#' # look at how the intra, inter, and total variance.
+#' # We assume `sim_adat` contains *only* replicate samples
+#' # and assume the `SiteId` represents assay "runs".
+#' # We can then `lapply()` over each feature, calculating
+#' # the `CVdecomp` for each and store to a data frame
 #' split_on <- sim_adat$SiteId
 #'
 #' # split data
@@ -37,10 +41,10 @@
 #'   lapply(split, f = split_on)
 #'
 #' # iterate over list/analytes; each contains multiple (4x) "runs"
-#' coeffVar <- lapply(site_split, calcCV)
+#' coeffVar <- lapply(site_split, calc_cv)
 #' coeffVar <- do.call(rbind, coeffVar) |> data.frame()
 #' @export
-calcCV <- function(x) {
+calc_cv <- function(x) {
   if ( inherits(x, "data.frame") ) {
     stop("Please recast data.frame `x` as a list of vectors.",
          call. = FALSE)
