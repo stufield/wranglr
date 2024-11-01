@@ -72,16 +72,16 @@
 #' sample_two <- create_kfold(sim_adat, k = 4L, repeats = 2L,
 #'                            breaks = list(time = 4L, status = NA))
 #'
-#' @importFrom helpr is.Integer len_one add_class
+#' @importFrom helpr is_int_vec len_one add_class
 #' @export
 create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   stopifnot(
     "`data` must be an object of class `data.frame`." =
       !missing(data) && is.data.frame(data),
-    "`k` must be a positive integer." = is.Integer(k) && is.vector(k) &&
+    "`k` must be a positive integer." = is_int_vec(k) && is.vector(k) &&
       len_one(k) && k > 0.0,
-    "`repeats` must be a positive integer." = is.Integer(repeats) &&
+    "`repeats` must be a positive integer." = is_int_vec(repeats) &&
       is.vector(repeats) && len_one(repeats) && repeats > 0.0,
     # This is not a thorough test of the breaks input; relying on downstream
     # calls to fully vet
@@ -139,14 +139,14 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   the fold designation for each split. And `Repeat` indicates the repeat
 #'   number (if applicable).
 #' @importFrom tibble tibble
-#' @importFrom helpr is.Integer len_one
+#' @importFrom helpr is_int_vec len_one
 .vfold_splits <- function(data, k = 10L, breaks = NULL, depth = 20L) {
   # local testing of only those variables used in this function
   # we do not test those that are merely passed to other functions
   stopifnot(
     "`data` must be an object of class `data.frame`." =
       !missing(data) && is.data.frame(data),
-    "`k` must be a positive integer." = is.Integer(k) &&
+    "`k` must be a positive integer." = is_int_vec(k) &&
       is.vector(k) && len_one(k) && k > 0.0,
     "`breaks` must be NULL or a list of length 1 or 2." =
       is.null(breaks) || (is.list(breaks) && length(breaks) %in% 1:2L)
@@ -201,7 +201,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   where `n = length(x)`. If `x` is numeric, there must be at least 40 rows in
 #'   the data set (when `depth = 20`) to conduct stratified sampling.
 #' @return A factor vector indicating the stratum for each `x`.
-#' @importFrom helpr has_length is.Integer len_one value
+#' @importFrom helpr has_length is_int_vec len_one value
 #' @importFrom stats na.omit quantile
 .make_strata <- function(x, breaks = 4, n.unique = 5, depth = 20) {
   stopifnot(
@@ -212,9 +212,9 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
          all(is.finite(breaks) | is.infinite(breaks))) ||
       (is.vector(breaks) && len_one(breaks) &&
          (is.finite(breaks) | (is.na(breaks) && !is.nan(breaks)))),
-    "`depth` must be a positive integer." = is.Integer(depth) &&
+    "`depth` must be a positive integer." = is_int_vec(depth) &&
       is.vector(depth) && len_one(depth) && depth > 0.0,
-    "`n.unique` must be a positive integer." = is.Integer(n.unique) &&
+    "`n.unique` must be a positive integer." = is_int_vec(n.unique) &&
       is.vector(n.unique) && len_one(n.unique) && n.unique > 0.0
   )
 
@@ -296,17 +296,17 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'
 #' @return A list containing the selected indices for each fold. These are
 #'   intended to be the "assessment" sample.
-#' @importFrom helpr has_length is.Integer len_one
+#' @importFrom helpr has_length is_int_vec len_one
 .getStrataIndices_one <- function(strata, breaks, k, idx, depth, ...) {
   # local testing of only those variables used in this function
   # we do not test those that are merely passed to other functions
   stopifnot(
     "All inputs must be provided." = !missing(strata) &&
       !missing(breaks) && !missing(k) && !missing(idx) && !missing(depth),
-    "`k` must be a positive integer." = is.Integer(k) && is.vector(k) &&
+    "`k` must be a positive integer." = is_int_vec(k) && is.vector(k) &&
       len_one(k) && k > 0.0,
     "`idx` must be an integer vector with dimension matching `strata`." =
-      is.Integer(idx) && is.vector(idx) && length(idx) == length(strata) && all(idx > 0)
+      is_int_vec(idx) && is.vector(idx) && length(idx) == length(strata) && all(idx > 0)
   )
 
   stratas <- .make_strata(strata, breaks = breaks, depth = depth)
@@ -350,9 +350,9 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     # However, these will be caught in the calls to the single strata and
     # .make_strata methods
     "`breaks` must be a list of length 2." = is.list(breaks) && length(breaks) == 2L,
-    "`k` must be a positive integer." = is.Integer(k) &&
+    "`k` must be a positive integer." = is_int_vec(k) &&
       is.vector(k) && len_one(k) && k > 0.0,
-    "`idx` must be an integer vector." = is.Integer(idx) &&
+    "`idx` must be an integer vector." = is_int_vec(idx) &&
       is.vector(idx) && length(idx) == nrow(strata) && all(idx > 0)
   )
 
@@ -380,14 +380,14 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' @param ... Inputs passed on to stratification functions. Must contain `depth`.
 #' @return A list, each element providing the indices of the assessment data for
 #'   a single fold.
-#' @importFrom helpr has_length is.Integer len_one value
+#' @importFrom helpr has_length is_int_vec len_one value
 .getStrataIndices <- function(strata, k, idx, breaks, ...) {
   stopifnot(
     "All inputs must be provided." = !missing(strata) && !missing(k) &&
       !missing(idx) && !missing(breaks),
-    "`k` must be a positive integer." = is.Integer(k) &&
+    "`k` must be a positive integer." = is_int_vec(k) &&
       is.vector(k) && len_one(k) && k > 0.0,
-    "`idx` must be an integer vector." = is.Integer(idx) &&
+    "`idx` must be an integer vector." = is_int_vec(idx) &&
       is.vector(idx) && has_length(idx) && all(idx > 0),
     "`idx` must have same dimension as `strata`" = (!is.null(strata) &&
       (length(idx) == nrow(strata))) || is.null(strata),
@@ -443,13 +443,13 @@ is.x_split <- function(x) {
 #' # retrieve analysis data for all splits
 #' an_all <- analysis(sample_no_strat)
 #'
-#' @importFrom helpr is.Integer len_one
+#' @importFrom helpr is_int_vec len_one
 #' @export
 analysis <- function(object, i = NULL) {
   stopifnot(
     "`object` must be a `x_split` object." = is.x_split(object),
     "`i` must be a positive integer." = is.null(i) ||
-      (is.Integer(i) && is.vector(i) && len_one(i) && i > 0.0),
+      (is_int_vec(i) && is.vector(i) && len_one(i) && i > 0.0),
     "`i` cannot exceed the number of splits." = is.null(i) ||
       (is.numeric(i) && i <= length(object$splits$split))
   )
@@ -475,13 +475,13 @@ analysis <- function(object, i = NULL) {
 #'
 #' # retrieve assessment data for all splits
 #' ass_all <- assessment(sample_no_strat)
-#' @importFrom helpr is.Integer len_one
+#' @importFrom helpr is_int_vec len_one
 #' @export
 assessment <- function(object, i = NULL) {
   stopifnot(
     "`object` must be a `x_split` object." = is.x_split(object),
     "`i` must be a positive integer." = is.null(i) ||
-      (is.Integer(i) && is.vector(i) && len_one(i) && i > 0.0),
+      (is_int_vec(i) && is.vector(i) && len_one(i) && i > 0.0),
     "`i` cannot exceed the number of splits." = is.null(i) ||
       (is.numeric(i) && i <= length(object$splits$split))
   )

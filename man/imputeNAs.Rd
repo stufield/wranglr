@@ -43,8 +43,8 @@ table(imputeNAs(x)) |> sort() |> tail()
 \code{\link[=median]{median()}}, \code{\link[=modify_if]{modify_if()}}
 
 Other impute: 
-\code{\link{imputePredictors}()},
-\code{\link{impute_outliers}()}
+\code{\link{impute_outliers}()},
+\code{\link{impute_predictors}()}
 }
 \author{
 Stu Field

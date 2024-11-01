@@ -54,6 +54,6 @@ getAnnotationsAPI <- function(path = "annotations_graph/api") {
     as_tibble()
   unnest(tbl, cols = names(tbl)) |>
     select(-EnsemblGeneId, -HgncId) |>
-    mutate(AptName = seqid2apt(SeqId)) |>
+    mutate(AptName = add_seq(SeqId)) |>
     select(SeqId, AptName, everything())
 }

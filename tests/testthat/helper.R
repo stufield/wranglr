@@ -3,7 +3,7 @@
 # minimal set of attributes to trick `is_intact_attr()` to be TRUE
 dress_adat <- function(df) {
   stopifnot(inherits(df, "data.frame"))
-  row_meta <- getMeta(df)
+  row_meta <- get_meta(df)
   structure(
     df,
     class = c("soma_adat", "data.frame"),

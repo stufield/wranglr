@@ -30,8 +30,8 @@ test_that("the object names are correct", {
 })
 
 test_that("AptNames are correct", {
-  expect_equal(st$AptName, getAnalytes(sample.adat))
-  expect_equal(st_group$AptName, getAnalytes(sample.adat))
+  expect_equal(st$AptName, get_analytes(sample.adat))
+  expect_equal(st_group$AptName, get_analytes(sample.adat))
 })
 
 test_that("column values are correct when no `group.var` is passed", {

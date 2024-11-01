@@ -81,40 +81,44 @@ library(help = splyr)
 
 
 ### Transforming Data
-* `centerScaleData()`
-* `somaRecipe()`
+
+* `center_scale()`
+* `create_recipe()`
+
 ```{r center-scale}
-scaled <- centerScaleData(sim_adat)
+scaled <- center_scale(sim_adat)
 apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
 apply(strip_meta(scaled), 2, sd)             # sd = 1
 
-# `somaRecipe()`
-rcp <- somaRecipe(sim_adat)
+# `create_recipe()`
+rcp <- create_recipe(sim_adat)
 rcp
 ```
 
 -----------
 
 
-```{r globalr, echo = FALSE}
-library(globalr)   # getOutliers
+```{r helpr, echo = FALSE}
+library(helpr)   # get_outliers
 ```
 
 ### Imputing Data
-* `imputeOutliers()`, `getOutliers()` (`SomaGlobals`)
+
+* `impute_outliers()`, `get_outliers()` (`helpr`)
 * `imputeNAs()`
-* `imputePredictors()`
+* `impute_predictors()`
+
 ```{r imputing}
 # Outliers
 x <- withr::with_seed(1, rnorm(10))   # normal
 x <- c(x, 100)                        # add outlier
-getOutliers(x)                        # index of the outlier
+get_outliers(x)                       # index of the outlier
 
 # parameters stored in attributes (parametric only)
-attributes(getOutliers(x, type = "para"))
+attributes(get_outliers(x, type = "para"))
 
 # Impute 11th value
-imputeOutliers(x)
+impute_outliers(x)
 
 # Impute NAs
 x <- withr::with_seed(1, rnorm(6))
@@ -133,7 +137,7 @@ tbl <- tibble::tribble(
     "b",         5,         5,            0,          1,
     "c",         9,         7,            7.1,        7.1
 )
-imputePredictors(x, tbl)
+impute_predictors(x, tbl)
 ```
 
 -----------

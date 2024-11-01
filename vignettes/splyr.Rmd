@@ -8,9 +8,9 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-library(globalr)
+library(helpr)
 library(splyr)
-sample.adat <- splyr:::sample.adat
+s_data <- splyr:::sample.adat
 knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>"
 )
@@ -50,10 +50,10 @@ rcp
 * `remove_outliers()`
 * `impute_outliers()`
 * `imputeNAs()`
-* `imputePredictors()`
+* `impute_predictors()`
 
 ```{r imputing}
-# Identify outliers (`globalr::get_outliers()`)
+# Identify outliers (`helpr::get_outliers()`)
 x <- withr::with_seed(1, rnorm(10))   # normal
 x <- c(x, 100)                        # add outlier
 get_outliers(x)                       # get index of the outlier
@@ -81,7 +81,7 @@ tbl <- tibble::tribble(
     "b",         5,         5,            0,          1,
     "c",         9,         7,            7.1,        7.1
 )
-imputePredictors(x, tbl)
+impute_predictors(x, tbl)
 ```
 
 -----------
@@ -127,7 +127,7 @@ levels(bar$a)   # 1 level now
 * `lookupAnnotations()`
 
 ```{r seqLookup}
-seqs <- withr::with_seed(101, sample(names(sample.adat), 10))
+seqs <- withr::with_seed(101, sample(names(s_data), 10))
 seqs
 
 # NAs for those analytes dropped from menu
@@ -140,5 +140,5 @@ seqify(seqs)
 seqLookup(seqs, splyr:::apt_data)
 
 # OR: on the fly
-seqLookup(seqs, attr(sample.adat, "Col.Meta"))
+seqLookup(seqs, attr(s_data, "Col.Meta"))
 ```

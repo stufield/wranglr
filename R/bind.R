@@ -74,7 +74,7 @@ bind_union <- function(...) {
 #' @param x A list of data frames.
 .bind_and_clean <- function(x) {
   out <- bind_rows(x, .id = "data") |> col2rn()
-  select(out, getMeta(out), everything())
+  select(out, get_meta(out), everything())
 }
 
 #' @noRd

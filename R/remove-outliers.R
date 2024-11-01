@@ -28,16 +28,16 @@
 #' x2 <- remove_outliers(x, y)       # final row removed
 #' x2
 #' @importFrom tibble tibble
-#' @importFrom helpr is.logspace
+#' @importFrom helpr is_logspace
 #' @export
 remove_outliers <- function(x, y = NULL, type = "nonparametric", ...) {
 
   ret <- tibble(x = x, y = y %||% NA_real_)
-  x.  <- if ( is.logspace(x) ) 10^x else x
+  x.  <- if ( is_logspace(x) ) 10^x else x
   idx <- get_outliers(x., type = type, ...)
 
   if ( !is.null(y) && is.numeric(y) ) {
-    y.    <- if ( is.logspace(y) ) 10^y else y
+    y.    <- if ( is_logspace(y) ) 10^y else y
     idx_y <- get_outliers(y., type = type, ...)
     idx   <- union(idx, idx_y)
   }

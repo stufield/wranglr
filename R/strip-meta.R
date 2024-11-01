@@ -18,7 +18,7 @@
 #' @export
 strip_meta <- function(data, feat = NULL) {
   if ( inherits(data, "soma_adat") ) {
-    data.matrix(data[, getAnalytes(data)])
+    data.matrix(data[, get_analytes(data)])
   } else if ( !is.null(feat) ) {
     data.matrix(data[, feat])
   } else {

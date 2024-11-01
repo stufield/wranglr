@@ -11,7 +11,7 @@
 #' @author Amy Zhang
 #' @examples
 #' test <- sim_adat
-#' apts <- splyr:::getAnalytes(test)
+#' apts <- splyr:::get_analytes(test)
 #' rec <-  recipes::recipe(~ ., data = dplyr::select(test, dplyr::all_of(apts))) |>
 #'  recipes::step_log(recipes::all_predictors(), base = 10) |>
 #'  recipes::step_center(recipes::all_predictors()) |>

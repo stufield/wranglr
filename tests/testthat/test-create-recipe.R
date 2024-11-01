@@ -11,7 +11,7 @@ train <- withr::with_seed(101,
 )
 
 rcp   <- create_recipe(train)
-feats <- getAnalytes(train)
+feats <- get_analytes(train)
 
 # Test data ----
 nn <- 5L

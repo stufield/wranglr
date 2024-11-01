@@ -17,28 +17,28 @@ x  <- data.frame(
 
 # Testing ----
 test_that("imputation thresholds only specified values", {
-  expect_equal(x, imputePredictors(df, tbl))
+  expect_equal(x, impute_predictors(df, tbl))
 })
 
 test_that("catches trips are error/warn when triggered", {
   expect_error(
-    imputePredictors(df, matrix(1:12, ncol = 4)),
+    impute_predictors(df, matrix(1:12, ncol = 4)),
     "The 'extrm_vals' object must be a 'tibble' object."
   )
 
   expect_error(
-    imputePredictors(df, dplyr::select(tbl, -impute_min)),  # rm column of tbl
+    impute_predictors(df, dplyr::select(tbl, -impute_min)),  # rm column of tbl
     paste("The 'extrm_vals' tibble must contain these 5 columns:",
           "'AptName', 'xtrm_min', 'xtrm_max', 'impute_min', 'impute_max'")
   )
 
   expect_error(
-    imputePredictors(df, dplyr::rename(tbl, AptNames = "AptName")),  # bad name
+    impute_predictors(df, dplyr::rename(tbl, AptNames = "AptName")),  # bad name
     paste("The 'extrm_vals' table has missing column(s): 'AptName'"), fixed = TRUE
   )
 
   expect_warning(
-    y <- imputePredictors(df, dplyr::rename(tbl, aptname = "AptName")), # lowercase
+    y <- impute_predictors(df, dplyr::rename(tbl, aptname = "AptName")), # lowercase
     "Extreme value table uses `aptname`, in the future please use `AptName`."
   )
   expect_equal(x, y)
@@ -46,7 +46,7 @@ test_that("catches trips are error/warn when triggered", {
   tbl2 <- tbl
   tbl2[3L, 3L] <- 9.5
   expect_error(
-    imputePredictors(df, tbl2),
+    impute_predictors(df, tbl2),
     paste("All 'impute_min' values must be > 'xtrm_min' AND",
           "all 'impute_max' values must be < 'xtrm_max'.")
   )

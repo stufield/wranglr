@@ -59,7 +59,7 @@ test_that("`center_scale()` unit test default feat (all numerics)", {
 
 
 test_that("`center_scale()` unit test when `feats` param is passed (subset)", {
-  feats <- getAnalytes(data)
+  feats <- get_analytes(data)
   cs2   <- center_scale(data, feat = feats)
   expect_equal(cs2$foo, data$foo)   # should be unchanged
   atts <- attributes(cs2)

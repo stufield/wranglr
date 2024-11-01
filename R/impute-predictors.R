@@ -25,10 +25,10 @@
 #'     "b",         5,         5,            0,          1,
 #'     "c",         9,         7,            7.1,        7.1
 #' )
-#' imputePredictors(x, tbl)
-#' @importFrom helpr is.logspace
+#' impute_predictors(x, tbl)
+#' @importFrom helpr is_logspace
 #' @export
-imputePredictors <- function(data, extrm_vals) {
+impute_predictors <- function(data, extrm_vals) {
 
   if ( "aptname" %in% names(extrm_vals) ) {
     extrm_vals <- dplyr::rename(extrm_vals, "AptName" = aptname)
@@ -113,9 +113,9 @@ imputePredictors <- function(data, extrm_vals) {
 #' @noRd
 .check_rfu_space <- function(x) {
   # check `x` IS in log-space
-  if ( !is.logspace(x) ) {
+  if ( !is_logspace(x) ) {
     warning(
-      "The data passed to `imputePredictors()` has not been log-transformed!\n",
+      "The data passed to `impute_predictors()` has not been log-transformed!\n",
       "   Most imputation tables assume log10-transformed data.", call. = FALSE
     )
   }
@@ -124,7 +124,7 @@ imputePredictors <- function(data, extrm_vals) {
   is_cntr <- sum(colSums(rfu)) < 1
   if ( !is_cntr ) {
     warning(
-      "The data passed to `imputePredictors()` has not been centered!\n",
+      "The data passed to `impute_predictors()` has not been centered!\n",
       "   Most imputation tables assume centered data.", call. = FALSE
     )
   }
@@ -133,7 +133,7 @@ imputePredictors <- function(data, extrm_vals) {
   is_scale <- abs(stats::median(apply(rfu, 2, stats::sd)) - 1.0) < 0.1
   if ( !is_scale ) {
     warning(
-      "The data passed to `imputePredictors()` has not been scaled!\n",
+      "The data passed to `impute_predictors()` has not been scaled!\n",
       "   Most imputation tables assume scaled data.", call. = FALSE
     )
   }

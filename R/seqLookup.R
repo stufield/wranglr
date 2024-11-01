@@ -66,6 +66,7 @@ seqLookup <- function(seq, tbl = NULL) {
            TargetFullName, Type, Dilution, any_of(add_vars))
 }
 
+
 #' @describeIn seqLookup
 #'   Convert to `seq` object
 #' @return For `seqify()`, an object of class `seq`.
@@ -84,11 +85,9 @@ seqLookup <- function(seq, tbl = NULL) {
 #' seqify(vec)
 #' @export
 seqify <- function(x) {
-  stopifnot("All values of `x` must be SeqIds." = all(is.apt(x)))
+  stopifnot("All values of `x` must be SeqIds." = all(is_seq(x)))
   structure(x, class = c("seq", "character"))
 }
-
-
 
 
 #' @noRd

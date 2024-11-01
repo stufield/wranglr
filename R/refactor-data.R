@@ -24,7 +24,7 @@
 #' @importFrom helpr signal_info value
 #' @export
 refactor_data <- function(data) {
-  lgl <- vapply(data[ getMeta(data)], is.factor, NA, USE.NAMES = TRUE)
+  lgl <- vapply(data[get_meta(data)], is.factor, NA, USE.NAMES = TRUE)
   nms <- names(lgl[lgl])
   for ( meta in nms ) {
     levs <- levels(data[[meta]])

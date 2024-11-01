@@ -56,7 +56,7 @@ ggplot(data.frame(x = vec), aes(x = x)) +
 
 Other impute: 
 \code{\link{imputeNAs}()},
-\code{\link{imputePredictors}()}
+\code{\link{impute_predictors}()}
 }
 \author{
 Stu Field

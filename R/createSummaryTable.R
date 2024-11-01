@@ -57,7 +57,7 @@ createSummaryTable <- function(adat, group.var, .funs = c("min",
 
   # Create nested-tibble of data sets by group
   adat_nest <- adat |>
-    select(group_var, getAnalytes(adat)) |>
+    select(group_var, get_analytes(adat)) |>
     arrange(group_var) |>   # for below; columns ordered by group levels
     group_by(group_var) |>  # split out by group
     nest()
