@@ -29,41 +29,38 @@
 #' @param x,seq Character. A vector of `SeqIds`, or
 #'   strings containing `SeqId`s.
 #' @param tbl A tibble containing annotation data.
-#' @return For [seqLookup()], a tibble, a subset of `tbl`,
+#' @return For [seq_lookup()], a tibble, a subset of `tbl`,
 #'   corresponding to the rows whose `SeqIds` match the values in `seq`.
 #' @author Stu Field
-#' @seealso  [getAnnotations()], [left_join()]
+#' @seealso  [get_anno()], [left_join()]
 #' @examples
 #' svec <- c("seq.2981.9", "seq.5073.30", "seq.4429.51", "seq.2447.7")
 #' svec
 #'
-#' seqLookup(svec)
+#' seq_lookup(svec)
 #'
 #' # can pass 'known' set of annotations
 #' #   note: the NAs are now replaced with updated info
-#' seqLookup(svec, tbl = splyr:::apt_data)
+#' seq_lookup(svec, tbl = splyr:::apt_data)
 #'
 #' @importFrom tibble tibble as_tibble
 #' @export
-seqLookup <- function(seq, tbl = NULL) {
-  .getSeqId <- function(x) {
-    sub("\\.", "-", sub("^seq\\.", "", x))
-  }
+seq_lookup <- function(seq, tbl = NULL) {
   if ( is.null(tbl) ) {
-    lookup <- getAnnotations(api = FALSE)
+    lookup <- get_anno()
   } else {
     lookup <- as_tibble(tbl)
-    lookup$SeqId <- .getSeqId(lookup$SeqId)
+    lookup$SeqId <- get_seq(lookup$SeqId)
   }
   add_vars <- c("UniProt", "List", "Reason")
-  tibble(seq = seq, SeqId = .getSeqId(seq)) |>
+  tibble(seq = seq, SeqId = get_seq(seq)) |>
     left_join(lookup, by = "SeqId") |>
     select(seq, SeqId, EntrezGeneSymbol, Target,
            TargetFullName, Type, Dilution, any_of(add_vars))
 }
 
 
-#' @describeIn seqLookup
+#' @describeIn seq_lookup
 #'   Convert to `seq` object.
 #' @return For `seqify()`, an object of class `seq`.
 #' @examples
@@ -89,7 +86,7 @@ seqify <- function(x) {
 #' @importFrom helpr add_color signal_rule liter
 #' @export
 print.seq <- function(x, ...) {
-  tbl   <- seqLookup(as.character(x))
+  tbl   <- seq_lookup(as.character(x))
   symb1 <- add_color("\u25b6", "cyan")
   symb2 <- add_color("  \u276F  ", "cyan")
   writeLines(

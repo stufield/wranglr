@@ -121,24 +121,24 @@ levels(bar$a)   # 1 level now
 
 -----------
 
-### `seq.XXXX` formats
-* `seqLookup()`
+### `seq.xxxx.xx` formats
+* `seq_lookup()`
 * `seqify()`
-* `lookupAnnotations()`
+* `lookup_anno()`
 
-```{r seqLookup}
+```{r seq-lookup}
 seqs <- withr::with_seed(101, sample(names(s_data), 10))
 seqs
 
 # NAs for those analytes dropped from menu
-seqLookup(seqs)
+seq_lookup(seqs)
 
 seqify(seqs)
 
 # Pass `apt.data` from appropriate ADAT
 # to reconstitute those missing analytes
-seqLookup(seqs, splyr:::apt_data)
+seq_lookup(seqs, splyr:::apt_data)
 
 # OR: on the fly
-seqLookup(seqs, attr(s_data, "Col.Meta"))
+seq_lookup(seqs, attr(s_data, "Col.Meta"))
 ```

@@ -11,6 +11,8 @@ create_summ_tbl(
 )
 }
 \arguments{
+\item{data}{A \code{data.frame} or \code{tibble} object containing data for summary.}
+
 \item{group_var}{An unquoted (or quoted) string containing the indices
 to group the statistics, e.g. \code{SampleGroup}. If missing, ungrouped
 statistics are returned.}
@@ -18,8 +20,6 @@ statistics are returned.}
 \item{.funs}{Character. Strings of the functions used to
 summarize the data. Each function \emph{must} take a vector of data
 as input and return a summary scalar.}
-
-\item{adat}{A \code{data.frame} or \code{tibble} object containing data for summary.}
 }
 \value{
 A \code{tibble} object with rows (features) and columns as the

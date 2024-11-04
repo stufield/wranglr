@@ -1,7 +1,7 @@
-#' Look Up Aptamer Pattern
+#' Look Up Annotations by Pattern
 #'
-#' Searches the internal "Annotations" table (`tibble`) from
-#' the Graph Database for regular expression matches according to `pattern`.
+#' Searches the internal "annotations" table (`tibble`) from
+#' regular expression matches according to `pattern`.
 #' Pattern matching is performed *any* (`regexpr = "|"`) of the following:
 #'   * `EntrezGeneSymbol`
 #'   * `TargetFullName`
@@ -13,14 +13,13 @@
 #' @param pattern Character. Regular expression pattern to match.
 #' @return A tibble, a subset of Annotations from the Graph DB
 #'   corresponding to matching rows of the desired `pattern`.
-#'   An empty `tibble` if no matches found.
 #' @author Stu Field
 #' @examples
-#' lookupAnnotations("^MMP")     # match EntrezGeneSymbols
-#' lookupAnnotations("^29")      # match SeqId
-#' lookupAnnotations("^black")   # Blacklisted
+#' lookup_anno("^MMP")     # match EntrezGeneSymbols
+#' lookup_anno("^29")      # match SeqId
+#' lookup_anno("^black")   # Blacklisted
 #' @export
-lookupAnnotations <- function(pattern) {
+lookup_anno <- function(pattern) {
   dplyr::filter(
     annotations_v5.0,
     grepl(pattern, Target) |

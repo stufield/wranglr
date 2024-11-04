@@ -9,7 +9,7 @@
 #'   * `mad` (median absolute deviation)
 #'   * `max`
 #'
-#' @param adat A `data.frame` or `tibble` object containing data for summary.
+#' @param data A `data.frame` or `tibble` object containing data for summary.
 #' @param group_var An unquoted (or quoted) string containing the indices
 #'   to group the statistics, e.g. `SampleGroup`. If missing, ungrouped
 #'   statistics are returned.
