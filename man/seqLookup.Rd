@@ -10,10 +10,10 @@ seqLookup(seq, tbl = NULL)
 seqify(x)
 }
 \arguments{
-\item{tbl}{A tibble containing analyte (annotation) data.}
+\item{tbl}{A tibble containing annotation data.}
 
-\item{x, seq}{Character. A vector of \code{SeqIds}, \code{AptNames}, or
-\code{Aptamers}, strings containing \code{SeqId}s.}
+\item{x, seq}{Character. A vector of \code{SeqIds}, or
+strings containing \code{SeqId}s.}
 }
 \value{
 For \code{\link[=seqLookup]{seqLookup()}}, a tibble, a subset of \code{tbl},
@@ -32,13 +32,11 @@ Conveniently look up "annotation" information such as:
 
 keyed on a vector of \code{SeqId}s.
 The lookup dictionary is matched on values in the \code{SeqId}
-column of Annotations (from the Graph Database), which is
-accessed via a static internal object.
-See \code{\link[=getAnnotations]{getAnnotations()}} for details.
+column of annotations, which accesses a static internal object.
 Alternatively, the user can explicitly pass an annotations table of
 of their choice.
 The \code{\link[=seqify]{seqify()}} function adds a \code{seq} class attribute allowing
-for a convenient S3 print method intended for interactive use.
+a convenient S3 print dispatch for interactive use.
 }
 \details{
 If historical analytes have been dropped from the menu
@@ -46,14 +44,13 @@ they will be absent from the default lookup table,
 resulting in \code{NA} for that row. But not all is lost! Dropped
 analytes can be retrieved by explicitly passing an annotations
 table corresponding to the original data prior to
-the menu change (see \code{Examples}). There are 2 ways to generate a
+the menu change (see \code{Examples}). The easiest way to generate a
 "time-capsuled" annotations table:
-1. via \code{getAnalyteInfo()}
 1. via \code{attr(data, "Col.Meta")}
 }
 \section{Functions}{
 \itemize{
-\item \code{seqify()}: Convert to \code{seq} object
+\item \code{seqify()}: Convert to \code{seq} object.
 
 }}
 \examples{
@@ -69,12 +66,11 @@ seqLookup(svec, tbl = splyr:::apt_data)
 # print method for class `seq`
 seqify(svec) |> class()
 
-# works with anonymous-AptNames
+# works with seq.xxxx.xx format
 seqify(svec)
 
-# also works with naked-SeqIds
-vec <- sub("^seq\\\\.", "", svec) |>
-  sub(pattern = "\\\\.", replacement = "-")
+# also works with pure SeqIds
+vec <- sub("\\\\.", "-", sub("^seq\\\\.", "", svec))
 vec
 
 seqify(vec)
@@ -83,7 +79,6 @@ seqify(vec)
 \code{\link[=getAnnotations]{getAnnotations()}}, \code{\link[=left_join]{left_join()}}
 
 Other Annotations: 
-\code{\link{getAnnotations}()},
 \code{\link{lookupAnnotations}()}
 }
 \author{

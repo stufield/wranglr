@@ -9,13 +9,11 @@
 #'
 #' keyed on a vector of `SeqId`s.
 #' The lookup dictionary is matched on values in the `SeqId`
-#' column of Annotations (from the Graph Database), which is
-#' accessed via a static internal object.
-#' See [getAnnotations()] for details.
+#' column of annotations, which accesses a static internal object.
 #' Alternatively, the user can explicitly pass an annotations table of
 #' of their choice.
 #' The [seqify()] function adds a `seq` class attribute allowing
-#' for a convenient S3 print method intended for interactive use.
+#' a convenient S3 print dispatch for interactive use.
 #'
 #' @details
 #' If historical analytes have been dropped from the menu
@@ -23,15 +21,14 @@
 #'   resulting in `NA` for that row. But not all is lost! Dropped
 #'   analytes can be retrieved by explicitly passing an annotations
 #'   table corresponding to the original data prior to
-#'   the menu change (see `Examples`). There are 2 ways to generate a
+#'   the menu change (see `Examples`). The easiest way to generate a
 #'   "time-capsuled" annotations table:
-#'      1. via `getAnalyteInfo()`
 #'      1. via `attr(data, "Col.Meta")`
 #'
 #' @family Annotations
-#' @param x,seq Character. A vector of `SeqIds`, `AptNames`, or
-#'   `Aptamers`, strings containing `SeqId`s.
-#' @param tbl A tibble containing analyte (annotation) data.
+#' @param x,seq Character. A vector of `SeqIds`, or
+#'   strings containing `SeqId`s.
+#' @param tbl A tibble containing annotation data.
 #' @return For [seqLookup()], a tibble, a subset of `tbl`,
 #'   corresponding to the rows whose `SeqIds` match the values in `seq`.
 #' @author Stu Field
@@ -50,8 +47,7 @@
 #' @export
 seqLookup <- function(seq, tbl = NULL) {
   .getSeqId <- function(x) {
-    sub("^seq\\.", "", x) |>
-      sub(pattern = "\\.", replacement = "-")
+    sub("\\.", "-", sub("^seq\\.", "", x))
   }
   if ( is.null(tbl) ) {
     lookup <- getAnnotations(api = FALSE)
@@ -68,18 +64,17 @@ seqLookup <- function(seq, tbl = NULL) {
 
 
 #' @describeIn seqLookup
-#'   Convert to `seq` object
+#'   Convert to `seq` object.
 #' @return For `seqify()`, an object of class `seq`.
 #' @examples
 #' # print method for class `seq`
 #' seqify(svec) |> class()
 #'
-#' # works with anonymous-AptNames
+#' # works with seq.xxxx.xx format
 #' seqify(svec)
 #'
-#' # also works with naked-SeqIds
-#' vec <- sub("^seq\\.", "", svec) |>
-#'   sub(pattern = "\\.", replacement = "-")
+#' # also works with pure SeqIds
+#' vec <- sub("\\.", "-", sub("^seq\\.", "", svec))
 #' vec
 #'
 #' seqify(vec)
@@ -100,7 +95,7 @@ print.seq <- function(x, ...) {
   writeLines(
     signal_rule("SeqId Lookup", lty = "double", line_col = "magenta")
   )
-  tbl  <- select(tbl, "SeqId-AptName" = "seq", GeneID = "EntrezGeneSymbol",
+  tbl  <- select(tbl, "SeqId-Feature" = "seq", GeneID = "EntrezGeneSymbol",
                  Target = "TargetFullName", "List", "Reason")
   tbl  <- rbind(names(tbl), tbl)
   cols <- c("red", "blue", "green", "yellow", "magenta")

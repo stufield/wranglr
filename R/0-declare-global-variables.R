@@ -10,6 +10,7 @@ if ( getRversion() >= "2.15.1" ) {
     c(".",
       "group_var",
       "feature",
+      "Feature",
       "name",
       "List",
       "rangeLower",
@@ -17,7 +18,7 @@ if ( getRversion() >= "2.15.1" ) {
       "role",
       "sdLower",
       "sdUpper",
-      "SeqId", "AptName", "Dilution", "EnsemblGeneId", "EntrezGeneSymbol", "HgncId", "Target", "TargetFullName", "Type", "aptname"  # remove one day
+      "SeqId", "Dilution", "EnsemblGeneId", "EntrezGeneSymbol", "HgncId", "Target", "TargetFullName", "Type", "aptname"  # remove one day
     )
   )
 }

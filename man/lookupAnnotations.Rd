@@ -33,7 +33,6 @@ lookupAnnotations("^black")   # Blacklisted
 }
 \seealso{
 Other Annotations: 
-\code{\link{getAnnotations}()},
 \code{\link{seqLookup}()}
 }
 \author{

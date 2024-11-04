@@ -7,11 +7,11 @@
 impute_predictors(data, extrm_vals)
 }
 \arguments{
-\item{data}{A \code{soma_adat}, \code{data.frame}, or \code{tibble} object.}
+\item{data}{A \code{data.frame}, or \code{tibble} object.}
 
 \item{extrm_vals}{A tibble (\code{tbl_df}) object with the following 5 fields:
 \describe{
-\item{\verb{AptName:}}{SOMAmer reagent feature name matching fields in \code{data}}
+\item{\verb{Feature:}}{feature name matching fields in \code{data}}
 \item{\verb{xtrm_min:}}{minimum acceptable value for that feature}
 \item{\verb{xtrm_max:}}{maximum acceptable value for that feature}
 \item{\verb{impute_min:}}{value to assign if below \code{xtrm_min}}
@@ -26,9 +26,9 @@ form of imputation can be capping RFU values above a threshold (i.e.
 winsorizing).
 }
 \examples{
-x   <- data.frame(a = 1:3, b = 4:6, c = 7:9, d = c(1.23, 4.56, 7.89))
+x   <- data.frame(a = 1:3L, b = 4:6L, c = 7:9L, d = c(1.23, 4.56, 7.89))
 tbl <- tibble::tribble(
-  ~ AptName,  ~ xtrm_max, ~ impute_max, ~ xtrm_min, ~ impute_min,
+  ~ Feature,  ~ xtrm_max, ~ impute_max, ~ xtrm_min, ~ impute_min,
     "a",         NA,        NA,           NA,         NA,
     "b",         5,         5,            0,          1,
     "c",         9,         7,            7.1,        7.1
@@ -41,6 +41,6 @@ Other impute:
 \code{\link{impute_outliers}()}
 }
 \author{
-Alex Poole, Stu Field
+Stu Field
 }
 \concept{impute}

@@ -1,11 +1,13 @@
 #' Get Graph Database Annotations
 #'
-#' Generate a lookup table (tibble) of Annotations from the Graph
-#' Database keyed on `SeqId`.
-#' By default, an internal static object corresponding to analyte
-#' annotations is returned.
-#' Alternatively, a request is sent to the internal Graph DB API endpoint
-#' to pull a live/dynamic annotations table via a call to [getAnnotationsAPI()].
+#' Generate a lookup table (tibble) of annotations
+#'   from the Graph Database keyed on `SeqId`.
+#'   By default, an internal static object
+#'   corresponding to analyte annotations is returned.
+#'   Alternatively, a request is sent to the
+#'   internal Graph DB API endpoint to pull a
+#'   live/dynamic annotations table via a call
+#'   to [getAnnotationsAPI()].
 #'
 #' @family Annotations
 #' @param api Logical. Should the API endpoint be queried, if
@@ -28,8 +30,8 @@ getAnnotations <- function(api = FALSE, path = "annotations_graph/api") {
 }
 
 #' @describeIn getAnnotations
-#' Similar to [getAnnotations()] but requests
-#' live dynamic annotations from the Graph DB API.
+#'   Similar to [getAnnotations()] but requests
+#'   live dynamic annotations from the Graph DB API.
 #' @importFrom purrr transpose
 #' @importFrom tidyr unnest
 #' @export
@@ -54,6 +56,6 @@ getAnnotationsAPI <- function(path = "annotations_graph/api") {
     as_tibble()
   unnest(tbl, cols = names(tbl)) |>
     select(-EnsemblGeneId, -HgncId) |>
-    mutate(AptName = add_seq(SeqId)) |>
-    select(SeqId, AptName, everything())
+    mutate(Feature = add_seq(SeqId)) |>
+    select(SeqId, Feature, everything())
 }

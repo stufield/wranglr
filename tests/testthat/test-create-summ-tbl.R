@@ -1,7 +1,7 @@
 
 # Setup ----
-st       <- createSummaryTable(sample.adat)
-st_group <- createSummaryTable(sample.adat, SampleGroup)
+st <- create_summ_tbl(sample.adat)
+st_group <- create_summ_tbl(sample.adat, SampleGroup)
 
 
 # Testing ----
@@ -13,14 +13,14 @@ test_that("output is a tibble object", {
 test_that("tibble dimensions are correct", {
   expect_s3_class(st, "data.frame")
   expect_s3_class(st_group, "data.frame")
-  expect_equal(dim(st), c(1129, 7))
-  expect_equal(dim(st_group), c(1129, 13))
+  expect_equal(dim(st), c(1129L, 7L))
+  expect_equal(dim(st_group), c(1129L, 13L))
 })
 
 test_that("the object names are correct", {
-  expect_named(st, c("AptName", "min", "median", "mean", "sd", "mad", "max"))
+  expect_named(st, c("Feature", "min", "median", "mean", "sd", "mad", "max"))
   expect_named(st_group,
-               c("AptName",
+               c("Feature",
                  "min_F", "min_M",
                  "median_F", "median_M",
                  "mean_F", "mean_M",
@@ -29,13 +29,13 @@ test_that("the object names are correct", {
                  "max_F", "max_M"))
 })
 
-test_that("AptNames are correct", {
-  expect_equal(st$AptName, get_analytes(sample.adat))
-  expect_equal(st_group$AptName, get_analytes(sample.adat))
+test_that("Feature names are correct", {
+  expect_equal(st$Feature, get_analytes(sample.adat))
+  expect_equal(st_group$Feature, get_analytes(sample.adat))
 })
 
-test_that("column values are correct when no `group.var` is passed", {
-  expect_equal(st |> dplyr::select(-AptName) |> colSums(),
+test_that("column values are correct when no `group_var` is passed", {
+  expect_equal(st |> dplyr::select(-Feature) |> colSums(),
                c(min    = 5901966.5000000,
                  median = 10965454.6500000,
                  mean   = 11277897.3850000,
@@ -44,8 +44,8 @@ test_that("column values are correct when no `group.var` is passed", {
                  max    = 19664004.50000000))
 })
 
-test_that("column values are correct when `group.var` is passed", {
-  expect_equal(st_group |> dplyr::select(-AptName) |> colSums(),
+test_that("column values are correct when `group_var` is passed", {
+  expect_equal(st_group |> dplyr::select(-Feature) |> colSums(),
                c(min_F    = 6606430.60000000,
                  min_M    = 6561672.40000000,
                  median_F = 11210751.30000000,
@@ -60,6 +60,9 @@ test_that("column values are correct when `group.var` is passed", {
                  max_M    = 17245191.90000000))
 })
 
-test_that("the `group.var` can be a unquoted or quoted string", {
-  expect_identical(st_group, createSummaryTable(sample.adat, "SampleGroup"))
+test_that("the `group_var` can be a unquoted or quoted string", {
+  expect_identical(
+    st_group,
+    create_summ_tbl(sample.adat, "SampleGroup")
+  )
 })

@@ -20,12 +20,14 @@ A tibble of the corresponding column meta data available in
 the Annotations Graph DB.
 }
 \description{
-Generate a lookup table (tibble) of Annotations from the Graph
-Database keyed on \code{SeqId}.
-By default, an internal static object corresponding to analyte
-annotations is returned.
-Alternatively, a request is sent to the internal Graph DB API endpoint
-to pull a live/dynamic annotations table via a call to \code{\link[=getAnnotationsAPI]{getAnnotationsAPI()}}.
+Generate a lookup table (tibble) of annotations
+from the Graph Database keyed on \code{SeqId}.
+By default, an internal static object
+corresponding to analyte annotations is returned.
+Alternatively, a request is sent to the
+internal Graph DB API endpoint to pull a
+live/dynamic annotations table via a call
+to \code{\link[=getAnnotationsAPI]{getAnnotationsAPI()}}.
 }
 \section{Functions}{
 \itemize{

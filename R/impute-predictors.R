@@ -5,10 +5,10 @@
 #' winsorizing).
 #'
 #' @family impute
-#' @param data A `soma_adat`, `data.frame`, or `tibble` object.
+#' @param data A `data.frame`, or `tibble` object.
 #' @param extrm_vals A tibble (`tbl_df`) object with the following 5 fields:
 #' \describe{
-#'   \item{`AptName:`}{SOMAmer reagent feature name matching fields in `data`}
+#'   \item{`Feature:`}{feature name matching fields in `data`}
 #'   \item{`xtrm_min:`}{minimum acceptable value for that feature}
 #'   \item{`xtrm_max:`}{maximum acceptable value for that feature}
 #'   \item{`impute_min:`}{value to assign if below `xtrm_min`}
@@ -16,39 +16,38 @@
 #' }
 #' Use `NA` to *not* impute, or use `dplyr::filter()` to remove the entire
 #' row if neither `min` nor `max` is desired for a given feature.
-#' @author Alex Poole, Stu Field
+#' @author Stu Field
 #' @examples
-#' x   <- data.frame(a = 1:3, b = 4:6, c = 7:9, d = c(1.23, 4.56, 7.89))
+#' x   <- data.frame(a = 1:3L, b = 4:6L, c = 7:9L, d = c(1.23, 4.56, 7.89))
 #' tbl <- tibble::tribble(
-#'   ~ AptName,  ~ xtrm_max, ~ impute_max, ~ xtrm_min, ~ impute_min,
+#'   ~ Feature,  ~ xtrm_max, ~ impute_max, ~ xtrm_min, ~ impute_min,
 #'     "a",         NA,        NA,           NA,         NA,
 #'     "b",         5,         5,            0,          1,
 #'     "c",         9,         7,            7.1,        7.1
 #' )
 #' impute_predictors(x, tbl)
-#' @importFrom helpr is_logspace
 #' @export
 impute_predictors <- function(data, extrm_vals) {
 
   if ( "aptname" %in% names(extrm_vals) ) {
-    extrm_vals <- dplyr::rename(extrm_vals, "AptName" = aptname)
-    warning(
-      "Extreme value table uses `aptname`, ",
-      "in the future please use `AptName`.", call. = FALSE
-    )
+    extrm_vals <- dplyr::rename(extrm_vals, "Feature" = aptname)
+  }
+
+  if ( "feature" %in% names(extrm_vals) ) {
+    extrm_vals <- dplyr::rename(extrm_vals, "Feature" = feature)
   }
 
   .check_extrm_vals(extrm_vals)
-  common_cols <- intersect(names(data), extrm_vals$AptName)
+  common_cols <- intersect(names(data), extrm_vals$Feature)
 
   if ( length(common_cols) == 0L ) {
     stop(
-      "No common features between `data` and `extrm_vals$AptName`.",
+      "No common features between `data` and `extrm_vals$Feature`.",
       call. = FALSE
     )
   }
 
-  extra_apts <- setdiff(extrm_vals$AptName, common_cols)
+  extra_apts <- setdiff(extrm_vals$Feature, common_cols)
 
   if ( length(extra_apts) > 0L ) {
     warning(
@@ -66,7 +65,7 @@ impute_predictors <- function(data, extrm_vals) {
   }
 
   for ( col in common_cols ) {
-    data[[col]] <- .impute(data[[col]], dplyr::filter(extrm_vals, AptName == col))
+    data[[col]] <- .impute(data[[col]], dplyr::filter(extrm_vals, Feature == col))
   }
   data
 }
@@ -79,8 +78,8 @@ impute_predictors <- function(data, extrm_vals) {
   if ( !inherits(x, "tbl_df") ) {
     stop("The 'extrm_vals' object must be a 'tibble' object.", call. = FALSE)
   }
-  tbl_nms <- c("AptName", "xtrm_min", "xtrm_max", "impute_min", "impute_max")
-  if ( ncol(x) != 5 ) {
+  tbl_nms <- c("Feature", "xtrm_min", "xtrm_max", "impute_min", "impute_max")
+  if ( ncol(x) != 5L ) {
     stop(
       "The 'extrm_vals' tibble must contain these 5 columns: ", value(tbl_nms),
       call. = FALSE
@@ -110,13 +109,15 @@ impute_predictors <- function(data, extrm_vals) {
 #'  * scaled
 #' @param x the data to be imputed.
 #' @importFrom stats sd median
+#' @importFrom helpr is_logspace
 #' @noRd
 .check_rfu_space <- function(x) {
   # check `x` IS in log-space
   if ( !is_logspace(x) ) {
     warning(
       "The data passed to `impute_predictors()` has not been log-transformed!\n",
-      "   Most imputation tables assume log10-transformed data.", call. = FALSE
+      " Most imputation is performed on log-transformed data.",
+      call. = FALSE
     )
   }
 
@@ -130,7 +131,7 @@ impute_predictors <- function(data, extrm_vals) {
   }
 
   # if the median difference to 1.0 is > 0.1 ... not scaled
-  is_scale <- abs(stats::median(apply(rfu, 2, stats::sd)) - 1.0) < 0.1
+  is_scale <- abs(median(apply(rfu, 2, sd)) - 1.0) < 0.1
   if ( !is_scale ) {
     warning(
       "The data passed to `impute_predictors()` has not been scaled!\n",
