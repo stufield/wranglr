@@ -38,7 +38,7 @@ General features of the data (see \code{attributes(sim_adat)}):
 sim_adat
 }
 \description{
-Simulates SomaScan data by randomly generating data for various
+Simulates SomaScan proteomic data by randomly generating data for various
 Bioinformatics related analyses and unit tests. Feature names are randomly
 generated to have \strong{seq.xxxx.xx} format so that downstream tools will
 function seamlessly. Model types this data can support:

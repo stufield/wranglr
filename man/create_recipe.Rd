@@ -25,14 +25,15 @@ convert_recipe(object)
 \arguments{
 \item{data}{A \code{data.frame} to be pre-processed according to \code{x}.}
 
-\item{feat}{A vector indicating which variables to center/scale.}
+\item{feat}{\code{character(n)}. A vector indicating which
+variables to center/scale.}
 
 \item{log10}{Logical. Should features in \code{data} be log10-transformed?}
 
-\item{center}{Logical. Indicating whether the variables
+\item{center}{\code{logical(1)}. Whether the variables
 should be shifted to be zero centered (\eqn{\mu = 0}).}
 
-\item{scale}{Logical. Indicating whether the variables
+\item{scale}{\code{logical(1)}. Whether the variables
 should be scaled to have unit variance (\eqn{\sigma = 1}).}
 
 \item{...}{Optional arguments of the form \verb{variable = function()}

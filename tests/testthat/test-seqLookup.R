@@ -38,7 +38,7 @@ test_that("`seqLookup()` returns correct tibble when SeqIds are passed", {
   expect_equal(tbl$EntrezGeneSymbol, c("THBS1", "UCHL1"))
 })
 
-test_that("NAs are properly generated for missing apts with long seq passed", {
+test_that("NAs are properly generated for missing features with long seq passed", {
   seqs <- grep("^seq\\.", names(sample.adat), value = TRUE)
   tbl <- seqLookup(seqs, annotations_v4.1)
   expect_equal(dim(tbl), c(length(seqs), 10L))

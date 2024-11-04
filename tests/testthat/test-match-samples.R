@@ -25,7 +25,7 @@ test_that("`match_samples()` has expected output", {
   out_df <- match_samples(as.data.frame(train), as.data.frame(new))
   expect_equal(out_df, expected)
 
-  # check mixture of data.frame and soma_adat
+  # check mixture of `data.frame` and `soma_adat`
   expect_equal(match_samples(as.data.frame(train), new),
                list(x = expected$x, y = out_og$y))
   expect_equal(match_samples(train, as.data.frame(new)),

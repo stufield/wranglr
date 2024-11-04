@@ -7,8 +7,7 @@
 imputeNAs(x)
 }
 \arguments{
-\item{x}{A \code{soma_adat} object, a data frame, matrix,
-or a numeric vector.}
+\item{x}{A \code{data.frame}, matrix, or numeric vector.}
 }
 \value{
 An object of the same dimension and class as \code{x}
@@ -16,21 +15,22 @@ with any \code{NA} values replaced with the median of the
 corresponding vector.
 }
 \description{
-Imputes any \code{NAs}, usually in meta data, with the median value.
-Must be a numeric. Objects of \code{factor} or \code{character} class
-are not allowed.
+Imputes any \code{NAs} with the median value.
+Must be a numeric data only. \code{factor} or
+\code{character} class are not allowed.
 }
 \examples{
 adat <- sim_adat
-imputeNAs(adat)   # 'soma_adat' S3
+imputeNAs(adat)
 
-imputeNAs(adat$seq.3032.11)  # 'numeric' method; chosen at random
+idx <- 25L  # random 25th column
+imputeNAs(adat[[idx]])  
 
 # test the S3 method
-all.equal(imputeNAs(adat$seq.3032.11), imputeNAs(adat)$seq.3032.11)
+all.equal(imputeNAs(adat[[idx]]), imputeNAs(adat)[[idx]])
 
-x <- adat$seq.3032.11
-x[seq(1, nrow(adat), 10)] <- NA_real_
+x <- adat[[idx]]
+x[seq(1, nrow(adat), 10L)] <- NA_real_
 x
 
 median(x, na.rm = TRUE)

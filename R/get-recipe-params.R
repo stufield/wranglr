@@ -10,9 +10,9 @@
 #' deviations (`step = scale'`). Names correspond to recipe predictors.
 #' @author Amy Zhang
 #' @examples
-#' test <- sim_adat
-#' apts <- splyr:::get_analytes(test)
-#' rec <-  recipes::recipe(~ ., data = dplyr::select(test, dplyr::all_of(apts))) |>
+#' test  <- sim_adat
+#' feats <- splyr:::get_analytes(test)
+#' rec <-  recipes::recipe(~ ., data = dplyr::select(test, dplyr::all_of(feats))) |>
 #'  recipes::step_log(recipes::all_predictors(), base = 10) |>
 #'  recipes::step_center(recipes::all_predictors()) |>
 #'  recipes::step_scale(recipes::all_predictors()) |>
@@ -20,9 +20,10 @@
 #' get_recipe_params(rec, "scale")
 #' get_recipe_params(rec, "center")
 #'
-#' soma_rec <- create_recipe(test)
-#' get_recipe_params(soma_rec, "scale")
+#' rcp <- create_recipe(test)
 #' get_recipe_params(rec, "center")
+#'
+#' get_recipe_params(rcp, "scale")
 #' @export
 get_recipe_params <- function(recipe, param) {
   if ( !param %in% c("scale", "center") ) {

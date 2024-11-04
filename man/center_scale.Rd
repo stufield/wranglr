@@ -13,31 +13,32 @@ is_center_scaled(data)
 undo_center_scale(data, feat = NULL)
 }
 \arguments{
-\item{data}{A tibble, data frame, or matrix object with
-named data variables to center and/or scale.}
+\item{data}{A \code{tibble}, \code{data.frame}, or matrix object with
+named data variables to center and/or scale.
+If \code{matrix}, should \emph{only} contain numeric data.}
 
-\item{par_tbl}{A tibble containing the mean and standard deviations
-to use in processing the data. Must also contain an \code{feature} column
-to synchronize the features with their corresponding scaling parameters.
+\item{par_tbl}{A tibble containing the mean and
+standard deviations to use in processing the data.
+Must also contain an \code{feature} column to synchronize
+the features with their corresponding scaling parameters.
 If \code{NULL}, a parameter table is generated based on \code{data},
 i.e. \code{data} is its own reference.}
 
-\item{feat}{A vector indicating which variables to center/scale.}
+\item{feat}{\code{character(n)}. A vector indicating which
+variables to center/scale.}
 
-\item{center}{Logical. Indicating whether the variables
+\item{center}{\code{logical(1)}. Whether the variables
 should be shifted to be zero centered (\eqn{\mu = 0}).}
 
-\item{scale}{Logical. Indicating whether the variables
+\item{scale}{\code{logical(1)}. Whether the variables
 should be scaled to have unit variance (\eqn{\sigma = 1}).}
 }
 \value{
-A center/scaled object of the same class as \code{data}. Only features
-specified in \code{feat} are modified.
+A center/scaled object of the same class as \code{data}.
+Only features specified in \code{feat} are modified.
 }
 \description{
-A function to center and/or scale a data matrix (RFU table). Can be applied
-to a \code{soma_adat}, tibble, data frame, or matrix object, but if a
-matrix, should contain \emph{only} numeric columns (e.g. RFU data).
+A function to center and/or scale a data matrix.
 }
 \section{Functions}{
 \itemize{

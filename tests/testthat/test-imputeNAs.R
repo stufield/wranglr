@@ -32,7 +32,7 @@ test_that("the `imputeNAs` numeric method is correct", {
 })
 
 
-test_that("the `imputeNAs` soma_adat method is correct", {
+test_that("the `imputeNAs.soma_adat()` method is correct", {
   n        <- 150L
   apt_vals <- sample.adat[[n]]
   z        <- imputeNAs(sample.adat)

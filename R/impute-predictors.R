@@ -47,11 +47,11 @@ impute_predictors <- function(data, extrm_vals) {
     )
   }
 
-  extra_apts <- setdiff(extrm_vals$Feature, common_cols)
+  extra_feats <- setdiff(extrm_vals$Feature, common_cols)
 
-  if ( length(extra_apts) > 0L ) {
+  if ( length(extra_feats) > 0L ) {
     warning(
-      length(extra_apts), " extreme value aptamers not in data.",
+      length(extra_feats), " extreme value aptamers not in data.",
       call. = FALSE
     )
   }

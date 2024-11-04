@@ -7,17 +7,20 @@
 strip_meta(data, feat = NULL)
 }
 \arguments{
-\item{data}{A \code{data.frame} object containing feature data.}
+\item{data}{A \code{data.frame} object containing
+numeric feature data.}
 
-\item{feat}{A vector of column names corresponding to the features.}
+\item{feat}{\code{charcter(n)}. A vector of column
+names corresponding to the features.}
 }
 \value{
-A \code{data.matrix} object containing only the
-data matrix of values for the features.
+A numeric \code{data.matrix} object containing
+only the data matrix of values for the features.
 }
 \description{
-Strips the, non-feature (clinical), meta data from a \code{data.frame} object
-and returns a data matrix of only the feature data.
+Strips the, non-feature (clinical), meta data from
+a \code{data.frame} object and returns a data matrix
+of only the feature (numeric) data.
 }
 \examples{
 dim(sim_adat)

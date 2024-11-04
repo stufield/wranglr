@@ -1,12 +1,15 @@
 #' Strip Meta Data
 #'
-#' Strips the, non-feature (clinical), meta data from a `data.frame` object
-#' and returns a data matrix of only the feature data.
+#' Strips the, non-feature (clinical), meta data from
+#'   a `data.frame` object and returns a data matrix
+#'   of only the feature (numeric) data.
 #'
-#' @param data A `data.frame` object containing feature data.
-#' @param feat A vector of column names corresponding to the features.
-#' @return A `data.matrix` object containing only the
-#'   data matrix of values for the features.
+#' @param data A `data.frame` object containing
+#'   numeric feature data.
+#' @param feat `charcter(n)`. A vector of column
+#'   names corresponding to the features.
+#' @return A numeric `data.matrix` object containing
+#'   only the data matrix of values for the features.
 #' @author Stu Field
 #' @seealso [data.matrix()]
 #' @examples

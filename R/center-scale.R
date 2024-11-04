@@ -1,23 +1,24 @@
 #' Center and/or Scale Data
 #'
-#' A function to center and/or scale a data matrix (RFU table). Can be applied
-#' to a `soma_adat`, tibble, data frame, or matrix object, but if a
-#' matrix, should contain *only* numeric columns (e.g. RFU data).
+#' A function to center and/or scale a data matrix.
 #'
-#' @param data A tibble, data frame, or matrix object with
+#' @param data A `tibble`, `data.frame`, or matrix object with
 #'   named data variables to center and/or scale.
-#' @param par_tbl A tibble containing the mean and standard deviations
-#'   to use in processing the data. Must also contain an `feature` column
-#'   to synchronize the features with their corresponding scaling parameters.
+#'   If `matrix`, should *only* contain numeric data.
+#' @param par_tbl A tibble containing the mean and
+#'   standard deviations to use in processing the data.
+#'   Must also contain an `feature` column to synchronize
+#'   the features with their corresponding scaling parameters.
 #'   If `NULL`, a parameter table is generated based on `data`,
 #'   i.e. `data` is its own reference.
-#' @param feat A vector indicating which variables to center/scale.
-#' @param center Logical. Indicating whether the variables
+#' @param feat `character(n)`. A vector indicating which
+#'   variables to center/scale.
+#' @param center `logical(1)`. Whether the variables
 #'   should be shifted to be zero centered (\eqn{\mu = 0}).
-#' @param scale Logical. Indicating whether the variables
+#' @param scale `logical(1)`. Whether the variables
 #'   should be scaled to have unit variance (\eqn{\sigma = 1}).
-#' @return A center/scaled object of the same class as `data`. Only features
-#'   specified in `feat` are modified.
+#' @return A center/scaled object of the same class as `data`.
+#'   Only features specified in `feat` are modified.
 #' @author Stu Field
 #' @examples
 #' scaled <- center_scale(mtcars)

@@ -1,6 +1,5 @@
 
-# dress up dummy data.frame -> soma_adat
-# minimal set of attributes to trick `is_intact_attr()` to be TRUE
+# dummy data.frame -> soma_adat
 dress_adat <- function(df) {
   stopifnot(inherits(df, "data.frame"))
   row_meta <- get_meta(df)

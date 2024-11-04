@@ -5,7 +5,7 @@ test_that("splyr is in style compliance", {
   skip_on_covr()     # don't run if in 'covr'
   skip_if_not_installed("lintr")
   skip_if_not(packageVersion("lintr") >= "3.0.2")
-  skip_if_not_installed("somaverse")
+  skip_if_not_installed("megaverse")
 
   # linters and exclusions are controlled by
   # the .lintr file in pkg root
