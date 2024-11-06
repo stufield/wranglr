@@ -11,6 +11,7 @@
 #' }
 #'
 #' @inheritParams center_scale
+#'
 #' @param data A `data.frame` object to use as a template for
 #'   the pre-processing steps.
 #' @param log10 Logical. Should features in `data` be log10-transformed?
@@ -20,7 +21,9 @@
 #'   input and return a vector of equal length. See Examples. If also
 #'   center/scaling, the `...` transformation takes place *before*
 #'   the center-scale step.
+#'
 #' @return A `rcp` class object containing information for the recipe steps.
+#'
 #' @examples
 #' # create a pre-processing recipe
 #' rcp <- create_recipe(mtcars)
@@ -73,14 +76,13 @@ create_recipe <- function(data, feat = NULL, log10 = TRUE, center = TRUE,
 
 
 #' S3 method for `rcp` object
-#' @noRd
+#'
 #' @importFrom helpr pad signal_rule signal_done
 #' @importFrom helpr signal_todo value liter symbl add_style
+#' @noRd
 #' @export
 print.rcp <- function(x, ...) {
-  writeLines(
-    signal_rule("Pre-processing recipe", lty = "double", line_col = "magenta")
-  )
+  signal_rule("Pre-processing recipe", lty = "double", line_col = "magenta")
   cat("\n")
   line3 <- paste0(rep.int(symbl$line, 3L), collapse = "")
   cat(line3, "Training data:\n")
@@ -111,15 +113,17 @@ print.rcp <- function(x, ...) {
       signal_todo(paste0(.pad22(.y), deparse(.x)))
     }) |> invisible()
   }
-  writeLines(signal_rule(lty = "double", line_col = "green"))
+  signal_rule(lty = "double", line_col = "green")
   invisible(x)
 }
 
 
 #' @describeIn create_recipe
 #'   executes the recipe instructions defined during via [create_recipe()].
+#'
 #' @param x A `rcp` class object with instructions for pre-processing.
 #' @param data A `data.frame` to be pre-processed according to `x`.
+#'
 #' @examples
 #' # apply recipe to orig/own data set
 #' new_data <- bake_recipe(rcp, mtcars)
@@ -159,6 +163,7 @@ bake_recipe <- function(x, data) {
 #' @describeIn create_recipe
 #'   tests for presence of `baked` entry in attributes, indicating that
 #'   the data have already been baked via [bake_recipe()].
+#'
 #' @examples
 #' # Logical test
 #' is.baked(new_data)
@@ -176,8 +181,10 @@ is.baked <- function(data) {
 #'   * log10-transform
 #'   * centered
 #'   * scaled
+#'
 #' @param object A `recipe` class object from the `recipes` package with
 #'   the 3 pre-processing steps described above.
+#'
 #' @examples
 #' # converting recipes
 #' library(recipes)

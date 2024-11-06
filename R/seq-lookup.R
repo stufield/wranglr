@@ -89,9 +89,7 @@ print.seq <- function(x, ...) {
   tbl   <- seq_lookup(as.character(x))
   symb1 <- add_color("\u25b6", "cyan")
   symb2 <- add_color("  \u276F  ", "cyan")
-  writeLines(
-    signal_rule("SeqId Lookup", lty = "double", line_col = "magenta")
-  )
+  signal_rule("SeqId Lookup", lty = "double", line_col = "magenta")
   tbl  <- select(tbl, "SeqId-Feature" = "seq", GeneID = "EntrezGeneSymbol",
                  Target = "TargetFullName", "List", "Reason")
   tbl  <- rbind(names(tbl), tbl)
@@ -99,7 +97,7 @@ print.seq <- function(x, ...) {
   tbl_mat <- liter(tbl, cols, function(.x, .y) add_color(format(.x), .y)) |>
     data.frame() |> as.matrix()
   cat(paste(" ", tbl_mat[1L, ], " ", collapse = " "), "\n")
-  writeLines(signal_rule(line_col = "grey"))
+  signal_rule(line_col = "grey")
   tbl_mat <- tbl_mat[-1L, , drop = FALSE]
   tbl_mat[, 1L] <- paste(symb1, tbl_mat[, 1L])
   writeLines(apply(tbl_mat, 1L, paste, collapse = symb2))

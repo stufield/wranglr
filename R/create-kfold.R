@@ -499,9 +499,7 @@ assessment <- function(object, i = NULL) {
 #' @importFrom helpr signal_rule value add_color
 #' @export
 print.x_split <- function(x, ...) {
-  writeLines(
-    signal_rule("A `x_split` object", lty = "double", line_col = "magenta")
-  )
+  signal_rule("A `x_split` object", lty = "double", line_col = "magenta")
   call <- attr(x, "call")
   key <- c("k", "repeats", "stratified", "orig data") |> pad(12)
   value <- c(
@@ -515,8 +513,8 @@ print.x_split <- function(x, ...) {
     writeLines(paste(add_color("\u2022", "red"), .x, .y))
   })
 
-  writeLines(signal_rule("split info", line_col = "cyan"))
+  signal_rule("split info", line_col = "cyan")
   print(x$splits)
-  writeLines(signal_rule("", lty = "double", line_col = "green"))
+  signal_rule("", lty = "double", line_col = "green")
   invisible(x)
 }
