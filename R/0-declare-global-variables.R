@@ -18,7 +18,8 @@ if ( getRversion() >= "2.15.1" ) {
       "role",
       "sdLower",
       "sdUpper",
-      "SeqId", "Dilution", "EnsemblGeneId", "EntrezGeneSymbol", "HgncId", "Target", "TargetFullName", "Type", "aptname"  # remove one day
+      "SeqId", "Dilution", "EnsemblGeneId", "EntrezGeneSymbol", "HgncId",
+      "Target", "TargetFullName", "Type", "aptname"  # remove one day
     )
   )
 }

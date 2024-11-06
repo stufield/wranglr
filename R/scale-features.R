@@ -1,12 +1,15 @@
 #' Scale/transform Analyte RFUs
 #'
 #' Scale features by a scalar reference value (named vector)
-#' match with the features contained in `.data`. Columns without a
-#' corresponding reference value are unmodified (with a warning).
+#'   match with the features contained in `.data`.
+#'   Columns without a corresponding reference value
+#'   are unmodified (with a warning).
 #'
 #' @param .data A `data.frame` class object.
 #' @param scale_vec A *named* vector of scalars, named by features in `.data`.
+#'
 #' @author Stu Field
+#'
 #' @examples
 #' ref  <- c(mpg = 10.0, wt = 0.1, drat = 1.0, disp = 0.0)
 #' new  <- scale_features(mtcars, ref)
@@ -14,10 +17,6 @@
 #' @importFrom tibble enframe deframe
 #' @export
 scale_features <- function(.data, scale_vec) {
-
-  .code <- function(x) {
-    paste0("\033[90m", encodeString(x, quote = "`"), "\033[39m")
-  }
 
   stopifnot(
     "`scale_vec` must be a named numeric vector." =

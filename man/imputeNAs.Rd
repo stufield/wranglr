@@ -24,7 +24,7 @@ adat <- sim_adat
 imputeNAs(adat)
 
 idx <- 25L  # random 25th column
-imputeNAs(adat[[idx]])  
+imputeNAs(adat[[idx]])
 
 # test the S3 method
 all.equal(imputeNAs(adat[[idx]]), imputeNAs(adat)[[idx]])

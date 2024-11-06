@@ -208,7 +208,6 @@ convert_recipe <- function(object) {
                                 role == "predictors")$variable
 
   steps <- vapply(object$steps, function(.x) class(.x)[1L], "")
-  idx   <- match(steps, "step_scale", nomatch = 0)
 
   ret$call <- match.call()
   ret$features   <- predictors
@@ -220,9 +219,9 @@ convert_recipe <- function(object) {
 
   for ( step in steps ) {
     if ( step == "step_log" ) {
-      logstep <- which(steps == "step_log")
       # this step doesn't do much yet
-      feats <- unname(object$steps[[logstep]]$columns)
+      # logstep <- which(steps == "step_log")  # nolint: commented_code_linter.
+      # feats <- unname(object$steps[[logstep]]$columns)  # nolint: commented_code_linter.
     } else if ( step == "step_center" ) {
       df_mu <- enframe(get_recipe_params(object, "center"),
                        name = "feature", value = "means")
