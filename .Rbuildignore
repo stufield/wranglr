@@ -1,9 +1,13 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-data-raw
 ^README\.Rmd$
-^Jenkinsfile-.*$
-^\.covrignore$
+^LICENSE\.md$
+^SECURITY\.md$
 ^_pkgdown\.yml$
+^pkgdown$
 ^\.lintr$
+^\.covrignore$
+^\.github$
 ^Makefile$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
