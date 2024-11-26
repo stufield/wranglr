@@ -1,26 +1,30 @@
 #' Vertically Combine Data Frames by Intersect
 #'
 #' For [bind_intersect()]: [rbind()] is used to vertically **combine** data
-#' frames based on the _intersect_ of their column names.
-#' This creates _fewer_ columns than the original data, or at best the same
-#' number of columns. The resulting data frame has the dimensions:
-#' \itemize{
-#'   \item rows: `nrow(df1) + nrow(df2) + ... + nrow(df_n)`
-#'   \item cols: `intersect(names(...))`
-#' }
+#'   frames based on the _intersect_ of their column names.
+#'   This creates _fewer_ columns than the original data, or at best the same
+#'   number of columns. The resulting data frame has the dimensions:
+#'   \itemize{
+#'     \item rows: `nrow(df1) + nrow(df2) + ... + nrow(df_n)`
+#'     \item cols: `intersect(names(...))`
+#'   }
 #'
 #' Incidentally, the default behavior of [rbind()] reorders the columns
 #'   correctly, but will only do so if their intersect matches.
 #'
 #' @name bind
+#'
 #' @param ... Data frames to combine. Can also be a _list_ of data frames
 #'   to combine.
+#'
 #' @return A single data frame with the total number of rows =
 #'   `sum(sapply(..., nrow))`.
 #' @note For [bind_intersect()], columns are combined on
 #'   their *intersect* only.
+#'
 #' @author Stu Field
 #' @seealso [Reduce()], [rbind()], [intersect()]
+#'
 #' @examples
 #' # For `bind_intersect()`
 #' spl <- split(mtcars, mtcars$cyl) |> unname()
@@ -46,9 +50,11 @@ bind_intersect <- function(...) {
     bind_union()
 }
 
+
 #' Vertically Combine Data Frames by Union
 #'
 #' @rdname bind
+#'
 #' @description For [bind_union()]: [rbind()] is used to vertically **merge**
 #'   data frames based on the _union_ of their column names. This creates
 #'   columns of `NAs` for the rows of a data frame with non-overlapping
@@ -57,9 +63,11 @@ bind_intersect <- function(...) {
 #'   \item rows: `nrow(df1) + nrow(df2) + ... + nrow(df_n)`
 #'   \item cols: `union(names(...))`
 #' }
+#'
 #' @note For [bind_union()], the ordering of the rows correspond
 #'   to the order they are supplied.
 #' @seealso [union()]
+#'
 #' @examples
 #' # For `bind_union()`
 #' bind_union(spl)

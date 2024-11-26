@@ -7,17 +7,18 @@
 get_recipe_params(recipe, param)
 }
 \arguments{
-\item{recipe}{Prepped \code{recipe} or \code{soma_recipe} class object.}
+\item{recipe}{Prepped \code{recipe} or \code{rcp} class object.}
 
-\item{param}{Character, possible values are 'center' and 'scale'.}
+\item{param}{\code{character(1)}. Possible values are \code{center} or \code{scale}.}
 }
 \value{
-A named numeric vector with means (\code{step = 'center'}) or standard
-deviations (\verb{step = scale'}). Names correspond to recipe predictors.
+A named numeric vector with means (\code{step = 'center'})
+or standard deviations (\verb{step = scale'}). Names correspond
+to recipe predictors.
 }
 \description{
-Get mean and standard deviations used to center/scale data from a prepped
-recipe.
+Get mean and standard deviations used to
+center/scale data from a prepped recipe.
 }
 \examples{
 test  <- sim_adat
@@ -34,7 +35,4 @@ rcp <- create_recipe(test)
 get_recipe_params(rec, "center")
 
 get_recipe_params(rcp, "scale")
-}
-\author{
-Amy Zhang
 }

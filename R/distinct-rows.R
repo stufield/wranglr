@@ -1,12 +1,15 @@
 #' Select Distinct Rows by a Selection of Variables
 #'
 #' Extract distinct rows. Additional arguments allow
-#' specification of variables to check for unique identity.
+#'   specification of variables to check for unique identity.
 #'
 #' @param x A data frame or tibble object.
 #' @param ... Additional arguments to [select()].
+#'
 #' @return A data frame or tibble object, same class as `x`.
+#'
 #' @author Stu Field
+#'
 #' @examples
 #' withr::with_seed(111, {
 #'   df <- tibble::tibble(

@@ -5,9 +5,10 @@
 #'   annotations keyed on `SeqId`.
 #'
 #' @return A tibble.
+#' @author Stu Field
+#'
 #' @examples
 #' get_anno()
-#' @author Stu Field
 #' @importFrom tibble as_tibble
 #' @export
 get_anno <- function() {

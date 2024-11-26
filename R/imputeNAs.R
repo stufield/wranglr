@@ -5,12 +5,16 @@
 #'   `character` class are not allowed.
 #'
 #' @family impute
+#'
 #' @param x A `data.frame`, matrix, or numeric vector.
+#'
 #' @return An object of the same dimension and class as `x`
 #'   with any `NA` values replaced with the median of the
 #'   corresponding vector.
+#'
 #' @author Stu Field
 #' @seealso [median()], [modify_if()]
+#'
 #' @examples
 #' adat <- sim_adat
 #' imputeNAs(adat)

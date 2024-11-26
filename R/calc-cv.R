@@ -1,8 +1,8 @@
 #' Calculate CV Decomposition
 #'
 #' Calculate the appropriate within and between assay
-#' run variance decomposition prior to calculating
-#' the %CV for a reproducibility study assay run.
+#'   run variance decomposition prior to calculating
+#'   the %CV for a reproducibility study assay run.
 #'
 #' @param x A list of vectors, each representing a separate assay run
 #'   for a particular analyte. The entries of the vectors should be replicates

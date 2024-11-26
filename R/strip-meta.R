@@ -8,10 +8,13 @@
 #'   numeric feature data.
 #' @param feat `charcter(n)`. A vector of column
 #'   names corresponding to the features.
+#'
 #' @return A numeric `data.matrix` object containing
 #'   only the data matrix of values for the features.
 #' @author Stu Field
+#'
 #' @seealso [data.matrix()]
+#'
 #' @examples
 #' dim(sim_adat)
 #' class(sim_adat)

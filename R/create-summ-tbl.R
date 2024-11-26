@@ -1,25 +1,30 @@
 #' Create A Summary Table
 #'
-#' Create a summary table of all the feature/SOMAmer data based on a
-#' grouping variable of meta data. Defaults summary statistics include:
-#'   * `min`
-#'   * `median`
-#'   * `mean`
-#'   * `sd`  (standard deviation)
-#'   * `mad` (median absolute deviation)
-#'   * `max`
+#' Create a summary table of all the feature data based on a
+#'   grouping variable of meta data. Defaults summary statistics include:
+#'   \itemize{
+#'     \item `min`
+#'     \item `median`
+#'     \item `mean`
+#'     \item `sd`  (standard deviation)
+#'     \item `mad` (median absolute deviation)
+#'     \item `max`
+#'   }
 #'
 #' @param data A `data.frame` or `tibble` object containing data for summary.
-#' @param group_var An unquoted (or quoted) string containing the indices
-#'   to group the statistics, e.g. `SampleGroup`. If missing, ungrouped
-#'   statistics are returned.
-#' @param .funs Character. Strings of the functions used to
-#'   summarize the data. Each function _must_ take a vector of data
-#'   as input and return a summary scalar.
+#' @param group_var `character(1)`. An unquoted (or quoted) string
+#'   containing the indices to group the statistics,
+#'   e.g. `Group`. If missing, ungrouped statistics are returned.
+#' @param .funs `character(n)`. String(s) of the functions used to
+#'   summarize the data. Each function *must* take a vector of data
+#'   as input and return a summary scalar, e.g. [mean()].
+#'
 #' @return A `tibble` object with rows (features) and columns as the
 #'   summary statistics listed in `.funs`.
 #' @author Stu Field
+#'
 #' @seealso [mad()], [median()], [sd()], [min()], [max()]
+#'
 #' @examples
 #' create_summ_tbl(sim_adat)
 #' create_summ_tbl(sim_adat, gender)

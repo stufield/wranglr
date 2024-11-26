@@ -21,9 +21,10 @@ Use \code{NA} to \emph{not} impute, or use \code{dplyr::filter()} to remove the 
 row if neither \code{min} nor \code{max} is desired for a given feature.}
 }
 \description{
-Threshold RFU values according to the model-specific analyte QC ranges. One
-form of imputation can be capping RFU values above a threshold (i.e.
-winsorizing).
+Threshold numeric values according to the model-specific
+set of feature ranges (e.g. from training). One form of
+imputation can be capping values above a threshold
+(i.e. winsorizing).
 }
 \examples{
 x   <- data.frame(a = 1:3L, b = 4:6L, c = 7:9L, d = c(1.23, 4.56, 7.89))

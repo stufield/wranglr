@@ -12,8 +12,8 @@ seqify(x)
 \arguments{
 \item{tbl}{A tibble containing annotation data.}
 
-\item{x, seq}{Character. A vector of \code{SeqIds}, or
-strings containing \code{SeqId}s.}
+\item{x, seq}{\code{character(n)}. A vector of \code{SeqIds}, or
+strings \emph{containing} \code{SeqId}s.}
 }
 \value{
 For \code{\link[=seq_lookup]{seq_lookup()}}, a tibble, a subset of \code{tbl},

@@ -7,7 +7,8 @@
 refactor_data(data)
 }
 \arguments{
-\item{data}{A \code{data.frame} object containing feature and clinical data.}
+\item{data}{A \code{data.frame} object containing
+feature and clinical data.}
 }
 \value{
 A \code{data.frame} object, identical as the

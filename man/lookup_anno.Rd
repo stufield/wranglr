@@ -7,7 +7,7 @@
 lookup_anno(pattern)
 }
 \arguments{
-\item{pattern}{Character. Regular expression pattern to match.}
+\item{pattern}{\code{character(1)}. Regular expression pattern to match.}
 }
 \value{
 A tibble, a subset of Annotations from the Graph DB

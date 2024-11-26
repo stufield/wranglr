@@ -8,8 +8,10 @@
 #' @param x,y The, two, `data.frame` objects to match against each other.
 #' @param idcol Character. The name of the column in both `x` and `y`
 #'   to use for matching and ordering the rows of the data frames.
+#'
 #' @return A named list with `x` and `y`, matched and ordered
 #'   based on `idcol`.
+#'
 #' @examples
 #' df    <- head(sim_adat, 25L)
 #' train <- withr::with_seed(1, dplyr::sample_n(df, 15L))

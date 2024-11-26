@@ -1,15 +1,19 @@
 #' Refactor Ghost Level Meta Data
 #'
 #' Refactor the meta data fields in a data frame,
-#' removing the "ghost" levels that remain after
-#' subsetting a factored column in a data frame.
+#'   removing the "ghost" levels that remain after
+#'   subsetting a factored column in a data frame.
 #'
-#' @param data A `data.frame` object containing feature and clinical data.
+#' @param data A `data.frame` object containing
+#'   feature and clinical data.
+#'
 #' @return A `data.frame` object, identical as the
 #'   original except the factor levels in factor class columns
 #'   have been refactored to remove "ghost levels".
 #' @author Stu Field
+#'
 #' @seealso [factor()], [droplevels()]
+#'
 #' @examples
 #' sim_adat$Sex <- factor(sim_adat$gender)
 #' sim_adat$Sex

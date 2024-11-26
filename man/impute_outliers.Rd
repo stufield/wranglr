@@ -4,32 +4,35 @@
 \alias{impute_outliers}
 \title{Impute Outlier Values}
 \usage{
-impute_outliers(x, n.sigma = 3)
+impute_outliers(x, n_sigma = 3)
 }
 \arguments{
 \item{x}{A vector of values, approximating a Gaussian distribution and
 containing (possibly) outlier samples.}
 
-\item{n.sigma}{Numeric. Number of standard deviations from the mean
-a \code{n.sigma} threshold for outliers.}
+\item{n_sigma}{\code{numeric(1)}. The the number of standard
+deviations from the mean a \code{n_sigma} threshold for outliers.
+Ignored if \code{type = "nonparametric"}.}
 }
 \value{
-A vector of values approximating a Gaussian distribution with the
-outlier samples imputed back to the robust Gaussian fit.
+A vector of values approximating a Gaussian
+distribution with the outlier samples imputed back
+to the robust Gaussian fit.
 }
 \description{
-Given a numeric vector, this function imputes outlier values, defined as
-3*sigma from the mean, back to a robustly calculated Gaussian. Gaussian
-parameters (mu + sigma) are robustly calculated.
+Given a numeric vector, this function imputes outlier values,
+defined as \eqn{3 \times \sigma} from the mean, back to a
+robustly calculated Gaussian. Gaussian parameters (\eqn{\mu + \sigma})
+are robustly calculated.
 }
 \details{
 The maximum value, i.e. the \eqn{100^{th}} percentile, is pushed back
-to the 3*sigma value of the Gaussian.
+to the \eqn{3 \times \sigma} value of the Gaussian.
 }
 \examples{
-set.seed(101)
-vec  <- c(2, 2.5, rnorm(26, 15, 2), 25, 25.9)   # Gaussian with 4 outliers (2hi, 2lo)
-pars <- attributes(helpr::get_outliers(vec, n.sigma = 3, type = "para"))
+# Gaussian with 4 outliers (2hi, 2lo)
+vec  <- withr::with_seed(101, c(2, 2.5, rnorm(26, 15, 2), 25, 25.9))
+pars <- attributes(helpr::get_outliers(vec, n_sigma = 3, type = "para"))
 pars
 
 impute_outliers(vec)

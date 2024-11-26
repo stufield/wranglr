@@ -7,7 +7,7 @@
 group_labels(x)
 }
 \arguments{
-\item{x}{A data frame or extension (like a \code{tibble} or \verb{grouped tibble}).}
+\item{x}{A data frame, \code{tibble} or \verb{grouped tibble}.}
 }
 \description{
 Returns a \code{tibble} of the grouping labels (usually class labels)

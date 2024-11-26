@@ -47,7 +47,7 @@ apply during conversion:
 \itemize{
 \item characters converted if no warnings are triggered
 \item integers are \emph{never} converted
-\item logical vectors \emph{always} converted to 0 / 1
+\item logical vectors \emph{always} converted to \code{0} or \code{1}
 \item factors are \emph{optionally} converted to numeric
 }
 }

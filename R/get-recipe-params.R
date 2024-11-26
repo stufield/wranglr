@@ -1,14 +1,15 @@
 #' Get Parameters From A Recipe
 #'
-#' Get mean and standard deviations used to center/scale data from a prepped
-#' recipe.
+#' Get mean and standard deviations used to
+#'   center/scale data from a prepped recipe.
 #'
-#' @param recipe Prepped `recipe` or `soma_recipe` class object.
-#' @param param Character, possible values are 'center' and 'scale'.
+#' @param recipe Prepped `recipe` or `rcp` class object.
+#' @param param `character(1)`. Possible values are `center` or `scale`.
 #'
-#' @return A named numeric vector with means (`step = 'center'`) or standard
-#' deviations (`step = scale'`). Names correspond to recipe predictors.
-#' @author Amy Zhang
+#' @return A named numeric vector with means (`step = 'center'`)
+#'   or standard deviations (`step = scale'`). Names correspond
+#'   to recipe predictors.
+#'
 #' @examples
 #' test  <- sim_adat
 #' feats <- splyr:::get_analytes(test)

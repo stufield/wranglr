@@ -13,20 +13,20 @@ create_summ_tbl(
 \arguments{
 \item{data}{A \code{data.frame} or \code{tibble} object containing data for summary.}
 
-\item{group_var}{An unquoted (or quoted) string containing the indices
-to group the statistics, e.g. \code{SampleGroup}. If missing, ungrouped
-statistics are returned.}
+\item{group_var}{\code{character(1)}. An unquoted (or quoted) string
+containing the indices to group the statistics,
+e.g. \code{Group}. If missing, ungrouped statistics are returned.}
 
-\item{.funs}{Character. Strings of the functions used to
+\item{.funs}{\code{character(n)}. String(s) of the functions used to
 summarize the data. Each function \emph{must} take a vector of data
-as input and return a summary scalar.}
+as input and return a summary scalar, e.g. \code{\link[=mean]{mean()}}.}
 }
 \value{
 A \code{tibble} object with rows (features) and columns as the
 summary statistics listed in \code{.funs}.
 }
 \description{
-Create a summary table of all the feature/SOMAmer data based on a
+Create a summary table of all the feature data based on a
 grouping variable of meta data. Defaults summary statistics include:
 \itemize{
 \item \code{min}

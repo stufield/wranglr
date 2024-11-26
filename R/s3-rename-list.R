@@ -1,15 +1,19 @@
 #' Rename Elements of a List
 #'
 #' See [dplyr::rename()], but for lists.
-#' Rename list elements simply and efficiently.
-#' Missing elements are unchanged and unmatched
-#' elements are ignored.
+#'   Rename list elements simply and efficiently.
+#'   Missing elements are unchanged and unmatched
+#'   elements are ignored.
 #'
 #' @name rename
+#'
 #' @inheritParams dplyr::rename
+#'
 #' @param .data A *named* `list` to be renamed.
+#'
 #' @return A newly named list corresponding to the
 #'   expressions passed to the `...`.
+#'
 #' @examples
 #' foo <- list(
 #'   a = 1:5,

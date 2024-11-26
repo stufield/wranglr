@@ -1,22 +1,26 @@
 #' Impute Predictor Data
 #'
-#' Threshold RFU values according to the model-specific analyte QC ranges. One
-#' form of imputation can be capping RFU values above a threshold (i.e.
-#' winsorizing).
+#' Threshold numeric values according to the model-specific
+#'   set of feature ranges (e.g. from training). One form of
+#'   imputation can be capping values above a threshold
+#'   (i.e. winsorizing).
 #'
 #' @family impute
+#'
 #' @param data A `data.frame`, or `tibble` object.
 #' @param extrm_vals A tibble (`tbl_df`) object with the following 5 fields:
-#' \describe{
-#'   \item{`Feature:`}{feature name matching fields in `data`}
-#'   \item{`xtrm_min:`}{minimum acceptable value for that feature}
-#'   \item{`xtrm_max:`}{maximum acceptable value for that feature}
-#'   \item{`impute_min:`}{value to assign if below `xtrm_min`}
-#'   \item{`impute_max:`}{value to assign if above `xtrm_max`}
-#' }
+#'   \describe{
+#'     \item{`Feature:`}{feature name matching fields in `data`}
+#'     \item{`xtrm_min:`}{minimum acceptable value for that feature}
+#'     \item{`xtrm_max:`}{maximum acceptable value for that feature}
+#'     \item{`impute_min:`}{value to assign if below `xtrm_min`}
+#'     \item{`impute_max:`}{value to assign if above `xtrm_max`}
+#'   }
 #' Use `NA` to *not* impute, or use `dplyr::filter()` to remove the entire
 #' row if neither `min` nor `max` is desired for a given feature.
+#'
 #' @author Stu Field
+#'
 #' @examples
 #' x   <- data.frame(a = 1:3L, b = 4:6L, c = 7:9L, d = c(1.23, 4.56, 7.89))
 #' tbl <- tibble::tribble(

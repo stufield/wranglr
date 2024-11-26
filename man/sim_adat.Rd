@@ -42,11 +42,9 @@ Simulates SomaScan proteomic data by randomly generating data for various
 Bioinformatics related analyses and unit tests. Feature names are randomly
 generated to have \strong{seq.xxxx.xx} format so that downstream tools will
 function seamlessly. Model types this data can support:
-\itemize{
-\item Binary classification
-\item Continuous regression
-\item Survival
-}
+* Binary classification
+* Continuous regression
+* Survival
 }
 \examples{
 sim_adat

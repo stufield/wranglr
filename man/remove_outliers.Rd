@@ -7,15 +7,16 @@
 remove_outliers(x, y = NULL, type = "nonparametric", ...)
 }
 \arguments{
-\item{x}{A numeric vector of RFU values from pair 1}
+\item{x}{\code{numeric(n)}. A vector of numeric values.}
 
 \item{y}{Optional. If \code{NULL}, assume non-paired data and performs outlier
-analysis on values in \code{x}. If \emph{not} \code{NULL}, either a numeric vector (RFU)
+analysis on values in \code{x} along. If \emph{not} \code{NULL}, either a numeric vector
 or character vector (e.g. class names) ordered in the same order as \code{x}
 indicating the pairing.}
 
-\item{type}{Matched string. One of "parametric" or "nonparametric" to
-determine the outliers detection implementation.}
+\item{type}{\code{character(1)}. Matched. Either
+"parametric" or "nonparametric" to determine
+the type of outliers detection implementation.}
 
 \item{...}{Additional arguments passed to \code{\link[=get_outliers]{get_outliers()}}.}
 }
@@ -26,30 +27,34 @@ numeric vector pair with statistical outliers removed.
 \description{
 Remove statistical outliers from (optionally) \emph{paired} vectors of numeric
 values using a statistical criterion based on median absolute deviation
-(6*mad) and a fold change criterion (5x the median). See \code{Details} below
-for more information about the \verb{type =} argument specification. The
-default is for "\code{non-parametric}" outlier detection.
+(\eqn{6 \times mad}) and a fold change criterion (5x the median).
+See "outlier detection" section for more information about
+the \verb{type =} argument specification.
 }
-\details{
+\section{outlier detection}{
+
+
 There are 2 possible methods used to define an outlier measurement
 and the return value depends on which method is implemented:
 \enumerate{
 \item The non-parametric case (default): agnostic to the distribution.
-Outlier measurements are defined as falling outside \code{mad.crit * mad}
+Outlier measurements are defined as falling outside \code{mad_crit * mad}
 from the median \emph{and} a specified number of fold-changes from
-the median (i.e. \code{fold.crit}; e.g. 5x).\cr
-\strong{Note:} \code{n.sigma} is ignored.
+the median (i.e. \code{fold_crit}; e.g. \eqn{5x}).\cr
+\strong{Note:} \code{n_sigma} is ignored.
 \item The parametric case: the mean and standard deviation are
-calculated robustly via \code{\link[helpr:fit_gauss]{fit_gauss()}}. Outliers
-are defined as measurements falling \emph{outside} +/- \code{n.sigma}*\eqn{\sigma}
+calculated robustly via \code{\link[helpr:fit_gauss]{fit_gauss()}}. Outliers are defined
+as measurements falling \emph{outside} +/- \code{n_sigma} * \eqn{\sigma}
 from the the estimated \eqn{\mu}.\cr
-\strong{Note:} \code{mad.crit} and \code{fold.crit} are ignored.
+\strong{Note:} \code{mad_crit} and \code{fold_crit} are ignored.
 }
+
 }
+
 \examples{
 x <- withr::with_seed(101, rnorm(10, mean = 1000, sd = 2))
 x <- c(x, 10000)          # create outlier (11L)
-x1 <- remove_outliers(x)   # 'x' only; no 'y'
+x1 <- remove_outliers(x)  # 'x' only; no 'y'
 x1
 
 y  <- head(LETTERS, length(x))   # paired 'x' and 'y'
@@ -60,5 +65,5 @@ x2
 \code{\link[=get_outliers]{get_outliers()}}
 }
 \author{
-Amy Zhang, Sophie Weiss, and Stu Field
+Stu Field
 }

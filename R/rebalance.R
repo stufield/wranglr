@@ -1,19 +1,22 @@
 #' Sampling for Class Imbalances
 #'
 #' Implements up- or down-sampling for analyses
-#' with binary class imbalances.
+#'   with binary class imbalances.
 #'
-#' @param data A data frame. For example, an individual
+#' @param data A data frame or tibble. For example, an individual
 #'   "analysis" fold ([rsample::analysis()]) from an [rsample::vfold_cv()] call.
-#' @param var Character. A column name of `data` containing class labels
-#'   for up-/down-sampling. Must contain a binary variable.
-#'   `tidyselect` variable selection is also supported. See Examples.
-#' @param method Character (matched). One of "down" or "up". Down-sampling
-#'   *decreases* the `n` per group to that of the smaller group size, whereas
-#'   up-sampling *increases* (sampling with replacement) the `n` per group to
-#'   that of the larger group size. The default is "down".
-#' @return A sub- or re-sampled data frame that is smaller or larger than
-#'   `data` with equal class size.
+#' @param var `character(1)`. A column name of `data` containing class labels
+#'   for up-/down-sampling. Assumes a binary variable.
+#'   `tidyselect` variable selection is also supported (see examples).
+#' @param method `character(1)`. One of "down" or "up" (matched).
+#'   Down-sampling *decreases* size of the major class,
+#'   whereas up-sampling *increases* (i.e. sampling with
+#'   replacement) the size per group of the minor class.
+#'
+#' @return A sub- or re-sampled data frame that is either smaller or
+#'   larger than `data` with equal class balance.
+#' @author Stu Field
+#'
 #' @examples
 #' xtab <- helpr::cross_tab
 #'
@@ -32,7 +35,7 @@
 #' # also supports unquoted strings
 #' si  <- rebalance(mtcars, vs)
 #' xtab(si, vs)
-#' @author Stu Field
+#'
 #' @export
 rebalance <- function(data, var, method = c("down", "up")) {
   method   <- match.arg(method)
@@ -42,10 +45,12 @@ rebalance <- function(data, var, method = c("down", "up")) {
   spl_vec  <- spl_vec %||% eval(substitute(var), envir = data)
   # spl_vec <- dplyr::pull(data, !!enquo(var)) # nolint: commented_code_linter.
   stopifnot(length(unique(spl_vec)) == 2L)      # check binary
-  .n <- switch(method, down = min(table(spl_vec)),
-                         up = max(table(spl_vec)))
+
+  .n <- switch(method, down = min(table(spl_vec)), up = max(table(spl_vec)))
+
   group_df <- split(data, spl_vec)   # group split by `var`
-  group_df |>                        # sample each group-split independently
+
+  group_df |>                # sample each group-split independently
     lapply(dplyr::sample_n, size = .n, replace = .replace) |>
     bind_intersect() |>      # keeps rownames
     select(-data)            # rm `data` column added by `bind_intersect()`

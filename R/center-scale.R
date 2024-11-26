@@ -17,9 +17,11 @@
 #'   should be shifted to be zero centered (\eqn{\mu = 0}).
 #' @param scale `logical(1)`. Whether the variables
 #'   should be scaled to have unit variance (\eqn{\sigma = 1}).
+#'
 #' @return A center/scaled object of the same class as `data`.
 #'   Only features specified in `feat` are modified.
 #' @author Stu Field
+#'
 #' @examples
 #' scaled <- center_scale(mtcars)
 #' apply(strip_meta(scaled), 2, mean) |> sum()  # mean ~ 0
@@ -124,6 +126,7 @@ center_scale.matrix <- function(data, par_tbl = NULL, feat = NULL,
 #'   tests for presence of `par_tbl` entry in attributes and
 #'   if it contains appropriate parameter information that
 #'   can be used for centering or scaling data.
+#'
 #' @examples
 #' # Logical test
 #' is_center_scaled(cs)
@@ -137,6 +140,7 @@ is_center_scaled <- function(data) {
 
 #' @describeIn center_scale
 #'   the inverse of `center_scale()`. Undo the transformation.
+#'
 #' @examples
 #' # Example of `undo_center_scale()`; reverse above
 #' old <- undo_center_scale(cs)
@@ -200,7 +204,7 @@ undo_center_scale <- function(data, feat = NULL) {
 
 
 #' Generate the parameter table of values for centering and scaling, i.e.
-#' means and standard deviations.
+#'   means and standard deviations.
 #' @importFrom tibble tibble
 #' @noRd
 .genParTbl <- function(x, feat = NULL) {

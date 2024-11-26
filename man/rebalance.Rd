@@ -7,21 +7,21 @@
 rebalance(data, var, method = c("down", "up"))
 }
 \arguments{
-\item{data}{A data frame. For example, an individual
+\item{data}{A data frame or tibble. For example, an individual
 "analysis" fold (\code{\link[rsample:as.data.frame.rsplit]{rsample::analysis()}}) from an \code{\link[rsample:vfold_cv]{rsample::vfold_cv()}} call.}
 
-\item{var}{Character. A column name of \code{data} containing class labels
-for up-/down-sampling. Must contain a binary variable.
-\code{tidyselect} variable selection is also supported. See Examples.}
+\item{var}{\code{character(1)}. A column name of \code{data} containing class labels
+for up-/down-sampling. Assumes a binary variable.
+\code{tidyselect} variable selection is also supported (see examples).}
 
-\item{method}{Character (matched). One of "down" or "up". Down-sampling
-\emph{decreases} the \code{n} per group to that of the smaller group size, whereas
-up-sampling \emph{increases} (sampling with replacement) the \code{n} per group to
-that of the larger group size. The default is "down".}
+\item{method}{\code{character(1)}. One of "down" or "up" (matched).
+Down-sampling \emph{decreases} size of the major class,
+whereas up-sampling \emph{increases} (i.e. sampling with
+replacement) the size per group of the minor class.}
 }
 \value{
-A sub- or re-sampled data frame that is smaller or larger than
-\code{data} with equal class size.
+A sub- or re-sampled data frame that is either smaller or
+larger than \code{data} with equal class balance.
 }
 \description{
 Implements up- or down-sampling for analyses
@@ -45,6 +45,7 @@ xtab(si, vs)
 # also supports unquoted strings
 si  <- rebalance(mtcars, vs)
 xtab(si, vs)
+
 }
 \author{
 Stu Field

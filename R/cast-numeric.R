@@ -1,25 +1,28 @@
 #' Convert Table Entries to Numeric
 #'
 #' Selectively convert an R object to a numeric vector if
-#' doing so does *not* result in a warning. This is
-#' typically the case when a `character` string
-#' contains a symbol that cannot be coerced cleanly. The following rules
-#' apply during conversion:
-#' \itemize{
-#'   \item characters converted if no warnings are triggered
-#'   \item integers are _never_ converted
-#'   \item logical vectors _always_ converted to 0 / 1
-#'   \item factors are _optionally_ converted to numeric
-#' }
+#'   doing so does *not* result in a warning. This is
+#'   typically the case when a `character` string
+#'   contains a symbol that cannot be coerced cleanly. The following rules
+#'   apply during conversion:
+#'   \itemize{
+#'     \item characters converted if no warnings are triggered
+#'     \item integers are _never_ converted
+#'     \item logical vectors _always_ converted to `0` or `1`
+#'     \item factors are _optionally_ converted to numeric
+#'   }
 #'
 #' @param x An object for S3 dispatch. Usually a character,
 #'   data frame, tibble, or named list containing convertible columns.
 #' @param ... Additional arguments to allow extensibility to S3 methods.
+#'
 #' @return An object coerced to a numeric if the rules above can be
 #'   followed. A data frame, `tibble`, or list returns the same class object
 #'   with the function applied to each element (column).
 #' @author Stu Field
+#'
 #' @seealso [as.numeric()], [modify()]
+#'
 #' @examples
 #' tbl <- tibble::tibble(
 #'   id     = 1:20,                            # NO

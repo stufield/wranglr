@@ -1,20 +1,20 @@
 #' Pre-processing Analysis Data
 #'
 #' Relative too the \pkg{recipes} package, the [recipes::recipe()] and
-#' [recipes::prep()] functions are combined.
+#'   [recipes::prep()] functions are combined.
 #'
-#' The order of recipe steps is *always*:
-#' \enumerate{
-#'   \item log10-transform
-#'   \item center
-#'   \item scale
-#' }
+#'   The order of recipe steps is *always*:
+#'   \enumerate{
+#'     \item log10-transform
+#'     \item center
+#'     \item scale
+#'   }
 #'
 #' @inheritParams center_scale
 #'
 #' @param data A `data.frame` object to use as a template for
 #'   the pre-processing steps.
-#' @param log10 Logical. Should features in `data` be log10-transformed?
+#' @param log10 `logical(1)`. Should features in `data` be log10-transformed?
 #' @param ... Optional arguments of the form `variable = function()`
 #'   specifying the function to be applied to the specified column.
 #'   Anonymous functions can be used but they should take a vector
@@ -22,7 +22,8 @@
 #'   center/scaling, the `...` transformation takes place *before*
 #'   the center-scale step.
 #'
-#' @return A `rcp` class object containing information for the recipe steps.
+#' @return A `rcp` class object containing information
+#'   for the recipe steps.
 #'
 #' @examples
 #' # create a pre-processing recipe

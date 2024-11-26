@@ -6,7 +6,8 @@
 #'   are unmodified (with a warning).
 #'
 #' @param .data A `data.frame` class object.
-#' @param scale_vec A *named* vector of scalars, named by features in `.data`.
+#' @param scale_vec A *named* vector of scalars,
+#'   named by features in `.data`.
 #'
 #' @author Stu Field
 #'

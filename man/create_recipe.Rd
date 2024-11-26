@@ -28,7 +28,7 @@ convert_recipe(object)
 \item{feat}{\code{character(n)}. A vector indicating which
 variables to center/scale.}
 
-\item{log10}{Logical. Should features in \code{data} be log10-transformed?}
+\item{log10}{\code{logical(1)}. Should features in \code{data} be log10-transformed?}
 
 \item{center}{\code{logical(1)}. Whether the variables
 should be shifted to be zero centered (\eqn{\mu = 0}).}
@@ -49,7 +49,8 @@ the center-scale step.}
 the 3 pre-processing steps described above.}
 }
 \value{
-A \code{rcp} class object containing information for the recipe steps.
+A \code{rcp} class object containing information
+for the recipe steps.
 }
 \description{
 Relative too the \pkg{recipes} package, the \code{\link[recipes:recipe]{recipes::recipe()}} and

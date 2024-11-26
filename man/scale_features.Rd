@@ -9,7 +9,8 @@ scale_features(.data, scale_vec)
 \arguments{
 \item{.data}{A \code{data.frame} class object.}
 
-\item{scale_vec}{A \emph{named} vector of scalars, named by features in \code{.data}.}
+\item{scale_vec}{A \emph{named} vector of scalars,
+named by features in \code{.data}.}
 }
 \description{
 Scale features by a scalar reference value (named vector)

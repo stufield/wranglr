@@ -1,11 +1,13 @@
 #' Return Grouping Labels
 #'
 #' Returns a `tibble` of the grouping labels (usually class labels)
-#' corresponding a `grouped_df` class object.
+#'   corresponding a `grouped_df` class object.
 #'
-#' @param x A data frame or extension (like a `tibble` or `grouped tibble`).
+#' @param x A data frame, `tibble` or `grouped tibble`.
+#'
 #' @author Stu Field
 #' @seealso [group_vars()], [group_data()]
+#'
 #' @examples
 #' df <- dplyr::group_by(mtcars, cyl)
 #' class(df)
