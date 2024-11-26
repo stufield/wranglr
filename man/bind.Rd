@@ -42,10 +42,11 @@ Incidentally, the default behavior of \code{\link[=rbind]{rbind()}} reorders the
 correctly, but will only do so if their intersect matches.
 }
 \note{
-For \code{\link[=bind_intersect]{bind_intersect()}}, columns are combined on their \emph{intersect} only.
+For \code{\link[=bind_intersect]{bind_intersect()}}, columns are combined on
+their \emph{intersect} only.
 
-For \code{\link[=bind_union]{bind_union()}}, the ordering of the rows correspond to the order
-they are supplied.
+For \code{\link[=bind_union]{bind_union()}}, the ordering of the rows correspond
+to the order they are supplied.
 }
 \examples{
 # For `bind_intersect()`
@@ -60,7 +61,7 @@ bind_intersect(spl)
 # Can pass either list or via '...'
 identical(bind_intersect(spl), bind_intersect(spl[[1L]], spl[[2L]], spl[[3L]]))
 
-# Passing a _named_ list adds `data` column with those names
+# Passing a *named* list adds `data` column with those names
 names(spl) <- letters[1:3L]
 bind_intersect(spl)
 

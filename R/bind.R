@@ -17,7 +17,8 @@
 #'   to combine.
 #' @return A single data frame with the total number of rows =
 #'   `sum(sapply(..., nrow))`.
-#' @note For [bind_intersect()], columns are combined on their _intersect_ only.
+#' @note For [bind_intersect()], columns are combined on
+#'   their *intersect* only.
 #' @author Stu Field
 #' @seealso [Reduce()], [rbind()], [intersect()]
 #' @examples
@@ -33,7 +34,7 @@
 #' # Can pass either list or via '...'
 #' identical(bind_intersect(spl), bind_intersect(spl[[1L]], spl[[2L]], spl[[3L]]))
 #'
-#' # Passing a _named_ list adds `data` column with those names
+#' # Passing a *named* list adds `data` column with those names
 #' names(spl) <- letters[1:3L]
 #' bind_intersect(spl)
 #'
@@ -41,7 +42,8 @@
 bind_intersect <- function(...) {
   dlist  <- .checkdots(...)
   common <- Reduce(intersect, lapply(dlist, names))
-  lapply(dlist, `[`, common) |> bind_union()
+  lapply(dlist, `[`, common) |>
+    bind_union()
 }
 
 #' Vertically Combine Data Frames by Union
@@ -55,25 +57,28 @@ bind_intersect <- function(...) {
 #'   \item rows: `nrow(df1) + nrow(df2) + ... + nrow(df_n)`
 #'   \item cols: `union(names(...))`
 #' }
-#' @note For [bind_union()], the ordering of the rows correspond to the order
-#'   they are supplied.
+#' @note For [bind_union()], the ordering of the rows correspond
+#'   to the order they are supplied.
 #' @seealso [union()]
 #' @examples
 #' # For `bind_union()`
 #' bind_union(spl)
 #' bind_union(spl[[1L]], spl[[2L]])
 #' bind_union(spl[[1L]], spl[[2L]], spl[[3L]])
-#' @importFrom helpr col2rn rn2col
+#' @importFrom helpr col2rn has_rn rn2col
 #' @export
 bind_union <- function(...) {
-  x <- .checkdots(...)
-  lapply(x, rn2col) |> .bind_and_clean()
+  .checkdots(...) |>
+    .bind_and_clean()
 }
 
 #' @noRd
 #' @param x A list of data frames.
 .bind_and_clean <- function(x) {
-  out <- bind_rows(x, .id = "data") |> col2rn()
+  out <- bind_rows(x, .id = "data")
+  if ( ".bindr" %in% names(out) ) {
+    out <- col2rn(out, ".bindr")  # rm rn col is present
+  }
   select(out, get_meta(out), everything())
 }
 
@@ -91,6 +96,11 @@ bind_union <- function(...) {
   # add names if absent
   if ( is.null(names(dots)) ) {
     names(dots) <- sprintf("data_%02i", seq_along(dots))
+  }
+  # maintain rn if present
+  rn_lgl <- vapply(dots, has_rn, NA)
+  if ( any(rn_lgl) ) {
+    dots <- lapply(dots, rn2col, name = ".bindr")
   }
   dots
 }
