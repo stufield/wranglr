@@ -19,7 +19,7 @@ strings \emph{containing} \code{SeqId}s.}
 For \code{\link[=seq_lookup]{seq_lookup()}}, a tibble, a subset of \code{tbl},
 corresponding to the rows whose \code{SeqIds} match the values in \code{seq}.
 
-For \code{seqify()}, an object of class \code{seq}.
+\code{seqify()}: a \code{seq} class object.
 }
 \description{
 Conveniently look up "annotation" information such as:

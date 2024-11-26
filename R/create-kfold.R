@@ -77,12 +77,11 @@
 create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   stopifnot(
-    "`data` must be an object of class `data.frame`." =
-      !missing(data) && is.data.frame(data),
+    "`data` must be a `data.frame`." = !missing(data) && is.data.frame(data),
     "`k` must be a positive integer." = is_int_vec(k) && is.vector(k) &&
-      len_one(k) && k > 0.0,
+      len_one(k) && k > 0,
     "`repeats` must be a positive integer." = is_int_vec(repeats) &&
-      is.vector(repeats) && len_one(repeats) && repeats > 0.0,
+      is.vector(repeats) && len_one(repeats) && repeats > 0,
     # This is not a thorough test of the breaks input; relying on downstream
     # calls to fully vet
     "`breaks` must be NULL or a list of length 1 or 2." =
@@ -144,7 +143,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   # local testing of only those variables used in this function
   # we do not test those that are merely passed to other functions
   stopifnot(
-    "`data` must be an object of class `data.frame`." =
+    "`data` must be a `data.frame`." =
       !missing(data) && is.data.frame(data),
     "`k` must be a positive integer." = is_int_vec(k) &&
       is.vector(k) && len_one(k) && k > 0.0,
@@ -325,12 +324,12 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' Stratification step based on 2 stratification variables
 #'
 #' @noRd
-#' @param strata An object of class `data.frame`. The values of the stratification
-#'   variables. Must have 2 columns.
+#' @param strata A `data.frame` class object. The values of
+#'   the stratification variables. Must have exactly *2* columns.
 #' @param breaks A list. Each element an integer, numeric vector, or NA.
-#' @param k Integer. The number of partitions of the data set.
-#' @param idx Integer vector. The indices of the data to be stratified.
-#' @param depth Integer. Used to determine the best number of percentiles that
+#' @param k `integer(1)`. The number of partitions of the data set.
+#' @param idx `integer(n)`. The indices of the data to be stratified.
+#' @param depth `integer(1)`. Used to determine the best number of percentiles that
 #'   should be used. The number of bins are based on `min(5, floor(n / depth))`
 #'   where `n = length(x)`. If `x` is numeric, there must be at least 40 rows in
 #'   the data set (when `depth = 20`) to conduct stratified sampling.
@@ -344,7 +343,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   stopifnot(
     "All inputs must be provided." = !missing(strata) &&
       !missing(breaks) && !missing(k) && !missing(idx) && !missing(depth),
-    "`strata` must be an object of class `data.frame` with 2 columns." =
+    "`strata` must be a `data.frame` with 2 columns." =
       is.data.frame(strata) && ncol(strata) == 2L,
     # This breaks test will not catch bad form for all types of list elements
     # However, these will be caught in the calls to the single strata and
@@ -372,10 +371,10 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' Internal function to select appropriate stratification function
 #'
 #' @noRd
-#' @param strata `NULL` or an object of class `data.frame` with 1 or 2 columns.
+#' @param strata `NULL` or a `data.frame` with 1 or 2 columns.
 #'   If not `NULL`, this contains the values of the stratification variable(s).
-#' @param k Integer. The number of partitions of the data set.
-#' @param idx Integer vector. The indices of the data to be stratified.
+#' @param k `integer(1). The number of partitions of the data set.
+#' @param idx `integer(n)`. The indices of the data to be stratified.
 #' @param breaks A list. Each element an integer, numeric vector, or `NA`.
 #' @param ... Inputs passed on to stratification functions. Must contain `depth`.
 #' @return A list, each element providing the indices of the assessment data for
@@ -417,7 +416,9 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' Test for object class "x_split"
 #'
 #' @rdname create_kfold
+#'
 #' @param x An `R` object to test.
+#'
 #' @return [is.x_split()]: Logical. `TRUE` if `x` inherits from
 #'   class `x_split`.
 #' @export
@@ -431,9 +432,11 @@ is.x_split <- function(x) {
 #' [analysis()] : `r lifecycle::badge("questioning")`
 #'
 #' @rdname create_kfold
+#'
 #' @param object A `x_split` object.
 #' @param i An integer or `NULL`. If an integer, the split for which the
 #'   analysis or assessment data is to be retrieved.
+#'
 #' @return [analysis()]: A list ... each element containing an object of
 #'   class `data.frame`.
 #' @examples
@@ -467,8 +470,10 @@ analysis <- function(object, i = NULL) {
 #' [assessment()] : `r lifecycle::badge("questioning")`
 #'
 #' @rdname create_kfold
+#'
 #' @return [assessment()]: A list ... each element containing an object of
 #'   class `data.frame`.
+#'
 #' @examples
 #' # retrieve assessment data for 2nd split
 #' ass_2 <- assessment(sample_no_strat, 2L)

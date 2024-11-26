@@ -49,7 +49,7 @@ center_scale <- function(data, par_tbl = NULL, feat = NULL,
 #' @export
 center_scale.default <- function(data, par_tbl = NULL, feat = NULL,
                                  center = TRUE, scale = TRUE) {
-  stop("No S3 method could be found for object of class: ",
+  stop("No S3 method could be found for class: ",
        value(class(data)), call. = FALSE)
 }
 

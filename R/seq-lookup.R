@@ -68,7 +68,8 @@ seq_lookup <- function(seq, tbl = NULL) {
 
 #' @describeIn seq_lookup
 #'   Convert to `seq` object.
-#' @return For `seqify()`, an object of class `seq`.
+#'
+#' @return `seqify()`: a `seq` class object.
 #' @examples
 #' # print method for class `seq`
 #' seqify(svec) |> class()

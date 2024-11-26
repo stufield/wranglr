@@ -105,15 +105,15 @@ test_that("`center_scale()` generates error for other S3 methods", {
   # default
   expect_error(
     center_scale(1:10L),
-    "No S3 method could be found for object of class: 'integer'"
+    "No S3 method could be found for class: 'integer'"
   )
   expect_error(
     center_scale(1.5),
-    "No S3 method could be found for object of class: 'numeric'"
+    "No S3 method could be found for class: 'numeric'"
   )
   expect_error(
     center_scale(letters),
-    "No S3 method could be found for object of class: 'character'"
+    "No S3 method could be found for class: 'character'"
   )
   expect_error(
     center_scale(data, center = FALSE, scale = FALSE),

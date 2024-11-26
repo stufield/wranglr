@@ -252,15 +252,15 @@ test_that("`.getStrataIndices_two()` returns expected errors", {
   expect_error(.getStrataIndices_two(matrix(1, 30, 1L),
                                      breaks = breaks, k = 4L, idx = 1:30L,
                                      depth = 2L),
-               "`strata` must be an object of class `data.frame` with 2 columns.")
+               "`strata` must be a `data.frame` with 2 columns.")
   expect_error(.getStrataIndices_two(data.frame("x" = 1, "Y" = 2, "Z" = 3),
                                      breaks = breaks, k = 4L, idx = 1:30L,
                                      depth = 2L),
-               "`strata` must be an object of class `data.frame` with 2 columns.")
+               "`strata` must be a `data.frame` with 2 columns.")
   expect_error(.getStrataIndices_two(1:3,
                                      breaks = breaks, k = 4L, idx = 1:30L,
                                      depth = 2L),
-               "`strata` must be an object of class `data.frame` with 2 columns.")
+               "`strata` must be a `data.frame` with 2 columns.")
 
   expect_error(.getStrataIndices_two(strata, breaks = breaks[[1L]], k = 4L,
                                      idx = 1:30L, depth = 2L),
@@ -481,11 +481,11 @@ test_that("`.getStrataIndices` returns expected results for data.frame strata", 
 test_that("`.vfold_splits()` returns expected errors", {
   expect_error(
     .vfold_splits(k = 10L, breaks = NULL, depth = 20L),
-    "`data` must be an object of class `data.frame`."
+    "`data` must be a `data.frame`."
   )
   expect_error(
     .vfold_splits(sim_adat$time, k = 10L, breaks = NULL, depth = 20L),
-    "`data` must be an object of class `data.frame`."
+    "`data` must be a `data.frame`."
   )
 
   expect_positive_integer_scalar(".vfold_splits",
@@ -592,11 +592,11 @@ test_that("`.vfold_splits()` returns expected results", {
 test_that("`create_kfold()` returns expected errors", {
   expect_error(
     create_kfold(k = 10L, strata = NULL, breaks = 4L),
-    "`data` must be an object of class `data.frame`."
+    "`data` must be a `data.frame`."
   )
   expect_error(
     create_kfold(sim_adat$time),
-    "`data` must be an object of class `data.frame`."
+    "`data` must be a `data.frame`."
   )
 
   expect_positive_integer_scalar("create_kfold",
