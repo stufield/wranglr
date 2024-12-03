@@ -36,15 +36,16 @@
 #'                       hp   = log10,
 #'                       qsec = function(x) round(x / 10))
 #'
+#' @importFrom helpr dots_list2
 #' @export
 create_recipe <- function(data, feat = NULL, log10 = TRUE, center = TRUE,
                           scale = TRUE, ...) {
 
   feat <- feat %||% names(which(vapply(data, is.numeric, NA)))
-  dots <- rlang::dots_list(...)
+  dots <- dots_list2(...)
 
   if ( length(dots) > 0L ) {
-    data <- .apply_dot_funcs(data, dots)   # this happens first
+    data <- .apply_dot_funcs(data, dots)   # this happens first; order oper
   }
 
   if ( log10 ) {
@@ -256,7 +257,7 @@ convert_recipe <- function(object) {
 
   ret$p        <- length(predictors)
   ret$par_tbl  <- pars
-  ret$dot_vars <- character(0)
+  ret["dot_vars"] <- list(NULL) # semantics important to insert actual `NULL`
   structure(ret, class = c("converted_recipe", "rcp", "list"))
 }
 

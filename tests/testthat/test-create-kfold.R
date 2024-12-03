@@ -1,7 +1,8 @@
 
 # Setup -----
 expect_positive_integer_scalar <- function(func, args, arg_name, msg) {
-  act <- quasi_label(rlang::enquo(func), arg = "func")
+  # this is instead of quasi_label(), which requires rlang::enquo()
+  act <- list(val = func, lab = encodeString(func, quote = "\""))
 
   args[[arg_name]] <- "4"
   expect_error(do.call(func, args), msg)
@@ -23,7 +24,7 @@ expect_positive_integer_scalar <- function(func, args, arg_name, msg) {
 }
 
 expect_idx <- function(func, args) {
-  act <- quasi_label(rlang::enquo(func), arg = "func")
+  act <- list(val = func, lab = encodeString(func, quote = "\""))
   msg <- "`idx` must be an integer vector."
   args$idx <- matrix(1L, 1L, 1L)
   expect_error(do.call(func, args), msg)
@@ -43,8 +44,8 @@ expect_idx <- function(func, args) {
 
 # Testing ----
 # .make_strata() ----
-# This function is the meat of the stratification step and thus should always
-# be tested.
+# This function is the meat of the stratification
+#   step and thus should always be tested.
 test_that("`.make_strata()` returns expected errors", {
 
   expect_error(.make_strata(), "All inputs must be provided.")

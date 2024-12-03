@@ -42,9 +42,10 @@ match_samples <- function(x, y, idcol = "SampleId") {
     )
   }
 
-  id_sym <- rlang::ensym(idcol)
-  df_x <- arrange(dplyr::filter(x, !!id_sym %in% shared_ids), !!id_sym)
-  df_y <- arrange(dplyr::filter(y, !!id_sym %in% shared_ids), !!id_sym)
+  df_x <- dplyr::filter(x, x[[idcol]] %in% shared_ids) |>
+    arrange(!!str2lang(idcol))
+  df_y <- dplyr::filter(y, y[[idcol]] %in% shared_ids) |>
+    arrange(!!str2lang(idcol))
 
   if ( nrow(df_x) != n || nrow(df_y) != n ) {
     stop(

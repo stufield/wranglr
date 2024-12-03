@@ -29,7 +29,6 @@ Suggests:
     lintr,
     lobstr,
     recipes,
-    rlang,
     rmarkdown,
     spelling,
     testthat,
