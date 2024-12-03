@@ -28,8 +28,8 @@ elements are ignored.
 \examples{
 foo <- list(
   a = 1:5,
-  b = letters[1:10],
-  c = data.frame(set = 1:4, col = LETTERS[1:4])
+  b = letters[1:10L],
+  c = data.frame(set = 1:4, col = LETTERS[1:4L])
 )
 
 # Map all names
