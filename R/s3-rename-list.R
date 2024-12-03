@@ -33,27 +33,16 @@
 #' # The !!! is supported
 #' key <- c(super = "b", awesome = "a", wicked = "c")
 #' rename(foo, !!! key)
-#' @importFrom stats setNames
+#' @importFrom helpr set_Names dots_list2
 #' @export
 rename.list <- function(.data, ...) {
   if ( is.null(names(.data)) ) {
     stop("The list must be named.", call. = FALSE)
   }
-  map <- dots_list2(..., env = parent.frame())
-  loc <- setNames(match(map, names(.data), nomatch = 0L), names(map))
+  map <- dots_list2(...)
+  loc <- set_Names(match(map, names(.data), nomatch = 0L), names(map))
   loc <- loc[loc > 0L]
   newnames <- names(.data)
   newnames[loc] <- names(loc)
   setNames(.data, newnames)
-}
-
-# helper to avoid the rlang::dots_list() import
-dots_list2 <- function(..., env) {
-  x <- deparse(substitute(...))
-  tryCatch(c(...), error = function(e) splice_dots(x, env))
-}
-
-splice_dots <- function(x, env) {
-  lang <- str2lang(sub("^[!]{,3}", "", x))
-  eval(lang, envir = env)
 }
