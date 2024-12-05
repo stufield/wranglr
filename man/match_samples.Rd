@@ -7,10 +7,10 @@
 match_samples(x, y, idcol = "SampleId")
 }
 \arguments{
-\item{x, y}{The, two, \code{data.frame} objects to match against each other.}
+\item{x, y}{The two data frames to match samples against.}
 
-\item{idcol}{Character. The name of the column in both \code{x} and \code{y}
-to use for matching and ordering the rows of the data frames.}
+\item{idcol}{\code{character(1)}. The name of the column containing
+sample identifiers in both \code{x} and \code{y}.}
 }
 \value{
 A named list with \code{x} and \code{y}, matched and ordered
@@ -18,15 +18,16 @@ based on \code{idcol}.
 }
 \description{
 Given two data frames, this function matches their rows
-based on the intersection of sample IDs in \code{idcol}.
-The returned data frames are ordered by \code{idcol}.
-Rows that do not have intersecting \code{idcol} values are excluded.
+based on the intersection of a unique sample identifier column,
+\code{idcol}.
+The returned data frames are ordered by \code{idcol} and containing
+only rows based on the intersection of \code{idcol} values.
 }
 \examples{
 df    <- head(sim_adat, 25L)
 train <- withr::with_seed(1, dplyr::sample_n(df, 15L))
 new   <- withr::with_seed(2, dplyr::sample_n(df, 15L))
-intersect(train$SampleId, new$SampleId)    # there are overlapping IDs
+intersect(train$SampleId, new$SampleId)  # overlapping IDs exist
 
 dfs <- match_samples(train, new)
 dfs

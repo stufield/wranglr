@@ -2,14 +2,14 @@
 % Please edit documentation in R/impute-predictors.R
 \name{impute_predictors}
 \alias{impute_predictors}
-\title{Impute Predictor Data}
+\title{Impute Predictor Variables}
 \usage{
 impute_predictors(data, extrm_vals)
 }
 \arguments{
 \item{data}{A \code{data.frame}, or \code{tibble} object.}
 
-\item{extrm_vals}{A tibble (\code{tbl_df}) object with the following 5 fields:
+\item{extrm_vals}{A \code{tibble} with the following \strong{5} fields:
 \describe{
 \item{\verb{Feature:}}{feature name matching fields in \code{data}}
 \item{\verb{xtrm_min:}}{minimum acceptable value for that feature}
@@ -21,10 +21,9 @@ Use \code{NA} to \emph{not} impute, or use \code{dplyr::filter()} to remove the 
 row if neither \code{min} nor \code{max} is desired for a given feature.}
 }
 \description{
-Threshold numeric values according to the model-specific
-set of feature ranges (e.g. from training). One form of
-imputation can be capping values above a threshold
-(i.e. winsorizing).
+Threshold numeric values in model predictors according to
+set of training ranges. Typically this involves
+capping values above or below a threshold.
 }
 \examples{
 x   <- data.frame(a = 1:3L, b = 4:6L, c = 7:9L, d = c(1.23, 4.56, 7.89))

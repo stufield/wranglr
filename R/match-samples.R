@@ -1,13 +1,14 @@
 #' Match Two Data Frames Based on Sample ID
 #'
 #' Given two data frames, this function matches their rows
-#'   based on the intersection of sample IDs in `idcol`.
-#'   The returned data frames are ordered by `idcol`.
-#'   Rows that do not have intersecting `idcol` values are excluded.
+#'   based on the intersection of a unique sample identifier column,
+#'   `idcol`.
+#'   The returned data frames are ordered by `idcol` and containing
+#'   only rows based on the intersection of `idcol` values.
 #'
-#' @param x,y The, two, `data.frame` objects to match against each other.
-#' @param idcol Character. The name of the column in both `x` and `y`
-#'   to use for matching and ordering the rows of the data frames.
+#' @param x,y The two data frames to match samples against.
+#' @param idcol `character(1)`. The name of the column containing
+#'   sample identifiers in both `x` and `y`.
 #'
 #' @return A named list with `x` and `y`, matched and ordered
 #'   based on `idcol`.
@@ -16,7 +17,7 @@
 #' df    <- head(sim_adat, 25L)
 #' train <- withr::with_seed(1, dplyr::sample_n(df, 15L))
 #' new   <- withr::with_seed(2, dplyr::sample_n(df, 15L))
-#' intersect(train$SampleId, new$SampleId)    # there are overlapping IDs
+#' intersect(train$SampleId, new$SampleId)  # overlapping IDs exist
 #'
 #' dfs <- match_samples(train, new)
 #' dfs
@@ -54,5 +55,5 @@ match_samples <- function(x, y, idcol = "SampleId") {
     )
   }
 
-  list(x = df_x, y = df_y)
+  set_Names(list(df_x, df_y), c(xname, yname))
 }

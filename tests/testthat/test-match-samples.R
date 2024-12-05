@@ -11,25 +11,27 @@ test_that("`match_samples()` has expected output", {
   out_og <- match_samples(train, new, idcol = "SampleId")
 
   # sanity check
-  expect_named(out_og, c("x", "y"))
-  expect_equal(out_og$x$SampleId,
+  expect_named(out_og, c("train", "new"))
+  expect_equal(out_og$train$SampleId,
                c("001", "002", "006", "011", "016", "022", "023"))
-  expect_equal(out_og$y$SampleId,
+  expect_equal(out_og$new$SampleId,
                c("001", "002", "006", "011", "016", "022", "023"))
-  expect_equal(out_og$y, new[c(12L, 10L, 3L, 11L, 15L, 14L, 4L), ])
-  expect_equal(out_og$x, train[c(4L, 5L, 13L, 6L, 11L, 9L, 15L), ])
+  expect_equal(out_og$train, new[c(12L, 10L, 3L, 11L, 15L, 14L, 4L), ])
+  expect_equal(out_og$new, train[c(4L, 5L, 13L, 6L, 11L, 9L, 15L), ])
 
 
   # check dataframe input
   expected <- lapply(out_og, as.data.frame)
   out_df <- match_samples(as.data.frame(train), as.data.frame(new))
-  expect_equal(out_df, expected)
+  expect_equal(out_df, expected, ignore_attr = TRUE) # names differ
 
   # check mixture of `data.frame` and `soma_adat`
-  expect_equal(match_samples(as.data.frame(train), new),
-               list(x = expected$x, y = out_og$y))
-  expect_equal(match_samples(train, as.data.frame(new)),
-               list(x = out_og$x, y = expected$y))
+  foo <- as.data.frame(train)
+  expect_equal(match_samples(foo, new),
+               list(foo = expected$train, new = out_og$new))
+  foo <- as.data.frame(new)
+  expect_equal(match_samples(train, foo),
+               list(train = out_og$train, foo = expected$new))
 })
 
 test_that("`match_samples()` works with different sample ID inputs", {
@@ -39,9 +41,9 @@ test_that("`match_samples()` works with different sample ID inputs", {
   train$SampleId <- new$SampleId <- NULL
 
   out_diffid <- match_samples(train, new, idcol = "id")
-  expect_equal(out_diffid$x$id,
+  expect_equal(out_diffid$train$id,
                c("001", "002", "006", "011", "016", "022", "023"))
-  expect_equal(out_diffid$y$id,
+  expect_equal(out_diffid$new$id,
                c("001", "002", "006", "011", "016", "022", "023"))
 })
 

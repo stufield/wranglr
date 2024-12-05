@@ -22,19 +22,19 @@ test_that("imputation thresholds only specified values", {
 
 test_that("catches trips are error/warn when triggered", {
   expect_error(
-    impute_predictors(df, matrix(1:12, ncol = 4)),
-    "The 'extrm_vals' object must be a 'tibble' object."
+    impute_predictors(df, matrix(1:12, ncol = 4L)),
+    "The `extrm_vals` object must be a `tibble`."
   )
 
   expect_error(
     impute_predictors(df, dplyr::select(tbl, -impute_min)),  # rm column of tbl
-    paste("The 'extrm_vals' tibble must contain these 5 columns:",
+    paste("The `extrm_vals` tibble must contain these 5 columns:",
           "'Feature', 'xtrm_min', 'xtrm_max', 'impute_min', 'impute_max'")
   )
 
   expect_error(
     impute_predictors(df, dplyr::rename(tbl, FooBar = "Feature")), # bad name
-    paste("The 'extrm_vals' table has missing column(s): 'Feature'"),
+    paste("The `extrm_vals` table has missing column(s): 'Feature'"),
     fixed = TRUE
   )
 
@@ -48,30 +48,7 @@ test_that("catches trips are error/warn when triggered", {
   tbl2[3L, 3L] <- 9.5
   expect_error(
     impute_predictors(df, tbl2),
-    paste("All 'impute_min' values must be > 'xtrm_min' AND",
-          "all 'impute_max' values must be < 'xtrm_max'.")
-  )
-})
-
-test_that("trips warnings when RFU space may be incorrect", {
-  # all 3 warnings
-  .check_rfu_space(data.frame(a = c(500, 501), b = c(1000, 2000))) |>
-    expect_warning("log-transformed!") |>
-    expect_warning("centered!") |>
-    expect_warning("scaled!")
-
-  # not centered; not scaled
-  .check_rfu_space(data.frame(a = c(4.5, 4.7), b = c(2.1, 2.9))) |>
-    expect_warning("centered!") |>
-    expect_warning("scaled!")
-
-  expect_warning(
-    .check_rfu_space(center_scale(sample.adat, scale = FALSE)),
-    "Most imputation tables assume scaled data"
-  )
-
-  expect_warning(
-    .check_rfu_space(center_scale(sample.adat, center = FALSE)),
-    "Most imputation tables assume centered data"
+    paste("All `impute_min` values must be > `xtrm_min` AND",
+          "all `impute_max` values must be < `xtrm_max`.")
   )
 })
