@@ -7,23 +7,31 @@ output: github_document
 
 
 ```{r setup, echo = FALSE, message = FALSE}
+options(width = 100)
+Sys.setlocale("LC_COLLATE", "en_US.UTF-8") # ensure common sorting envir
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-"
+  fig.path = "man/figures/README-",
+  out.width = "100%"
 )
-sample.adat <- splyr:::sample.adat
+ver <- desc::desc_get_version(".")
+ver <- paste0("https://img.shields.io/badge/Version-", ver,
+              "-success.svg?style=flat&logo=github")
+sample_data <- splyr:::sample.adat
 ```
 
 
 # The `splyr` package
 
 <!-- badges: start -->
-[![build](https://img.shields.io/badge/build-passing-success.svg?logo=travis)](http://bitbucket.sladmin.com/projects/SV/repos/somaplyr/commits)
-![coverage](`r coverage`)
-![lint](`r lintage`)
-[![pkgdown](https://img.shields.io/badge/pkgdown-_-critical.svg?logo=semantic-web&logoColor=red)](https://bitbucket.sladmin.com/pages/SV/somaplyr/bb-pkgdown/browse/index.html)
-[![License: GPL-3](https://img.shields.io/badge/License-GPL3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![GitHub version](`r ver`)
+[![CRAN status](http://www.r-pkg.org/badges/version/splyr)](https://cran.r-project.org/package=splyr)
+[![R-CMD-check](https://github.com/stufield/splyr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/splyr/actions)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/splyr)](https://cran.r-project.org/package=splyr)
+[![Codecov test coverage](https://codecov.io/gh/stufield/splyr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stufield/splyr?branch=main)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
 <!-- badges: end -->
 
 
@@ -76,8 +84,8 @@ library(help = splyr)
 
 ```{r center-scale}
 scaled <- center_scale(sim_adat)
-apply(feature_meta(scaled), 2, mean) |> sum()  # mean = 0
-apply(feature_meta(scaled), 2, sd)             # sd = 1
+apply(feature_matrix(scaled), 2, mean) |> sum()  # mean = 0
+apply(feature_matrix(scaled), 2, sd)             # sd = 1
 
 # `create_recipe()`
 rcp <- create_recipe(sim_adat)
@@ -121,7 +129,7 @@ table(imputeNAs(x))
 # Predictors
 x   <- data.frame(a = 1:3, b = 4:6, c = 7:9, d = c(1.23, 4.56, 7.89))
 tbl <- tibble::tribble(
-  ~ AptName,  ~ xtrm_max, ~ impute_max, ~ xtrm_min, ~ impute_min,
+  ~ Feature,  ~ xtrm_max, ~ impute_max, ~ xtrm_min, ~ impute_min,
     "a",         NA,        NA,           NA,         NA,
     "b",         5,         5,            0,          1,
     "c",         9,         7,            7.1,        7.1
@@ -131,35 +139,11 @@ impute_predictors(x, tbl)
 
 -----------
 
-### Shaping Data
-
-* `pivot_long()`
-
-```{r pivot}
-widelong <- tibble::tibble(
-  subject_id    = c(1561L, 1561L, 1561L, 3358L, 3358L, 3358L),
-  ie            = c("IE1", "IE2", "IE3", "IE1", "IE2", "IE3"),
-  clin_var1_ie1 = c(93L, 93L, 93L, 56L, 56L, 56L),
-  clin_var1_ie2 = c(84L, 84L, 84L, 79L, 79L, 79L),
-  clin_var1_ie3 = c(89L, 89L, 89L, 68L, 68L, 68L),
-  clin_var2_ie1 = c(15L, 15L, 15L, 77L, 77L, 77L),
-  clin_var2_ie2 = c(99L, 99L, 99L, 92L, 92L, 92L),
-  clin_var2_ie3 = c(100L, 100L, 100L, 16L, 16L, 16L),
-  clin_var3_ie1 = c("N", "N", "N", "N", "N", "N"),
-  clin_var3_ie3 = c("N", "N", "N", "N", "N", "N"),
-  seq.15529.33  = c(31498.5, 20108.1, 11905.1, 5726.6, 46357.8, 47059.8)
-)
-widelong
-
-# run with default arguments
-pivot_long(widelong)
-```
-
------------
 
 ### Binding Data
-* `rbind_intersect()`
-* `rbind_union()`
+
+* `bind_intersect()`
+* `bind_union()`
 
 ```{r bind}
 df1 <- data.frame(a = 1, b = 2, c = 3, row.names = "A")
@@ -168,18 +152,19 @@ df3 <- data.frame(a = 7, b = 8, e = 9, row.names = "C")
 list_df  <- list(a = df1, b = df2, c = df3)
 list_df
 
-rbind_intersect(list_df)
+bind_intersect(list_df)
 
-rbind_union(list_df)
+bind_union(list_df)
 ```
 
 -----------
 
 ### Selecting Feature Data
+
 * `refactor_data()`
 * `feature_matrix()`
 
-```{r refactor-mat}
+```{r refactor}
 df  <- data.frame(a = factor(c("a", "b")), b = 1:2L)
 foo <- df[df$a == "a", ]
 foo
@@ -193,23 +178,25 @@ levels(bar$a)   # 1 level now
 -----------
 
 ### `seq.XXXX` formats
-* `seqLookup()`
+
+* `seq_lookup()`
 * `seqify()`
-* `lookupAnnotations()`
-```{r seqLookup}
-seqs <- withr::with_seed(101, sample(names(sample.adat), 10L))
+* `lookup_anno()`
+
+```{r seq-lookup}
+seqs <- withr::with_seed(101, sample(names(sample_data), 10L))
 seqs
 
 # NAs for those analytes dropped from menu
-seqLookup(seqs)
+seq_lookup(seqs)
 
 seqify(seqs)
 
-# Pass `apt.data` from appropriate ADAT
-# to reconstitute those missing analytes
-seqLookup(seqs, splyr:::apt_data)
+# Pass `tbl` containing annotations
+# to reconstitute those missing ones
+seq_lookup(seqs, splyr:::apt_data)
 
 # OR: on the fly
-seqLookup(seqs, attr(sample.adat, "Col.Meta"))
+seq_lookup(seqs, attr(sample_data, "Col.Meta"))
 ```
 
