@@ -63,8 +63,8 @@ test_that("recipe-bake workflow is same as center_scale()", {
   x   <- log10(train[, feats])
   tbl <- tibble::tibble(
     feature = feats,
-    means   = unname(colMeans(strip_meta(x))),
-    sds     = unname(apply(strip_meta(x), 2, sd))
+    means   = unname(colMeans(feature_matrix(x))),
+    sds     = unname(apply(feature_matrix(x), 2, sd))
   )
   bkd <- bake_recipe(rcp, test)
   attr(bkd, "baked") <- NULL    # 'baked' attribute differs; rm to compare

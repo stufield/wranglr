@@ -12,17 +12,6 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "man/figures/README-"
 )
-cvr <- covr::percent_coverage(covr::package_coverage())
-coverage <- sprintf(
-  "https://img.shields.io/badge/coverage-%0.1f%%25-%s.svg?style=flat&logo=codecov",
-  cvr, ifelse(cvr > 75, "success", ifelse(cvr > 50, "yellow", "critical"))
-)
-#lints <- length(lintr::lint_dir("R", show_progress = FALSE))
-lints <- 0
-lintage <- sprintf(
-  "https://img.shields.io/badge/lints-%s-%s.svg?style=flat&logo=gitlab",
-  lints, ifelse(lints < 25, "success", ifelse(lints < 50, "yellow", "critical"))
-)
 sample.adat <- splyr:::sample.adat
 ```
 
@@ -87,8 +76,8 @@ library(help = splyr)
 
 ```{r center-scale}
 scaled <- center_scale(sim_adat)
-apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
-apply(strip_meta(scaled), 2, sd)             # sd = 1
+apply(feature_meta(scaled), 2, mean) |> sum()  # mean = 0
+apply(feature_meta(scaled), 2, sd)             # sd = 1
 
 # `create_recipe()`
 rcp <- create_recipe(sim_adat)
@@ -143,7 +132,9 @@ impute_predictors(x, tbl)
 -----------
 
 ### Shaping Data
-* `pivotLong()`
+
+* `pivot_long()`
+
 ```{r pivot}
 widelong <- tibble::tibble(
   subject_id    = c(1561L, 1561L, 1561L, 3358L, 3358L, 3358L),
@@ -161,39 +152,41 @@ widelong <- tibble::tibble(
 widelong
 
 # run with default arguments
-pivotLong(widelong)
+pivot_long(widelong)
 ```
 
 -----------
 
 ### Binding Data
-* `rbindIntersect()`
-* `rbindUnion()`
-```{r rbind}
+* `rbind_intersect()`
+* `rbind_union()`
+
+```{r bind}
 df1 <- data.frame(a = 1, b = 2, c = 3, row.names = "A")
 df2 <- data.frame(a = 4, b = 5, d = 6, row.names = "B")
 df3 <- data.frame(a = 7, b = 8, e = 9, row.names = "C")
 list_df  <- list(a = df1, b = df2, c = df3)
 list_df
 
-rbindIntersect(list_df)
+rbind_intersect(list_df)
 
-rbindUnion(list_df)
+rbind_union(list_df)
 ```
 
 -----------
 
-### Stripping Data
+### Selecting Feature Data
 * `refactor_data()`
-* `strip_meta()`
-```{r strip}
-df  <- data.frame(a = factor(c("a", "b")), b = 1:2)
+* `feature_matrix()`
+
+```{r refactor-mat}
+df  <- data.frame(a = factor(c("a", "b")), b = 1:2L)
 foo <- df[df$a == "a", ]
 foo
 
 levels(foo$a)   # 2 levels! "b" is a ghost level
 
-bar <- refactorData(foo)
+bar <- refactor_data(foo)
 levels(bar$a)   # 1 level now
 ```
 
@@ -219,10 +212,4 @@ seqLookup(seqs, splyr:::apt_data)
 # OR: on the fly
 seqLookup(seqs, attr(sample.adat, "Col.Meta"))
 ```
-
-
--------------
-
-
-#### LICENSE
 

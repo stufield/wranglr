@@ -51,8 +51,8 @@ can be used for centering or scaling data.
 }}
 \examples{
 scaled <- center_scale(mtcars)
-apply(strip_meta(scaled), 2, mean) |> sum()  # mean ~ 0
-apply(strip_meta(scaled), 2, sd)             # sd ~ 1
+apply(feature_matrix(scaled), 2, mean) |> sum()  # mean ~ 0
+apply(feature_matrix(scaled), 2, sd)             # sd ~ 1
 
 idx <- withr::with_seed(1,
   sample(1:nrow(mtcars), size = nrow(mtcars) / 2)
@@ -63,8 +63,8 @@ test  <- mtcars[-idx, ]
 # Pass `par_tbl` as reference
 ft <- c("disp", "hp", "drat")
 par <- tibble::tibble(feature = ft,
-                      means   = colMeans(strip_meta(train, ft)),
-                      sds     = apply(strip_meta(train, ft), 2, sd))
+                      means   = colMeans(feature_matrix(train, ft)),
+                      sds     = apply(feature_matrix(train, ft), 2, sd))
 cs <- center_scale(test, par_tbl = par)
 # Logical test
 is_center_scaled(cs)

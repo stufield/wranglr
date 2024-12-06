@@ -80,10 +80,10 @@ for ( i in features ) {
 }
 
 # check means of feature data
-apply(strip_meta(mt_mod, features), 2, mean) |> sum()  # mean = 0
+apply(feature_matrix(mt_mod, features), 2, mean) |> sum()  # mean = 0
 
 # check sd of feature data
-apply(strip_meta(mt_mod, features), 2, sd)
+apply(feature_matrix(mt_mod, features), 2, sd)
 ```
 
 

@@ -24,8 +24,8 @@
 #'
 #' @examples
 #' scaled <- center_scale(mtcars)
-#' apply(strip_meta(scaled), 2, mean) |> sum()  # mean ~ 0
-#' apply(strip_meta(scaled), 2, sd)             # sd ~ 1
+#' apply(feature_matrix(scaled), 2, mean) |> sum()  # mean ~ 0
+#' apply(feature_matrix(scaled), 2, sd)             # sd ~ 1
 #'
 #' idx <- withr::with_seed(1,
 #'   sample(1:nrow(mtcars), size = nrow(mtcars) / 2)
@@ -36,8 +36,8 @@
 #' # Pass `par_tbl` as reference
 #' ft <- c("disp", "hp", "drat")
 #' par <- tibble::tibble(feature = ft,
-#'                       means   = colMeans(strip_meta(train, ft)),
-#'                       sds     = apply(strip_meta(train, ft), 2, sd))
+#'                       means   = colMeans(feature_matrix(train, ft)),
+#'                       sds     = apply(feature_matrix(train, ft), 2, sd))
 #' cs <- center_scale(test, par_tbl = par)
 #' @export
 center_scale <- function(data, par_tbl = NULL, feat = NULL,
@@ -208,7 +208,7 @@ undo_center_scale <- function(data, feat = NULL) {
 #' @importFrom tibble tibble
 #' @noRd
 .genParTbl <- function(x, feat = NULL) {
-  m <- strip_meta(x, feat)
+  m <- feature_matrix(x, feat)
   tibble(
     feature = colnames(m),
     means   = unname(colMeans(m, na.rm = TRUE)),

@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 
 
 
-The `splyr` package contains the general functions necessary 
-to manipulate internal R representations of adat files and wrangle those
-data into convenient form for analysis.
+The `splyr` package contains the general functions necessary to manipulate
+internal R representations of adat files and wrangle those data into convenient
+form for analysis.
 
 
 --------------------
@@ -35,8 +35,8 @@ data into convenient form for analysis.
 
 ```{r center-scale-recipe}
 scaled <- center_scale(mtcars)               # all numeric features
-apply(strip_meta(scaled), 2, mean) |> sum()  # mean = 0
-apply(strip_meta(scaled), 2, sd)             # sd = 1
+apply(feature_matrix(scaled), 2, mean) |> sum()  # mean = 0
+apply(feature_matrix(scaled), 2, sd)             # sd = 1
 
 # `create_recipe()`
 rcp <- create_recipe(mtcars, feat = c("mpg", "disp", "drat", "wt"))
@@ -87,6 +87,7 @@ impute_predictors(x, tbl)
 -----------
 
 ### Binding Data
+
 * `bind_intersect()`
 * `bind_union()`
 
@@ -104,12 +105,13 @@ bind_union(list_df)
 
 -----------
 
-### Stripping Data
-* `refactor_data()`
-* `strip_meta()`
+### Refactor
 
-```{r strip}
-df <- data.frame(a = factor(c("a", "b")), b = 1:2)
+* `refactor_data()`
+* `feature_matrix()`
+
+```{r refactor}
+df  <- data.frame(a = factor(c("a", "b")), b = 1:2L)
 foo <- df[df$a == "a", ]
 foo
 
@@ -122,6 +124,7 @@ levels(bar$a)   # 1 level now
 -----------
 
 ### `seq.xxxx.xx` formats
+
 * `seq_lookup()`
 * `seqify()`
 * `lookup_anno()`
@@ -135,8 +138,8 @@ seq_lookup(seqs)
 
 seqify(seqs)
 
-# Pass `apt.data` from appropriate ADAT
-# to reconstitute those missing analytes
+# Pass `tbl` containing annotations
+# to reconstitute those missing ones
 seq_lookup(seqs, splyr:::apt_data)
 
 # OR: on the fly

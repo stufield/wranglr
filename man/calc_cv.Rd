@@ -40,7 +40,7 @@ calc_cv(dom_example)
 split_on <- sim_adat$SiteId
 
 # split data
-site_split <- strip_meta(sim_adat) |> data.frame() |>
+site_split <- feature_matrix(sim_adat) |> data.frame() |>
   lapply(split, f = split_on)
 
 # iterate over list/analytes; each contains multiple (4x) "runs"
