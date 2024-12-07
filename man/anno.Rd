@@ -93,7 +93,7 @@ seq_lookup(svec)
 
 # pass a 'known' set of annotations
 # note: the NAs are now replaced
-seq_lookup(svec, tbl = splyr:::apt_data)
+seq_lookup(svec, tbl = splyr:::sample_cm)
 
 # print method for class `splyr_seq`
 seqify(svec) |> class()

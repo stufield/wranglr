@@ -220,7 +220,7 @@ levels(bar$a)   # 1 level now
 - `lookup_anno()`
 
 ``` r
-seqs <- withr::with_seed(101, sample(names(sample_data), 10L))
+seqs <- withr::with_seed(101, sample(names(sample_df), 10L))
 seqs
 #>  [1] "seq.4493.92" "seq.2644.11" "seq.4987.17" "seq.3066.12" "seq.4706.17" "seq.3504.58"
 #>  [7] "seq.3186.2"  "seq.3190.43" "seq.3440.7"  "seq.4703.87"
@@ -258,7 +258,7 @@ seqify(seqs)
 
 # Pass `tbl` containing annotations
 # to reconstitute those missing ones
-seq_lookup(seqs, splyr:::apt_data)
+seq_lookup(seqs, splyr:::sample_cm)
 #> # A tibble: 10 × 8
 #>    seq         SeqId   EntrezGeneSymbol Target     TargetFullName             Type  Dilution UniProt
 #>    <chr>       <chr>   <chr>            <chr>      <chr>                      <chr> <chr>    <chr>  
@@ -274,7 +274,7 @@ seq_lookup(seqs, splyr:::apt_data)
 #> 10 seq.4703.87 4703-87 LTA              TNF-b      Lymphotoxin-alpha          Prot… 40       P01374
 
 # OR: on the fly
-seq_lookup(seqs, attr(sample_data, "Col.Meta"))
+seq_lookup(seqs, attr(sample_df, "Col.Meta"))
 #> # A tibble: 10 × 8
 #>    seq         SeqId   EntrezGeneSymbol Target     TargetFullName             Type  Dilution UniProt
 #>    <chr>       <chr>   <chr>            <chr>      <chr>                      <chr> <chr>    <chr>  

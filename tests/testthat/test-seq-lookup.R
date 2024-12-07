@@ -1,5 +1,5 @@
 # Setup ----
-x <- withr::with_seed(100, sample(names(sample.adat), 2L))
+x <- withr::with_seed(100, sample(names(sample_df), 2L))
 
 # Testing ----
 test_that("`seq_lookup()` returns correct tibble when Aptamers are passed", {
@@ -17,7 +17,7 @@ test_that("`seq_lookup()` returns correct tibble when Aptamers are passed", {
 })
 
 test_that("`seq_lookup()` returns correct tibble with `tbl` is passed", {
-  anno <- attr(sample.adat, "Col.Meta")
+  anno <- attr(sample_df, "Col.Meta")
   tbl  <- seq_lookup(x, anno)
   expect_equal(dim(tbl), c(2, 8L))
   expect_equal(tbl$seq, x)
@@ -39,7 +39,7 @@ test_that("`seq_lookup()` returns correct tibble when SeqIds are passed", {
 })
 
 test_that("NAs are properly generated for missing features with long seq passed", {
-  seqs <- grep("^seq\\.", names(sample.adat), value = TRUE)
+  seqs <- grep("^seq\\.", names(sample_df), value = TRUE)
   tbl <- seq_lookup(seqs, annotations_v4.1)
   expect_equal(dim(tbl), c(length(seqs), 10L))
   expect_equal(sum(is.na(tbl$Target)), 86)

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 ver <- desc::desc_get_version(".")
 ver <- paste0("https://img.shields.io/badge/Version-", ver,
               "-success.svg?style=flat&logo=github")
-sample_data <- splyr:::sample.adat
+sample_df <- splyr:::sample_df
 ```
 
 
@@ -184,7 +184,7 @@ levels(bar$a)   # 1 level now
 * `lookup_anno()`
 
 ```{r seq-lookup}
-seqs <- withr::with_seed(101, sample(names(sample_data), 10L))
+seqs <- withr::with_seed(101, sample(names(sample_df), 10L))
 seqs
 
 # NAs for those analytes dropped from menu
@@ -194,9 +194,9 @@ seqify(seqs)
 
 # Pass `tbl` containing annotations
 # to reconstitute those missing ones
-seq_lookup(seqs, splyr:::apt_data)
+seq_lookup(seqs, splyr:::sample_cm)
 
 # OR: on the fly
-seq_lookup(seqs, attr(sample_data, "Col.Meta"))
+seq_lookup(seqs, attr(sample_df, "Col.Meta"))
 ```
 

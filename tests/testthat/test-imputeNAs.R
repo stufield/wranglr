@@ -34,12 +34,12 @@ test_that("the `imputeNAs` numeric method is correct", {
 
 test_that("the `imputeNAs.soma_adat()` method is correct", {
   n        <- 150L
-  apt_vals <- sample.adat[[n]]
-  z        <- imputeNAs(sample.adat)
-  expect_equal(z, sample.adat)                  # check nothing changed; no NAs
-  expect_length(z[[n]], nrow(sample.adat))
-  expect_equal(imputeNAs(sample.adat[[n]]), z[[n]])    # nothing changed
-  expect_equal(imputeNAs(sample.adat[[n]]), apt_vals)  # nothing changed
+  apt_vals <- sample_df[[n]]
+  z        <- imputeNAs(sample_df)
+  expect_equal(z, sample_df)                  # check nothing changed; no NAs
+  expect_length(z[[n]], nrow(sample_df))
+  expect_equal(imputeNAs(sample_df[[n]]), z[[n]])    # nothing changed
+  expect_equal(imputeNAs(sample_df[[n]]), apt_vals)  # nothing changed
 })
 
 

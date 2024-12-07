@@ -1,7 +1,7 @@
 
 # Setup ----
-st <- create_summ_tbl(sample.adat)
-st_group <- create_summ_tbl(sample.adat, SampleGroup)
+st <- create_summ_tbl(sample_df)
+st_group <- create_summ_tbl(sample_df, SampleGroup)
 
 
 # Testing ----
@@ -30,8 +30,8 @@ test_that("the object names are correct", {
 })
 
 test_that("Feature names are correct", {
-  expect_equal(st$Feature, get_analytes(sample.adat))
-  expect_equal(st_group$Feature, get_analytes(sample.adat))
+  expect_equal(st$Feature, get_analytes(sample_df))
+  expect_equal(st_group$Feature, get_analytes(sample_df))
 })
 
 test_that("column values are correct when no `group_var` is passed", {
@@ -63,6 +63,6 @@ test_that("column values are correct when `group_var` is passed", {
 test_that("the `group_var` can be a unquoted or quoted string", {
   expect_identical(
     st_group,
-    create_summ_tbl(sample.adat, "SampleGroup")
+    create_summ_tbl(sample_df, "SampleGroup")
   )
 })

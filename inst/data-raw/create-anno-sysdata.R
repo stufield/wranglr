@@ -31,12 +31,10 @@ annotations_v5.0 <- dplyr::select(annotations_v5.0,
 annotations_v5.0 <- dplyr::relocate(annotations_v5.0, "List", "Reason",
                                     .after = Type)
 
-setdiff(names(annotations_v4.1), names(annotations_v5.0))
-
 save(annotations_v4.0,
      annotations_v4.1,
      annotations_v5.0,
-     sample.adat,
-     apt_data,
+     sample_df,
+     sample_cm,
      file = "R/sysdata.rda",
      compress = "xz")

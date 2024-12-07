@@ -95,7 +95,7 @@ grep_anno <- function(pattern) {
 #'
 #' # pass a 'known' set of annotations
 #' # note: the NAs are now replaced
-#' seq_lookup(svec, tbl = splyr:::apt_data)
+#' seq_lookup(svec, tbl = splyr:::sample_cm)
 #'
 #' @importFrom tibble tibble as_tibble
 #' @export
