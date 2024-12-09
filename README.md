@@ -213,11 +213,11 @@ levels(bar$a)   # 1 level now
 
 ------------------------------------------------------------------------
 
-### `seq.XXXX` formats
+### SeqIds and Annotations
 
+- `lookup_anno()`
 - `seq_lookup()`
 - `seqify()`
-- `lookup_anno()`
 
 ``` r
 seqs <- withr::with_seed(101, sample(names(sample_df), 10L))
@@ -258,34 +258,19 @@ seqify(seqs)
 
 # Pass `tbl` containing annotations
 # to reconstitute those missing ones
-seq_lookup(seqs, splyr:::sample_cm)
-#> # A tibble: 10 × 8
-#>    seq         SeqId   EntrezGeneSymbol Target     TargetFullName             Type  Dilution UniProt
-#>    <chr>       <chr>   <chr>            <chr>      <chr>                      <chr> <chr>    <chr>  
-#>  1 seq.4493.92 4493-92 IL11             IL-11      Interleukin-11             Prot… 40       P20809 
-#>  2 seq.2644.11 2644-11 PRKCA            PKC-A      Protein kinase C alpha ty… Prot… 40       P17252 
-#>  3 seq.4987.17 4987-17 FCAR             FCAR       Immunoglobulin alpha Fc r… Prot… 40       P24071 
-#>  4 seq.3066.12 3066-12 LGALS3           Galectin-3 Galectin-3                 Prot… 1        P17931 
-#>  5 seq.4706.17 4706-17 EPB41            41         Protein 4.1                Prot… 1        P11171 
-#>  6 seq.3504.58 3504-58 HAMP             LEAP-1     Hepcidin                   Prot… 1        P81172 
-#>  7 seq.3186.2  3186-2  C2               C2         Complement C2              Prot… 0.005    P06681 
-#>  8 seq.3190.43 3190-43 GAS1             GAS1       Growth arrest-specific pr… Prot… 40       P54826 
-#>  9 seq.3440.7  3440-7  GZMA             granzyme A Granzyme A                 Prot… 40       P12544 
-#> 10 seq.4703.87 4703-87 LTA              TNF-b      Lymphotoxin-alpha          Prot… 40       P01374
-
-# OR: on the fly
-seq_lookup(seqs, attr(sample_df, "Col.Meta"))
-#> # A tibble: 10 × 8
-#>    seq         SeqId   EntrezGeneSymbol Target     TargetFullName             Type  Dilution UniProt
-#>    <chr>       <chr>   <chr>            <chr>      <chr>                      <chr> <chr>    <chr>  
-#>  1 seq.4493.92 4493-92 IL11             IL-11      Interleukin-11             Prot… 40       P20809 
-#>  2 seq.2644.11 2644-11 PRKCA            PKC-A      Protein kinase C alpha ty… Prot… 40       P17252 
-#>  3 seq.4987.17 4987-17 FCAR             FCAR       Immunoglobulin alpha Fc r… Prot… 40       P24071 
-#>  4 seq.3066.12 3066-12 LGALS3           Galectin-3 Galectin-3                 Prot… 1        P17931 
-#>  5 seq.4706.17 4706-17 EPB41            41         Protein 4.1                Prot… 1        P11171 
-#>  6 seq.3504.58 3504-58 HAMP             LEAP-1     Hepcidin                   Prot… 1        P81172 
-#>  7 seq.3186.2  3186-2  C2               C2         Complement C2              Prot… 0.005    P06681 
-#>  8 seq.3190.43 3190-43 GAS1             GAS1       Growth arrest-specific pr… Prot… 40       P54826 
-#>  9 seq.3440.7  3440-7  GZMA             granzyme A Granzyme A                 Prot… 40       P12544 
-#> 10 seq.4703.87 4703-87 LTA              TNF-b      Lymphotoxin-alpha          Prot… 40       P01374
+anno <- attr(sample_df, "anno")
+seq_lookup(seqs, tbl = anno)
+#> # A tibble: 10 × 10
+#>    seq         SeqId   EntrezGeneSymbol Target    TargetFullName Type  Dilution UniProt List  Reason
+#>    <chr>       <chr>   <chr>            <chr>     <chr>          <chr> <chr>    <chr>   <chr> <chr> 
+#>  1 seq.4493.92 4493-92 IL11             IL-11     Interleukin-11 Prot… 20%      P20809  ""    ""    
+#>  2 seq.2644.11 2644-11 PRKCA            PKC-A     Protein kinas… Prot… 20%      P17252  ""    ""    
+#>  3 seq.4987.17 4987-17 FCAR             FCAR      Immunoglobuli… Prot… 20%      P24071  ""    ""    
+#>  4 seq.3066.12 3066-12 LGALS3           Galectin… Galectin-3     Prot… 0.5%     P17931  ""    ""    
+#>  5 seq.4706.17 4706-17 EPB41            41        Protein 4.1    Prot… 0.5%     P11171  ""    ""    
+#>  6 seq.3504.58 3504-58 HAMP             LEAP-1    Hepcidin       Prot… 0.5%     P81172  ""    ""    
+#>  7 seq.3186.2  3186-2  C2               C2        Complement C2  Prot… 0.005%   P06681  ""    ""    
+#>  8 seq.3190.43 3190-43 <NA>             <NA>      <NA>           <NA>  <NA>     <NA>    <NA>  <NA>  
+#>  9 seq.3440.7  3440-7  GZMA             granzyme… Granzyme A     Prot… 20%      P12544  ""    ""    
+#> 10 seq.4703.87 4703-87 LTA              TNF-b     Lymphotoxin-a… Prot… 20%      P01374  ""    ""
 ```

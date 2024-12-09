@@ -1,7 +1,7 @@
 
 # Setup ----
 st <- create_summ_tbl(sample_df)
-st_group <- create_summ_tbl(sample_df, SampleGroup)
+st_group <- create_summ_tbl(sample_df, group)
 
 
 # Testing ----
@@ -63,6 +63,6 @@ test_that("column values are correct when `group_var` is passed", {
 test_that("the `group_var` can be a unquoted or quoted string", {
   expect_identical(
     st_group,
-    create_summ_tbl(sample_df, "SampleGroup")
+    create_summ_tbl(sample_df, "group")
   )
 })

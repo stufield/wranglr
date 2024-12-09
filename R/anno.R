@@ -93,10 +93,6 @@ grep_anno <- function(pattern) {
 #'
 #' seq_lookup(svec)
 #'
-#' # pass a 'known' set of annotations
-#' # note: the NAs are now replaced
-#' seq_lookup(svec, tbl = splyr:::sample_cm)
-#'
 #' @importFrom tibble tibble as_tibble
 #' @export
 seq_lookup <- function(seq, tbl = NULL) {
@@ -106,11 +102,11 @@ seq_lookup <- function(seq, tbl = NULL) {
     lookup <- as_tibble(tbl)
     lookup$SeqId <- get_seq(lookup$SeqId)
   }
-  add_vars <- c("UniProt", "List", "Reason")
+  add_vars <- c("Dilution", "UniProt", "List", "Reason")
   tibble(seq = seq, SeqId = get_seq(seq)) |>
     left_join(lookup, by = "SeqId") |>
     select(seq, SeqId, EntrezGeneSymbol, Target,
-           TargetFullName, Type, Dilution, any_of(add_vars))
+           TargetFullName, any_of(add_vars))
 }
 
 

@@ -177,11 +177,11 @@ levels(bar$a)   # 1 level now
 
 -----------
 
-### `seq.XXXX` formats
+### SeqIds and Annotations
 
+* `lookup_anno()`
 * `seq_lookup()`
 * `seqify()`
-* `lookup_anno()`
 
 ```{r seq-lookup}
 seqs <- withr::with_seed(101, sample(names(sample_df), 10L))
@@ -194,9 +194,7 @@ seqify(seqs)
 
 # Pass `tbl` containing annotations
 # to reconstitute those missing ones
-seq_lookup(seqs, splyr:::sample_cm)
-
-# OR: on the fly
-seq_lookup(seqs, attr(sample_df, "Col.Meta"))
+anno <- attr(sample_df, "anno")
+seq_lookup(seqs, tbl = anno)
 ```
 

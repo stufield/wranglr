@@ -31,10 +31,27 @@ annotations_v5.0 <- dplyr::select(annotations_v5.0,
 annotations_v5.0 <- dplyr::relocate(annotations_v5.0, "List", "Reason",
                                     .after = Type)
 
+x <- readRDS("inst/data-raw/sample-data.rds") |>
+  dplyr::select(-SiteId, -Subject_ID, -RowCheck, -SampleType,
+                -SampleMatrix, -PlateId,
+                sid   = SlideId,
+                sub   = Subarray,
+                ind_id = SampleId,
+                group = SampleGroup,
+                time  = TimePoint,
+                norm0 = HybControlNormScale,
+                norm1 = NormScale_0_005,
+                norm2 = NormScale_1,
+                norm3 = NormScale_40)
+
+attr(x, "anno") <- readRDS("inst/data-raw/sample-data.rds") |>
+  attr("Col.Meta") |>
+  dplyr::select(SeqId, Target, TargetFullName, EntrezGeneID, EntrezGeneSymbol)
+sample_df <- x
+
 save(annotations_v4.0,
      annotations_v4.1,
      annotations_v5.0,
      sample_df,
-     sample_cm,
      file = "R/sysdata.rda",
      compress = "xz")
