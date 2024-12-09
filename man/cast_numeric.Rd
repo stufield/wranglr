@@ -14,15 +14,15 @@ cast_numeric(x, ...)
 
 \method{cast_numeric}{character}(x, ...)
 
-\method{cast_numeric}{factor}(x, ..., coerce.factor = TRUE)
+\method{cast_numeric}{factor}(x, ..., coerce_factor = TRUE)
 
 \method{cast_numeric}{integer}(x, ...)
 
 \method{cast_numeric}{logical}(x, ...)
 
-\method{cast_numeric}{list}(x, ..., coerce.factor = TRUE)
+\method{cast_numeric}{list}(x, ..., coerce_factor = TRUE)
 
-\method{cast_numeric}{data.frame}(x, ..., coerce.factor = TRUE)
+\method{cast_numeric}{data.frame}(x, ..., coerce_factor = TRUE)
 }
 \arguments{
 \item{x}{An object for S3 dispatch. Usually a character,
@@ -30,7 +30,7 @@ data frame, tibble, or named list containing convertible columns.}
 
 \item{...}{Additional arguments to allow extensibility to S3 methods.}
 
-\item{coerce.factor}{Logical. Should \code{factor} types be
+\item{coerce_factor}{\code{logical(1)}. Should \code{factor} types be
 converted to their corresponding numeric?}
 }
 \value{
@@ -65,7 +65,7 @@ tbl <- tibble::tibble(
 cast_numeric(tbl)
 }
 \seealso{
-\code{\link[=as.numeric]{as.numeric()}}, \code{\link[=modify]{modify()}}
+\code{\link[=as.numeric]{as.numeric()}}
 }
 \author{
 Stu Field

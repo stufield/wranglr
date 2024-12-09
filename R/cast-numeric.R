@@ -7,9 +7,9 @@
 #'   apply during conversion:
 #'   \itemize{
 #'     \item characters converted if no warnings are triggered
-#'     \item integers are _never_ converted
-#'     \item logical vectors _always_ converted to `0` or `1`
-#'     \item factors are _optionally_ converted to numeric
+#'     \item integers are *never* converted
+#'     \item logical vectors *always* converted to `0` or `1`
+#'     \item factors are *optionally* converted to numeric
 #'   }
 #'
 #' @param x An object for S3 dispatch. Usually a character,
@@ -19,9 +19,10 @@
 #' @return An object coerced to a numeric if the rules above can be
 #'   followed. A data frame, `tibble`, or list returns the same class object
 #'   with the function applied to each element (column).
+#'
 #' @author Stu Field
 #'
-#' @seealso [as.numeric()], [modify()]
+#' @seealso [as.numeric()]
 #'
 #' @examples
 #' tbl <- tibble::tibble(
@@ -67,11 +68,11 @@ cast_numeric.numeric <- function(x, ...) {
 }
 
 #' @rdname cast_numeric
-#' @param coerce.factor Logical. Should `factor` types be
+#' @param coerce_factor `logical(1)`. Should `factor` types be
 #'   converted to their corresponding numeric?
 #' @export
-cast_numeric.factor <- function(x, ..., coerce.factor = TRUE) {
-  if ( coerce.factor ) {
+cast_numeric.factor <- function(x, ..., coerce_factor = TRUE) {
+  if ( coerce_factor ) {
     x <- as.numeric(x)
   }
   x
@@ -91,13 +92,14 @@ cast_numeric.logical <- function(x, ...) {
 
 #' @rdname cast_numeric
 #' @export
-cast_numeric.list <- function(x, ..., coerce.factor = TRUE) {
-  modify(x, cast_numeric, coerce.factor = coerce.factor)
+cast_numeric.list <- function(x, ..., coerce_factor = TRUE) {
+  lapply(x, cast_numeric, coerce_factor = coerce_factor)
 }
 
 #' @rdname cast_numeric
-#' @importFrom purrr modify
 #' @export
-cast_numeric.data.frame <- function(x, ..., coerce.factor = TRUE) {
-  modify(x, cast_numeric, coerce.factor = coerce.factor)
+cast_numeric.data.frame <- function(x, ..., coerce_factor = TRUE) {
+  lapply(x, cast_numeric, coerce_factor = coerce_factor) |>
+    data.frame(check.rows = FALSE, check.names = FALSE) |>
+    structure(class = class(x))   # preserve class
 }

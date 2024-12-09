@@ -19,7 +19,7 @@ test_that("`cast_numeric()` integer class is NOT converted", {
 test_that("`cast_numeric()` factor class is converted on request", {
   x <- factor(c("A", "B"))
   expect_equal(cast_numeric(x), 1:2)
-  expect_equal(cast_numeric(x, coerce.factor = FALSE), x)
+  expect_equal(cast_numeric(x, coerce_factor = FALSE), x)
 })
 
 test_that("`cast_numeric()` logical is converted correctly", {
@@ -33,7 +33,7 @@ test_that("`cast_numeric()` list is converted correctly", {
     list(a = 1:2L, b = 0.5, c = 1:2, d = 1)
   )
   expect_equal(
-    cast_numeric(x, coerce.factor = FALSE),
+    cast_numeric(x, coerce_factor = FALSE),
     list(a = 1:2L, b = 0.5, c = factor(c("A", "B")), d = 1)
   )
 })
@@ -42,14 +42,14 @@ test_that("`cast_numeric()` list is converted correctly", {
 test_that("`cast_numeric()` data frame method", {
   tbl <- withr::with_seed(101, {
     tibble::tibble(
-      id     = 1:20,                            # NO
-      chr_id = as.character(1:20),              # YES
+      id     = 1:20,                    # NO
+      chr_id = as.character(1:20),      # YES
       logic  = sample(c(TRUE, FALSE), 20, replace = TRUE), # YES
-      fact   = factor(letters[1:20L]),           # YES or NO depending on coerce.factor
-      num    = rnorm(20),                       # YES
+      fact   = factor(letters[1:20L]),  # YES or NO depending on coerce_factor
+      num    = rnorm(20),               # YES
       x      = rep(c("foo", "bar"), each = 10), # NO
-      y      = c(as.character(runif(19)), NA_character_),  # YES; only 1 NA, 5% total
-      z      = as.character(rnorm(20))          # YES
+      y      = c(as.character(runif(19)), NA_character_), # YES; only 1 NA, 5% total
+      z      = as.character(rnorm(20))  # YES
     )
   })
 
@@ -74,8 +74,8 @@ test_that("`cast_numeric()` data frame method", {
   expect_equal(c(table(vapply(new, class, ""))),
                c(character = 1, integer = 1, numeric = 6))
 
-  # coerce.factor = FALSE)` is obeyed
-  new <- cast_numeric(tbl, coerce.factor = FALSE)
+  # `coerce_factor = FALSE` is obeyed
+  new <- cast_numeric(tbl, coerce_factor = FALSE)
   expect_equal(new$fact, tbl$fact)   # no change
   expect_equal(c(table(vapply(new, class, character(1)))),
                c(character = 1, factor = 1, integer = 1, numeric = 5))
