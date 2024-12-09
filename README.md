@@ -24,8 +24,8 @@ MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.
 ## Overview
 
 The `wranglr` package contains the general functions necessary to
-manipulate internal `R` representations of `*.adat` files and wrangle
-those data into convenient form for analysis.
+manipulate and wrangle internal `R` representations of proteomic data
+into convenient forms for analysis.
 
 ------------------------------------------------------------------------
 

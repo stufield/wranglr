@@ -37,9 +37,9 @@ sample_df <- wranglr:::sample_df
 
 ## Overview
 
-The `wranglr` package contains the general functions necessary to manipulate
-internal `R` representations of `*.adat` files and wrangle those data into
-convenient form for analysis.
+The `wranglr` package contains the general functions
+necessary to manipulate and wrangle internal `R` representations
+of proteomic data into convenient forms for analysis.
 
 
 ----------------
