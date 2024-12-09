@@ -61,32 +61,26 @@ library(help = wranglr)
 - `create_recipe()`
 
 ``` r
-scaled <- center_scale(simdata)
+scaled <- center_scale(mtcars)
 apply(feature_matrix(scaled), 2, mean) |> sum()  # mean = 0
-#> [1] -1.049005e-15
+#> [1] 3.410697e-16
 apply(feature_matrix(scaled), 2, sd)             # sd = 1
-#> seq.2802.68 seq.9251.29 seq.1942.70 seq.5751.80 seq.9608.12 seq.3459.49 seq.3865.56 seq.3363.21 
-#>           1           1           1           1           1           1           1           1 
-#> seq.4487.88 seq.5994.84 seq.9011.72 seq.2902.23 seq.2260.48 seq.4936.96 seq.2277.95 seq.2953.31 
-#>           1           1           1           1           1           1           1           1 
-#> seq.3032.11  seq.4330.4 seq.4914.10  seq.3896.5  seq.5002.7  seq.3476.4 seq.1130.49 seq.6356.60 
-#>           1           1           1           1           1           1           1           1 
-#> seq.4579.40 seq.8344.24 seq.8441.53 seq.9360.55  seq.7841.8 seq.8142.63 seq.4461.56 seq.9297.97 
-#>           1           1           1           1           1           1           1           1 
-#> seq.9396.38 seq.3300.26 seq.2772.14 seq.6615.18 seq.8797.98 seq.9879.88 seq.8993.16 seq.9373.82 
-#>           1           1           1           1           1           1           1           1
+#>  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
+#>    1    1    1    1    1    1    1    1    1    1    1
 
 # `create_recipe()`
-rcp <- create_recipe(simdata)
-#> Warning in lapply(X = x, FUN = .Generic, ...): NaNs produced
+rcp <- create_recipe(mtcars)
 rcp
 #> ══ Pre-processing recipe ═══════════════════════════════════════════════════════════════════════════
 #> 
 #> ─── Training data:
-#> ✓ Data containing 100 samples used in recipe✓ RFU features ( n = 49 ) will be processed by:
+#> ✓ Data containing 32 samples used in recipe
+#> ✓ RFU features ( n = 11 ) will be processed by:
 #> 
 #> ─── Steps:
-#> • log10-transformed ✓• Centered (mean = 0) ✓• Scaled (sd = 1) ✓
+#> • log10-transformed      ✓
+#> • Centered (mean = 0)    ✓
+#> • Scaled (sd = 1)        ✓
 #> 
 #> ════════════════════════════════════════════════════════════════════════════════════════════════════
 ```

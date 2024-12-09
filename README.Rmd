@@ -83,12 +83,12 @@ library(help = wranglr)
 * `create_recipe()`
 
 ```{r center-scale}
-scaled <- center_scale(simdata)
+scaled <- center_scale(mtcars)
 apply(feature_matrix(scaled), 2, mean) |> sum()  # mean = 0
 apply(feature_matrix(scaled), 2, sd)             # sd = 1
 
 # `create_recipe()`
-rcp <- create_recipe(simdata)
+rcp <- create_recipe(mtcars)
 rcp
 ```
 
@@ -96,7 +96,7 @@ rcp
 
 
 ```{r helpr, echo = FALSE}
-library(helpr)   # get_outliers
+library(helpr)   # needs get_outliers()
 ```
 
 ### Imputing Data
