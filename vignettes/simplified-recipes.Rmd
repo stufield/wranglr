@@ -28,7 +28,7 @@ Among the most common are:
 * centering with mean zero
 * scaling to unit variance (`sd = 1`)
 
-which are the typical data preparation steps for proteomic RFU data.
+which are the typical data preparation steps for proteomic data.
 
 Numerous tools exist in the `R` ecosystem, including some relatively new
 packages, e.g. the [recipes](https://recipes.tidymodels.org) package, however
@@ -191,7 +191,7 @@ the center-scale transformation in the case where features *and*
 
 * `disp`: was square rooted (prior to log > center > scale)
 * `hp`: log_e-transformed
-* `qseq`: anonymous function divide by 10 and round to 1 dp
+* `qseq`: anonymous function divide by 10 and round to 1 decimal place
 
 ```{r dots}
 # the 'additional' modified variables

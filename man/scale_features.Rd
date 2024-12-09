@@ -2,7 +2,7 @@
 % Please edit documentation in R/scale-features.R
 \name{scale_features}
 \alias{scale_features}
-\title{Scale/transform Analyte RFUs}
+\title{Scale/transform Features (variables)}
 \usage{
 scale_features(.data, scale_vec)
 }

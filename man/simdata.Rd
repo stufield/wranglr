@@ -26,12 +26,12 @@ The format of \code{simdata} (100 x 47) is:
 
 General features of the data (see \code{attributes(simdata)}):
 \itemize{
-\item 5 significant classification analytes
-\item 5 significant regression analytes
-\item 5 significant survival analytes
-\item 25 noise analytes
-\item 4 sex/gender analytes (with noise features)
-\item \code{PGAM} (\code{seq.3896.5} for sample handling
+\item 5 significant classification features
+\item 5 significant regression features
+\item 5 significant survival features
+\item 25 noise features
+\item 4 sex/gender features (with noise features)
+\item \code{PGAM} (\code{3896-5} for sample handling)
 }
 }
 \usage{
@@ -40,11 +40,13 @@ simdata
 \description{
 Simulates proteomic data by randomly generating data for various
 Bioinformatics related analyses and unit tests. Feature names are randomly
-generated to have \strong{seq.xxxx.xx} format so that downstream tools will
+generated and have the \code{seq.xxxx.xx} format so that downstream tools will
 function seamlessly. Model types this data can support:
-* Binary classification
-* Continuous regression
-* Survival
+\enumerate{
+\item Binary classification
+\item Continuous regression
+\item Survival
+}
 }
 \examples{
 simdata

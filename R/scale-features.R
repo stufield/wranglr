@@ -1,4 +1,4 @@
-#' Scale/transform Analyte RFUs
+#' Scale/transform Features (variables)
 #'
 #' Scale features by a scalar reference value (named vector)
 #'   match with the features contained in `.data`.

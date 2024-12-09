@@ -7,8 +7,8 @@
 calc_cv(x)
 }
 \arguments{
-\item{x}{A list of vectors, each representing a separate assay run
-for a particular analyte. The entries of the vectors should be replicates
+\item{x}{A list of numeric vectors, each representing a separate assay run,
+i.e. a technical replicate. The entries of the vectors should be replicates
 of intra-run assay variation. \strong{Important!}: be sure to remove any \code{NAs},
 if present, beforehand.}
 }
@@ -21,15 +21,16 @@ run variance decomposition prior to calculating
 the \%CV for a reproducibility study assay run.
 }
 \examples{
-# Example 1 (Dom's example)
-dom_example <- list(A = c(5785.1, 5005.6, 5686.3, 5990.8,
-                          5235.4, 5340.6, 5272.6, 5905.2),
-                    B = c(5708.0, 5300.7, 5339.8, 5393.0,
-                          5762.0, 5553.4, 6081.4, 5473.5),
-                    C = c(5409.4, 5353.6, 5398.0, 5631.2,
-                          5646.1, 5073.4, 5879.2, 5617.5))
-dom_example
-calc_cv(dom_example)
+# Example 1
+example <- list(A = c(5785.1, 5005.6, 5686.3, 5990.8,
+                      5235.4, 5340.6, 5272.6, 5905.2),
+                B = c(5708.0, 5300.7, 5339.8, 5393.0,
+                      5762.0, 5553.4, 6081.4, 5473.5),
+                C = c(5409.4, 5353.6, 5398.0, 5631.2,
+                      5646.1, 5073.4, 5879.2, 5617.5))
+example
+
+calc_cv(example)
 
 # Example 2 (dummy `simdata` example)
 # look at how the intra, inter, and total variance.
@@ -47,13 +48,9 @@ site_split <- feature_matrix(simdata) |> data.frame() |>
 coeffVar <- lapply(site_split, calc_cv)
 coeffVar <- do.call(rbind, coeffVar) |> data.frame()
 }
-\references{
-Calculation follows the method laid out
-by Dom Zichi, \emph{Decomposition of Assay Variance}, 13 August 2011.
-}
 \seealso{
 \code{\link[=calc_ss]{calc_ss()}}
 }
 \author{
-Stu Field, Dom Zichi, Eduardo Tabacman
+Stu Field
 }

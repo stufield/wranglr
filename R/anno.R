@@ -75,10 +75,10 @@ grep_anno <- function(pattern) {
 #'   of their choice.
 #'
 #' @details
-#'   Historical analytes may have been dropped from the menu
+#'   Historical features may have been dropped from the menu
 #'   may be absent from the internal lookup table,
-#'   resulting in `NA` for that row. These
-#'   analytes can be retrieved by explicitly passing an annotations
+#'   resulting in `NA` for that row. In such cases,
+#'   they can be retrieved by explicitly passing an annotations
 #'   table corresponding to the original data prior to
 #'   the menu change. The easiest way to generate a
 #'   "time-capsuled" annotations table:

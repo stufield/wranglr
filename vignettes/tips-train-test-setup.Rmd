@@ -39,7 +39,7 @@ I recommend one of these below:
 1. base R data frame indexing with [sample()] and `[`
 1. use `dplyr::slice_sample()` or `dplyr::sample_frac()` in
    combination with `dplyr::anti_join()`
-1. use the [rsample](https://rsample.tidymodels.org) package (not demonstrated)
+1. use the [`rsample`](https://rsample.tidymodels.org) package (not demonstrated)
 
 ---------
 

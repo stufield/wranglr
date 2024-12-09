@@ -123,7 +123,7 @@ levels(bar$a)   # 1 level now
 
 -----------
 
-### SeqIds and Annotations
+### Sequence IDs and Annotations
 
 * `lookup_anno()`
 * `seq_lookup()`
