@@ -8,7 +8,7 @@
 #'     * Continuous regression
 #'     * Survival
 #'
-#' @format The format of `sim_adat` (100 x 47) is:
+#' @format The format of `simdata` (100 x 47) is:
 #'   \describe{
 #'     \item{id}{A sample `id` number.}
 #'     \item{class_response}{The classification response variable.}
@@ -27,7 +27,7 @@
 #'     \item{NormScale_1}{Random continuous data in \verb{[0.4, 2.5]}.}
 #'   }
 #'
-#' General features of the data (see `attributes(sim_adat)`):
+#' General features of the data (see `attributes(simdata)`):
 #'   * 5 significant classification analytes
 #'   * 5 significant regression analytes
 #'   * 5 significant survival analytes
@@ -38,5 +38,5 @@
 #' @author Stu Field
 #'
 #' @examples
-#' sim_adat
-"sim_adat"
+#' simdata
+"simdata"

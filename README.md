@@ -61,7 +61,7 @@ library(help = wranglr)
 - `create_recipe()`
 
 ``` r
-scaled <- center_scale(sim_adat)
+scaled <- center_scale(simdata)
 apply(feature_matrix(scaled), 2, mean) |> sum()  # mean = 0
 #> [1] -1.049005e-15
 apply(feature_matrix(scaled), 2, sd)             # sd = 1
@@ -77,7 +77,7 @@ apply(feature_matrix(scaled), 2, sd)             # sd = 1
 #>           1           1           1           1           1           1           1           1
 
 # `create_recipe()`
-rcp <- create_recipe(sim_adat)
+rcp <- create_recipe(simdata)
 #> Warning in lapply(X = x, FUN = .Generic, ...): NaNs produced
 rcp
 #> ══ Pre-processing recipe ═══════════════════════════════════════════════════════════════════════════

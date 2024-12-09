@@ -23,7 +23,7 @@
 # `create_kfold()` returns expected results for repeats = 1
 
     Code
-      out <- withr::with_seed(234L, create_kfold(sim_adat, breaks = list(time = 4L),
+      out <- withr::with_seed(234L, create_kfold(simdata, breaks = list(time = 4L),
       depth = 70L))
     Condition
       Warning:
@@ -36,13 +36,13 @@
 # `print.x_split()` returns expected messaging
 
     Code
-      create_kfold(sim_adat, k = 4L, repeats = 1L)
+      create_kfold(simdata, k = 4L, repeats = 1L)
     Output
       == A `x_split` object ==========================================================
       • k            4
       • repeats      1
       • stratified   'NULL'
-      • orig data    sim_adat
+      • orig data    simdata
       -- split info ------------------------------------------------------------------
       # A tibble: 4 x 3
         split             Fold Repeat
@@ -56,13 +56,13 @@
 ---
 
     Code
-      create_kfold(sim_adat, k = 4L, repeats = 3L)
+      create_kfold(simdata, k = 4L, repeats = 3L)
     Output
       == A `x_split` object ==========================================================
       • k            4
       • repeats      3
       • stratified   'NULL'
-      • orig data    sim_adat
+      • orig data    simdata
       -- split info ------------------------------------------------------------------
       # A tibble: 12 x 3
          split             Fold Repeat
@@ -84,7 +84,7 @@
 ---
 
     Code
-      df <- as.data.frame(sim_adat[, c("time", "status")])
+      df <- as.data.frame(simdata[, c("time", "status")])
       create_kfold(df, k = 5L)
     Output
       == A `x_split` object ==========================================================
@@ -106,13 +106,13 @@
 ---
 
     Code
-      create_kfold(sim_adat, k = 5L, breaks = list(status = NA))
+      create_kfold(simdata, k = 5L, breaks = list(status = NA))
     Output
       == A `x_split` object ==========================================================
       • k            5
       • repeats      1
       • stratified   'list(status = NA)'
-      • orig data    sim_adat
+      • orig data    simdata
       -- split info ------------------------------------------------------------------
       # A tibble: 5 x 3
         split             Fold Repeat
@@ -127,13 +127,13 @@
 ---
 
     Code
-      create_kfold(sim_adat, k = 5L, repeats = 3L, breaks = list(time = 4L, status = NA))
+      create_kfold(simdata, k = 5L, repeats = 3L, breaks = list(time = 4L, status = NA))
     Output
       == A `x_split` object ==========================================================
       • k            5
       • repeats      3
       • stratified   'list(time = 4L, status = NA)'
-      • orig data    sim_adat
+      • orig data    simdata
       -- split info ------------------------------------------------------------------
       # A tibble: 15 x 3
          split             Fold Repeat

@@ -21,7 +21,7 @@ Get mean and standard deviations used to
 center/scale data from a prepped recipe.
 }
 \examples{
-test  <- sim_adat
+test  <- simdata
 feats <- wranglr:::get_analytes(test)
 rec <-  recipes::recipe(~ ., data = dplyr::select(test, dplyr::all_of(feats))) |>
  recipes::step_log(recipes::all_predictors(), base = 10) |>

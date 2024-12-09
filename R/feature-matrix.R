@@ -19,11 +19,11 @@
 #' @seealso [data.matrix()]
 #'
 #' @examples
-#' dim(sim_adat)
-#' class(sim_adat)
+#' dim(simdata)
+#' class(simdata)
 #'
-#' feature_matrix(sim_adat) |> dim()
-#' feature_matrix(sim_adat) |> class()
+#' feature_matrix(simdata) |> dim()
+#' feature_matrix(simdata) |> class()
 #' @export
 feature_matrix <- function(data, feat = NULL) {
   if ( inherits(data, "soma_adat") ) {

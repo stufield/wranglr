@@ -20,7 +20,7 @@ Must be a numeric data only. \code{factor} or
 \code{character} class are not allowed.
 }
 \examples{
-adat <- sim_adat
+adat <- simdata
 imputeNAs(adat)
 
 idx <- 25L  # random 25th column

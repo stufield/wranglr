@@ -38,12 +38,12 @@ grouping variable of meta data. Defaults summary statistics include:
 }
 }
 \examples{
-create_summ_tbl(sim_adat)
-create_summ_tbl(sim_adat, gender)
+create_summ_tbl(simdata)
+create_summ_tbl(simdata, gender)
 
 # Arbitrary 3 groupings
-sim_adat$group <- sample(1:3, nrow(sim_adat), replace = TRUE)
-create_summ_tbl(sim_adat, "group")
+simdata$group <- sample(1:3, nrow(simdata), replace = TRUE)
+create_summ_tbl(simdata, "group")
 }
 \seealso{
 \code{\link[=mad]{mad()}}, \code{\link[=median]{median()}}, \code{\link[=sd]{sd()}}, \code{\link[=min]{min()}}, \code{\link[=max]{max()}}

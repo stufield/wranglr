@@ -21,10 +21,10 @@ removing the "ghost" levels that remain after
 subsetting a factored column in a data frame.
 }
 \examples{
-sim_adat$Sex <- factor(sim_adat$gender)
-sim_adat$Sex
+simdata$Sex <- factor(simdata$gender)
+simdata$Sex
 
-new <- sim_adat[sim_adat$Sex == "M", ]
+new <- simdata[simdata$Sex == "M", ]
 new$Sex           # ghost levels!
 levels(new$Sex)   # ghost levels!
 

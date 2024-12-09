@@ -14,7 +14,7 @@
 #'   based on `idcol`.
 #'
 #' @examples
-#' df    <- head(sim_adat, 25L)
+#' df    <- head(simdata, 25L)
 #' train <- withr::with_seed(1, dplyr::sample_n(df, 15L))
 #' new   <- withr::with_seed(2, dplyr::sample_n(df, 15L))
 #' intersect(train$SampleId, new$SampleId)  # overlapping IDs exist

@@ -28,16 +28,16 @@
 #' dom_example
 #' calc_cv(dom_example)
 #'
-#' # Example 2 (dummy `sim_adat` example)
+#' # Example 2 (dummy `simdata` example)
 #' # look at how the intra, inter, and total variance.
-#' # We assume `sim_adat` contains *only* replicate samples
+#' # We assume `simdata` contains *only* replicate samples
 #' # and assume the `SiteId` represents assay "runs".
 #' # We can then `lapply()` over each feature, calculating
 #' # the `CVdecomp` for each and store to a data frame
-#' split_on <- sim_adat$SiteId
+#' split_on <- simdata$SiteId
 #'
 #' # split data
-#' site_split <- feature_matrix(sim_adat) |> data.frame() |>
+#' site_split <- feature_matrix(simdata) |> data.frame() |>
 #'   lapply(split, f = split_on)
 #'
 #' # iterate over list/analytes; each contains multiple (4x) "runs"

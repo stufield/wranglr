@@ -26,12 +26,12 @@
 #' @seealso [mad()], [median()], [sd()], [min()], [max()]
 #'
 #' @examples
-#' create_summ_tbl(sim_adat)
-#' create_summ_tbl(sim_adat, gender)
+#' create_summ_tbl(simdata)
+#' create_summ_tbl(simdata, gender)
 #'
 #' # Arbitrary 3 groupings
-#' sim_adat$group <- sample(1:3, nrow(sim_adat), replace = TRUE)
-#' create_summ_tbl(sim_adat, "group")
+#' simdata$group <- sample(1:3, nrow(simdata), replace = TRUE)
+#' create_summ_tbl(simdata, "group")
 #' @importFrom stats mad median
 #' @importFrom helpr set_Names
 #' @importFrom tibble as_tibble

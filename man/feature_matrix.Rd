@@ -26,11 +26,11 @@ Particularly useful in selecting prior to
 a named, numeric data matrix as input.
 }
 \examples{
-dim(sim_adat)
-class(sim_adat)
+dim(simdata)
+class(simdata)
 
-feature_matrix(sim_adat) |> dim()
-feature_matrix(sim_adat) |> class()
+feature_matrix(simdata) |> dim()
+feature_matrix(simdata) |> class()
 }
 \seealso{
 \code{\link[=data.matrix]{data.matrix()}}

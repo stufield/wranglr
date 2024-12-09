@@ -244,7 +244,7 @@ test_that("`.getStrataIndices_one()` returns expected results", {
 # These tests can be moved to a less frequent schedule, though I would keep the
 # error tests in place for all testing levels
 test_that("`.getStrataIndices_two()` returns expected errors", {
-  strata <- sim_adat[, c("time", "status")]
+  strata <- simdata[, c("time", "status")]
   breaks <- list(time = 4L, status = NA)
 
   expect_error(.getStrataIndices_two(strata, 4L, 4L, 1:30L),
@@ -485,12 +485,12 @@ test_that("`.vfold_splits()` returns expected errors", {
     "`data` must be a `data.frame`."
   )
   expect_error(
-    .vfold_splits(sim_adat$time, k = 10L, breaks = NULL, depth = 20L),
+    .vfold_splits(simdata$time, k = 10L, breaks = NULL, depth = 20L),
     "`data` must be a `data.frame`."
   )
 
   expect_positive_integer_scalar(".vfold_splits",
-                                 list(data   = sim_adat,
+                                 list(data   = simdata,
                                       breaks = NULL,
                                       k      = 10L,
                                       depth  = 20L),
@@ -498,19 +498,19 @@ test_that("`.vfold_splits()` returns expected errors", {
                                  "`k` must be a positive integer.")
 
   expect_error(
-    .vfold_splits(sim_adat, k = 10L, breaks = 4L, depth = 20L),
+    .vfold_splits(simdata, k = 10L, breaks = 4L, depth = 20L),
     "`breaks` must be NULL or a list of length 1 or 2."
   )
   expect_error(
-    .vfold_splits(sim_adat, k = 10L, breaks = NA, depth = 20L),
+    .vfold_splits(simdata, k = 10L, breaks = NA, depth = 20L),
     "`breaks` must be NULL or a list of length 1 or 2."
   )
   expect_error(
-    .vfold_splits(sim_adat, k = 10L, breaks = list("a", "b", "c"), depth = 20L),
+    .vfold_splits(simdata, k = 10L, breaks = list("a", "b", "c"), depth = 20L),
     "`breaks` must be NULL or a list of length 1 or 2."
   )
   expect_error(
-    .vfold_splits(sim_adat, k = 10L, breaks = list(), depth = 20L),
+    .vfold_splits(simdata, k = 10L, breaks = list(), depth = 20L),
     "`breaks` must be NULL or a list of length 1 or 2."
   )
 })
@@ -530,60 +530,60 @@ test_that("`.vfold_splits()` returns expected results", {
 
   # No stratification
   expect_equal(
-    withr::with_seed(1234L, .vfold_splits(sim_adat)),
+    withr::with_seed(1234L, .vfold_splits(simdata)),
     withr::with_seed(1234L,
-      .local_imp(NULL, breaks = NULL, k = 10, n = nrow(sim_adat), depth = 20L)
+      .local_imp(NULL, breaks = NULL, k = 10, n = nrow(simdata), depth = 20L)
     )
   )
   expect_equal(
-    withr::with_seed(1234L, .vfold_splits(sim_adat, k = 4)),
+    withr::with_seed(1234L, .vfold_splits(simdata, k = 4)),
     withr::with_seed(1234L,
-      .local_imp(NULL, breaks = NULL, k = 4L, n = nrow(sim_adat), depth = 20L)
+      .local_imp(NULL, breaks = NULL, k = 4L, n = nrow(simdata), depth = 20L)
     )
   )
 
   # stratify on 1 variable with # of bins
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(sim_adat, k = 4, breaks = list(time = 4))
+      .vfold_splits(simdata, k = 4, breaks = list(time = 4))
     ),
     withr::with_seed(1234L,
-      .local_imp(sim_adat[, "time", drop = FALSE], breaks = list(4L), k = 4,
-                 n = nrow(sim_adat), depth = 20L)
+      .local_imp(simdata[, "time", drop = FALSE], breaks = list(4L), k = 4,
+                 n = nrow(simdata), depth = 20L)
     )
   )
 
   # stratify on 1 variable with vector of bins
-  breaks_vec <- seq(min(sim_adat$time), max(sim_adat$time),
+  breaks_vec <- seq(min(simdata$time), max(simdata$time),
                     length.out = 5)
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(sim_adat, k = 4, breaks = list(time = breaks_vec))
+      .vfold_splits(simdata, k = 4, breaks = list(time = breaks_vec))
     ),
     withr::with_seed(1234L,
-      .local_imp(sim_adat[, "time", drop = FALSE], breaks = list(breaks_vec),
-                 k = 4, n = nrow(sim_adat), depth = 20L)
+      .local_imp(simdata[, "time", drop = FALSE], breaks = list(breaks_vec),
+                 k = 4, n = nrow(simdata), depth = 20L)
     )
   )
 
   # stratify on 2 variable with all combinations of breaks
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(sim_adat, k = 4, breaks = list(time = 5L, status = 100L))
+      .vfold_splits(simdata, k = 4, breaks = list(time = 5L, status = 100L))
     ),
     withr::with_seed(1234L,
-      .local_imp(sim_adat[, c("time", "status")], breaks = list(5L, NA),
-                 k = 4, n = nrow(sim_adat), depth = 20L)
+      .local_imp(simdata[, c("time", "status")], breaks = list(5L, NA),
+                 k = 4, n = nrow(simdata), depth = 20L)
     )
   )
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(sim_adat, k = 4, breaks = list(time = breaks_vec,
+      .vfold_splits(simdata, k = 4, breaks = list(time = breaks_vec,
                                                         status = NA))
     ),
     withr::with_seed(1234L,
-      .local_imp(sim_adat[, c("time", "status")], breaks = list(breaks_vec, NA),
-                 k = 4L, n = nrow(sim_adat), depth = 20L)
+      .local_imp(simdata[, c("time", "status")], breaks = list(breaks_vec, NA),
+                 k = 4L, n = nrow(simdata), depth = 20L)
     )
   )
 })
@@ -596,30 +596,30 @@ test_that("`create_kfold()` returns expected errors", {
     "`data` must be a `data.frame`."
   )
   expect_error(
-    create_kfold(sim_adat$time),
+    create_kfold(simdata$time),
     "`data` must be a `data.frame`."
   )
 
   expect_positive_integer_scalar("create_kfold",
-                                 list(data = sim_adat, k = 10L),
+                                 list(data = simdata, k = 10L),
                                  "k",
                                  "`k` must be a positive integer.")
 
   expect_positive_integer_scalar("create_kfold",
-                                 list(data = sim_adat, repeats = 10L),
+                                 list(data = simdata, repeats = 10L),
                                  "repeats",
                                  "`repeats` must be a positive integer.")
 
   expect_error(
-    create_kfold(sim_adat, breaks = list()),
+    create_kfold(simdata, breaks = list()),
     "`breaks` must be NULL or a list of length 1 or 2."
   )
   expect_error(
-    create_kfold(sim_adat, breaks = list("a", "b", "c")),
+    create_kfold(simdata, breaks = list("a", "b", "c")),
     "`breaks` must be NULL or a list of length 1 or 2."
   )
   expect_error(
-    create_kfold(sim_adat, breaks = NA),
+    create_kfold(simdata, breaks = NA),
     "`breaks` must be NULL or a list of length 1 or 2."
   )
 })
@@ -637,38 +637,38 @@ test_that("`create_kfold()` returns expected results for repeats = 1", {
   # easiest check a case that will generate a warning
   expect_snapshot(
     out <- withr::with_seed(234L,
-      create_kfold(sim_adat, breaks = list(time = 4L), depth  = 70L))
+      create_kfold(simdata, breaks = list(time = 4L), depth  = 70L))
   )
 
   expect_equal(
     out,
     withr::with_seed(234L,
-      suppressWarnings(.local_imp(data   = sim_adat, k = 10,
+      suppressWarnings(.local_imp(data   = simdata, k = 10,
                                   breaks = list(time = 4L), depth = 70L))),
     ignore_attr = TRUE   # call attr differs
   )
 
   # each input is properly passed along
   expect_equal(
-    withr::with_seed(1234L, create_kfold(sim_adat, k = 5)),
+    withr::with_seed(1234L, create_kfold(simdata, k = 5)),
     withr::with_seed(1234L,
-      .local_imp(data = sim_adat, k = 5, breaks = NULL, depth = 20L)
+      .local_imp(data = simdata, k = 5, breaks = NULL, depth = 20L)
     ),
     ignore_attr = TRUE   # call attr differs
   )
 
   expect_equal(
-    withr::with_seed(1234L, create_kfold(sim_adat, breaks = list(time = 4L))),
+    withr::with_seed(1234L, create_kfold(simdata, breaks = list(time = 4L))),
     withr::with_seed(1234L,
-      .local_imp(data = sim_adat, k = 10, breaks = list(time = 4L), depth = 10L)
+      .local_imp(data = simdata, k = 10, breaks = list(time = 4L), depth = 10L)
     ),
     ignore_attr = TRUE   # call attr differs
   )
 
   expect_equal(
-    withr::with_seed(1234L, create_kfold(sim_adat, breaks = list(time = 5L))),
+    withr::with_seed(1234L, create_kfold(simdata, breaks = list(time = 5L))),
     withr::with_seed(1234L,
-      .local_imp(data = sim_adat, k = 10, breaks = list(time = 5L), depth = 20L)
+      .local_imp(data = simdata, k = 10, breaks = list(time = 5L), depth = 20L)
     ),
     ignore_attr = TRUE   # call attr differs
   )
@@ -692,9 +692,9 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
 
   # each input is properly passed along
   expect_equal(
-    withr::with_seed(1234L, create_kfold(sim_adat, k = 5, repeats = 2)),
+    withr::with_seed(1234L, create_kfold(simdata, k = 5, repeats = 2)),
     withr::with_seed(1234L,
-      .local_imp(sim_adat, k = 5, repeats = 2, breaks = NULL, depth = 20L)
+      .local_imp(simdata, k = 5, repeats = 2, breaks = NULL, depth = 20L)
     ),
     ignore_attr = TRUE   # call attribute will differ
   )
@@ -705,9 +705,9 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
 # successful, this should not change. Probably safe to only run these
 # in the nightly.
 test_that("`assessment()` returns expected errors", {
-  split_obj <- create_kfold(sim_adat, k = 4L)
+  split_obj <- create_kfold(simdata, k = 4L)
   expect_error(
-    assessment(sim_adat),
+    assessment(simdata),
     "`object` must be a `x_split` object."
   )
   expect_positive_integer_scalar("assessment",
@@ -721,10 +721,10 @@ test_that("`assessment()` returns expected errors", {
 })
 
 test_that("`assessment()` returns expected results", {
-  split_obj <- create_kfold(sim_adat, k = 4L)
+  split_obj <- create_kfold(simdata, k = 4L)
   expected  <- vector("list", 4L)
   for ( i in seq_len(4L) ) {
-    expected[[i]] <- sim_adat[split_obj$splits$split[[i]]$assessment, ]
+    expected[[i]] <- simdata[split_obj$splits$split[[i]]$assessment, ]
   }
   expect_length(out <- assessment(split_obj), 4L)
   expect_equal(out, expected)
@@ -739,9 +739,9 @@ test_that("`assessment()` returns expected results", {
 # successful, this should not change. Probably safe to only run these
 # in the nightly.
 test_that("`analysis()` returns expected errors", {
-  split_obj <- create_kfold(sim_adat, k = 4L)
+  split_obj <- create_kfold(simdata, k = 4L)
   expect_error(
-    analysis(sim_adat),
+    analysis(simdata),
     "`object` must be a `x_split` object."
   )
   expect_positive_integer_scalar("analysis",
@@ -755,10 +755,10 @@ test_that("`analysis()` returns expected errors", {
 })
 
 test_that("`analysis()` returns expected results", {
-  split_obj <- create_kfold(sim_adat, k = 4L)
+  split_obj <- create_kfold(simdata, k = 4L)
   expected <- vector("list", 4L)
   for ( i in seq_len(4L) ) {
-    expected[[i]] <- sim_adat[split_obj$splits$split[[i]]$analysis, ]
+    expected[[i]] <- simdata[split_obj$splits$split[[i]]$analysis, ]
   }
 
   expect_length(out <- analysis(split_obj), 4L)
@@ -774,28 +774,28 @@ test_that("`print.x_split()` returns expected messaging", {
 
   expect_snapshot({
     # no stratification; no repeats
-    create_kfold(sim_adat, k = 4L, repeats = 1L)
+    create_kfold(simdata, k = 4L, repeats = 1L)
   })
 
   expect_snapshot({
     # no stratification; w/ repeats
-    create_kfold(sim_adat, k = 4L, repeats = 3L)
+    create_kfold(simdata, k = 4L, repeats = 3L)
   })
 
   expect_snapshot({
     # no stratification; no repeats; based on a data.frame
-    df <- as.data.frame(sim_adat[, c("time", "status")])
+    df <- as.data.frame(simdata[, c("time", "status")])
     create_kfold(df, k = 5L)
   })
 
   expect_snapshot({
     # stratification on 1 discrete variable
-    create_kfold(sim_adat, k = 5L, breaks = list(status = NA))
+    create_kfold(simdata, k = 5L, breaks = list(status = NA))
   })
 
   expect_snapshot({
     # stratification on 2 variables; 1 continuous + 1 discrete
-    create_kfold(sim_adat, k = 5L, repeats = 3L,
+    create_kfold(simdata, k = 5L, repeats = 3L,
                  breaks = list(time = 4L, status = NA))
   })
 })
@@ -803,7 +803,7 @@ test_that("`print.x_split()` returns expected messaging", {
 # is.x_split ----
 # Safe to only run these in the nightly.
 test_that("`is.x_split()` returns expected results", {
-  object <- create_kfold(sim_adat, k = 5L, repeats = 3L,
+  object <- create_kfold(simdata, k = 5L, repeats = 3L,
                          breaks = list(time = 4L, status = NA))
   expect_true(is.x_split(object))
   expect_false(is.x_split(unclass(object)))

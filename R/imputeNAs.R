@@ -16,7 +16,7 @@
 #' @seealso [median()], [modify_if()]
 #'
 #' @examples
-#' adat <- sim_adat
+#' adat <- simdata
 #' imputeNAs(adat)
 #'
 #' idx <- 25L  # random 25th column

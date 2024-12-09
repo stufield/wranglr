@@ -1,5 +1,5 @@
 # Setup ---------
-df    <- head(sim_adat, 25L)
+df    <- head(simdata, 25L)
 train <- withr::with_seed(1, sample_n(df, 15))
 new   <- withr::with_seed(2, sample_n(df, 15))
 intersect(train$SampleId, new$SampleId)    # there are some overlapping

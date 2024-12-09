@@ -106,14 +106,14 @@ structure: \verb{[0, 0.25]}, \verb{(0.25, 0.75]}, and \verb{(0.75, 1.0]}.
 }
 \examples{
 # no stratification
-sample_no_strat <- create_kfold(sim_adat, k = 4L, repeats = 2L)
+sample_no_strat <- create_kfold(simdata, k = 4L, repeats = 2L)
 
 # stratification on 1 discrete variable
-sample_one <- create_kfold(sim_adat, k = 4L, repeats = 2L,
+sample_one <- create_kfold(simdata, k = 4L, repeats = 2L,
                            breaks = list(status = NA))
 
 # stratification on 2 variables; 1 continuous + 1 discrete
-sample_two <- create_kfold(sim_adat, k = 4L, repeats = 2L,
+sample_two <- create_kfold(simdata, k = 4L, repeats = 2L,
                            breaks = list(time = 4L, status = NA))
 
 # retrieve analysis data for 2nd split
