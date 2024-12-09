@@ -18,18 +18,18 @@ knitr::opts_chunk$set(
 ver <- desc::desc_get_version(".")
 ver <- paste0("https://img.shields.io/badge/Version-", ver,
               "-success.svg?style=flat&logo=github")
-sample_df <- splyr:::sample_df
+sample_df <- wranglr:::sample_df
 ```
 
 
-# The `splyr` package
+# The `wranglr` package
 
 <!-- badges: start -->
 ![GitHub version](`r ver`)
-[![CRAN status](http://www.r-pkg.org/badges/version/splyr)](https://cran.r-project.org/package=splyr)
-[![R-CMD-check](https://github.com/stufield/splyr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/splyr/actions)
-[![](https://cranlogs.r-pkg.org/badges/grand-total/splyr)](https://cran.r-project.org/package=splyr)
-[![Codecov test coverage](https://codecov.io/gh/stufield/splyr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stufield/splyr?branch=main)
+[![CRAN status](http://www.r-pkg.org/badges/version/wranglr)](https://cran.r-project.org/package=wranglr)
+[![R-CMD-check](https://github.com/stufield/wranglr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/wranglr/actions)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/wranglr)](https://cran.r-project.org/package=wranglr)
+[![Codecov test coverage](https://codecov.io/gh/stufield/wranglr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stufield/wranglr?branch=main)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
 <!-- badges: end -->
@@ -37,7 +37,7 @@ sample_df <- splyr:::sample_df
 
 ## Overview
 
-The `splyr` package contains the general functions necessary to manipulate
+The `wranglr` package contains the general functions necessary to manipulate
 internal `R` representations of `*.adat` files and wrangle those data into
 convenient form for analysis.
 
@@ -48,7 +48,7 @@ convenient form for analysis.
 ## Installation
 
 ```{r install-git, eval = FALSE}
-remotes::install_github("splyr")
+remotes::install_github("wranglr")
 ```
 
 
@@ -57,24 +57,24 @@ remotes::install_github("splyr")
 
 ## Usage
 
-To load `splyr` simply make a call to `library()` as usual:
+To load `wranglr` simply make a call to `library()` as usual:
 
 ```{r load, message = FALSE}
-library(splyr)
+library(wranglr)
 ```
 
 
 ## Help summary of the package
 
 ```{r help, eval = FALSE}
-library(help = splyr)
+library(help = wranglr)
 ```
 
 
 -------------
 
 
-## Useful functions in `splyr`
+## Useful functions in `wranglr`
 
 
 ### Transforming Data

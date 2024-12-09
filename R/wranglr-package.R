@@ -10,7 +10,7 @@ NULL
 .onLoad <- function(...) {
   pkgenv <- environment(.dummy)
   # Re-export data for internal/testing
-  utils::data("sim_adat", package = "splyr", envir = pkgenv)
+  utils::data("sim_adat", package = "wranglr", envir = pkgenv)
 
   # this is to register the internal S3 methods
   # this avoids having to export the methods in the NAMESPACE file

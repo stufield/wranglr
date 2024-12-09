@@ -1,16 +1,16 @@
 ---
-title: "Introduction to splyr"
+title: "Introduction to wranglr"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to splyr}
+  %\VignetteIndexEntry{Introduction to wranglr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
 library(helpr)
-library(splyr)
-sample_df <- splyr:::sample_df
+library(wranglr)
+sample_df <- wranglr:::sample_df
 knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>"
 )
@@ -18,15 +18,15 @@ knitr::opts_chunk$set(
 
 
 
-The `splyr` package contains the general functions necessary to manipulate
-internal R representations of adat files and wrangle those data into convenient
-form for analysis.
+The `wranglr` package contains the general functions
+necessary to manipulate and wrangle internal `R` representations
+of proteomic data into convenient forms for analysis.
 
 
---------------------
+---------
 
 
-## Useful functions in `splyr`
+## Useful functions in `wranglr`
 
 ### Transforming Data
 

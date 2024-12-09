@@ -34,7 +34,7 @@ to matching rows of in \code{pattern}.
 \code{\link[=seq_lookup]{seq_lookup()}}: a \code{tibble}, a subset of \code{tbl},
 corresponding to the rows whose \code{SeqIds} match the values in \code{seq}.
 
-\code{\link[=seqify]{seqify()}}: a \code{splyr_seq} class object.
+\code{\link[=seqify]{seqify()}}: a \code{wranglr_seq} class object.
 }
 \description{
 A group of functions that allow for the simple
@@ -75,7 +75,7 @@ column of annotations, which accesses a static internal object.
 Alternatively, the user can explicitly pass an annotations table of
 of their choice.
 
-\item \code{seqify()}: converts to \code{splyr_seq} object, primarily to
+\item \code{seqify()}: converts to \code{wranglr_seq} object, primarily to
 dispatch the S3 print method during interactive use.
 
 }}
@@ -91,7 +91,7 @@ svec
 
 seq_lookup(svec)
 
-# print method for class `splyr_seq`
+# print method for class `wranglr_seq`
 seqify(svec) |> class()
 
 # works with seq.xxxx.xx format

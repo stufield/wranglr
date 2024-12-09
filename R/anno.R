@@ -111,13 +111,13 @@ seq_lookup <- function(seq, tbl = NULL) {
 
 
 #' @describeIn anno
-#'   converts to `splyr_seq` object, primarily to
+#'   converts to `wranglr_seq` object, primarily to
 #'   dispatch the S3 print method during interactive use.
 #'
-#' @return [seqify()]: a `splyr_seq` class object.
+#' @return [seqify()]: a `wranglr_seq` class object.
 #'
 #' @examples
-#' # print method for class `splyr_seq`
+#' # print method for class `wranglr_seq`
 #' seqify(svec) |> class()
 #'
 #' # works with seq.xxxx.xx format
@@ -132,7 +132,7 @@ seq_lookup <- function(seq, tbl = NULL) {
 #' @export
 seqify <- function(seq) {
   stopifnot("All values of `x` must contain `SeqIds`." = all(is_seq(seq)))
-  structure(seq, class = c("splyr_seq", "character"))
+  structure(seq, class = c("wranglr_seq", "character"))
 }
 
 
@@ -141,7 +141,7 @@ seqify <- function(seq) {
 #' @noRd
 #' @importFrom helpr add_color signal_rule liter
 #' @export
-print.splyr_seq <- function(x, ...) {
+print.wranglr_seq <- function(x, ...) {
   tbl   <- seq_lookup(as.character(x))
   symb1 <- add_color("\u25b6", "cyan")
   symb2 <- add_color("  \u276F  ", "cyan")

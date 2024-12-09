@@ -3,18 +3,18 @@
 
     ## [1] "en_US.UTF-8"
 
-# The `splyr` package
+# The `wranglr` package
 
 <!-- badges: start -->
 
 ![GitHub
 version](https://img.shields.io/badge/Version-0.0.1-success.svg?style=flat&logo=github)
 [![CRAN
-status](http://www.r-pkg.org/badges/version/splyr)](https://cran.r-project.org/package=splyr)
-[![R-CMD-check](https://github.com/stufield/splyr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/splyr/actions)
-[![](https://cranlogs.r-pkg.org/badges/grand-total/splyr)](https://cran.r-project.org/package=splyr)
+status](http://www.r-pkg.org/badges/version/wranglr)](https://cran.r-project.org/package=wranglr)
+[![R-CMD-check](https://github.com/stufield/wranglr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/wranglr/actions)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/wranglr)](https://cran.r-project.org/package=wranglr)
 [![Codecov test
-coverage](https://codecov.io/gh/stufield/splyr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stufield/splyr?branch=main)
+coverage](https://codecov.io/gh/stufield/wranglr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/stufield/wranglr?branch=main)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License:
@@ -23,7 +23,7 @@ MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.
 
 ## Overview
 
-The `splyr` package contains the general functions necessary to
+The `wranglr` package contains the general functions necessary to
 manipulate internal `R` representations of `*.adat` files and wrangle
 those data into convenient form for analysis.
 
@@ -32,28 +32,28 @@ those data into convenient form for analysis.
 ## Installation
 
 ``` r
-remotes::install_github("splyr")
+remotes::install_github("wranglr")
 ```
 
 ------------------------------------------------------------------------
 
 ## Usage
 
-To load `splyr` simply make a call to `library()` as usual:
+To load `wranglr` simply make a call to `library()` as usual:
 
 ``` r
-library(splyr)
+library(wranglr)
 ```
 
 ## Help summary of the package
 
 ``` r
-library(help = splyr)
+library(help = wranglr)
 ```
 
 ------------------------------------------------------------------------
 
-## Useful functions in `splyr`
+## Useful functions in `wranglr`
 
 ### Transforming Data
 
@@ -222,55 +222,55 @@ levels(bar$a)   # 1 level now
 ``` r
 seqs <- withr::with_seed(101, sample(names(sample_df), 10L))
 seqs
-#>  [1] "seq.4493.92" "seq.2644.11" "seq.4987.17" "seq.3066.12" "seq.4706.17" "seq.3504.58"
-#>  [7] "seq.3186.2"  "seq.3190.43" "seq.3440.7"  "seq.4703.87"
+#>  [1] "seq.4500.50" "seq.2654.19" "seq.4993.16" "seq.3074.6"  "seq.4721.54" "seq.3516.60"
+#>  [7] "seq.3194.36" "seq.3197.70" "seq.3448.13" "seq.4719.58"
 
 # NAs for those analytes dropped from menu
 seq_lookup(seqs)
-#> # A tibble: 10 × 10
-#>    seq         SeqId   EntrezGeneSymbol Target    TargetFullName Type  Dilution UniProt List  Reason
-#>    <chr>       <chr>   <chr>            <chr>     <chr>          <chr> <chr>    <chr>   <chr> <chr> 
-#>  1 seq.4493.92 4493-92 IL11             IL-11     Interleukin-11 Prot… 20%      P20809  ""    ""    
-#>  2 seq.2644.11 2644-11 PRKCA            PKC-A     Protein kinas… Prot… 20%      P17252  ""    ""    
-#>  3 seq.4987.17 4987-17 FCAR             FCAR      Immunoglobuli… Prot… 20%      P24071  ""    ""    
-#>  4 seq.3066.12 3066-12 LGALS3           Galectin… Galectin-3     Prot… 0.5%     P17931  ""    ""    
-#>  5 seq.4706.17 4706-17 EPB41            41        Protein 4.1    Prot… 0.5%     P11171  ""    ""    
-#>  6 seq.3504.58 3504-58 HAMP             LEAP-1    Hepcidin       Prot… 0.5%     P81172  ""    ""    
-#>  7 seq.3186.2  3186-2  C2               C2        Complement C2  Prot… 0.005%   P06681  ""    ""    
-#>  8 seq.3190.43 3190-43 <NA>             <NA>      <NA>           <NA>  <NA>     <NA>    <NA>  <NA>  
-#>  9 seq.3440.7  3440-7  GZMA             granzyme… Granzyme A     Prot… 20%      P12544  ""    ""    
-#> 10 seq.4703.87 4703-87 LTA              TNF-b     Lymphotoxin-a… Prot… 20%      P01374  ""    ""
+#> # A tibble: 10 × 9
+#>    seq         SeqId   EntrezGeneSymbol Target          TargetFullName Dilution UniProt List  Reason
+#>    <chr>       <chr>   <chr>            <chr>           <chr>          <chr>    <chr>   <chr> <chr> 
+#>  1 seq.4500.50 4500-50 CLEC11A          SCGF-alpha      Stem cell gro… 0.5%     Q9Y240  ""    ""    
+#>  2 seq.2654.19 2654-19 TNFRSF1A         TNF sR-I        Tumor necrosi… 20%      P19438  ""    ""    
+#>  3 seq.4993.16 4993-16 GSTA3            GSTA3           Glutathione S… 20%      Q16772  ""    ""    
+#>  4 seq.3074.6  3074-6  LBP              LBP             Lipopolysacch… 0.005%   P18428  ""    ""    
+#>  5 seq.4721.54 4721-54 TFF3             TFF3            Trefoil facto… 0.5%     Q07654  ""    ""    
+#>  6 seq.3516.60 3516-60 CXCL12           SDF-1           Stromal cell-… 20%      P48061  ""    ""    
+#>  7 seq.3194.36 3194-36 GP6              GPVI            Platelet glyc… 0.5%     Q9HCN6  ""    ""    
+#>  8 seq.3197.70 3197-70 IDE              IDE             Insulin-degra… 20%      P14735  ""    ""    
+#>  9 seq.3448.13 3448-13 INSR             IR              Insulin recep… 20%      P06213  ""    ""    
+#> 10 seq.4719.58 4719-58 PDIA3            Protein disulf… Protein disul… 0.5%     P30101  ""    ""
 
 seqify(seqs)
 #> ══ SeqId Lookup ════════════════════════════════════════════════════════════════════════════════════
-#>   SeqId-Feature     GeneID     Target                               List     Reason   
+#>   SeqId-Feature     GeneID       Target                                                   List     Reason   
 #> ────────────────────────────────────────────────────────────────────────────────────────────────────
-#> ▶ seq.4493.92    ❯  IL11    ❯  Interleukin-11                    ❯        ❯        
-#> ▶ seq.2644.11    ❯  PRKCA   ❯  Protein kinase C alpha type       ❯        ❯        
-#> ▶ seq.4987.17    ❯  FCAR    ❯  Immunoglobulin alpha Fc receptor  ❯        ❯        
-#> ▶ seq.3066.12    ❯  LGALS3  ❯  Galectin-3                        ❯        ❯        
-#> ▶ seq.4706.17    ❯  EPB41   ❯  Protein 4.1                       ❯        ❯        
-#> ▶ seq.3504.58    ❯  HAMP    ❯  Hepcidin                          ❯        ❯        
-#> ▶ seq.3186.2     ❯  C2      ❯  Complement C2                     ❯        ❯        
-#> ▶ seq.3190.43    ❯  NA      ❯  NA                                ❯  NA    ❯  NA    
-#> ▶ seq.3440.7     ❯  GZMA    ❯  Granzyme A                        ❯        ❯        
-#> ▶ seq.4703.87    ❯  LTA     ❯  Lymphotoxin-alpha                 ❯        ❯
+#> ▶ seq.4500.50    ❯  CLEC11A   ❯  Stem cell growth factor-alpha                         ❯        ❯        
+#> ▶ seq.2654.19    ❯  TNFRSF1A  ❯  Tumor necrosis factor receptor superfamily member 1A  ❯        ❯        
+#> ▶ seq.4993.16    ❯  GSTA3     ❯  Glutathione S-transferase A3                          ❯        ❯        
+#> ▶ seq.3074.6     ❯  LBP       ❯  Lipopolysaccharide-binding protein                    ❯        ❯        
+#> ▶ seq.4721.54    ❯  TFF3      ❯  Trefoil factor 3                                      ❯        ❯        
+#> ▶ seq.3516.60    ❯  CXCL12    ❯  Stromal cell-derived factor 1                         ❯        ❯        
+#> ▶ seq.3194.36    ❯  GP6       ❯  Platelet glycoprotein VI                              ❯        ❯        
+#> ▶ seq.3197.70    ❯  IDE       ❯  Insulin-degrading enzyme                              ❯        ❯        
+#> ▶ seq.3448.13    ❯  INSR      ❯  Insulin receptor                                      ❯        ❯        
+#> ▶ seq.4719.58    ❯  PDIA3     ❯  Protein disulfide-isomerase A3                        ❯        ❯
 
 # Pass `tbl` containing annotations
 # to reconstitute those missing ones
 anno <- attr(sample_df, "anno")
 seq_lookup(seqs, tbl = anno)
-#> # A tibble: 10 × 10
-#>    seq         SeqId   EntrezGeneSymbol Target    TargetFullName Type  Dilution UniProt List  Reason
-#>    <chr>       <chr>   <chr>            <chr>     <chr>          <chr> <chr>    <chr>   <chr> <chr> 
-#>  1 seq.4493.92 4493-92 IL11             IL-11     Interleukin-11 Prot… 20%      P20809  ""    ""    
-#>  2 seq.2644.11 2644-11 PRKCA            PKC-A     Protein kinas… Prot… 20%      P17252  ""    ""    
-#>  3 seq.4987.17 4987-17 FCAR             FCAR      Immunoglobuli… Prot… 20%      P24071  ""    ""    
-#>  4 seq.3066.12 3066-12 LGALS3           Galectin… Galectin-3     Prot… 0.5%     P17931  ""    ""    
-#>  5 seq.4706.17 4706-17 EPB41            41        Protein 4.1    Prot… 0.5%     P11171  ""    ""    
-#>  6 seq.3504.58 3504-58 HAMP             LEAP-1    Hepcidin       Prot… 0.5%     P81172  ""    ""    
-#>  7 seq.3186.2  3186-2  C2               C2        Complement C2  Prot… 0.005%   P06681  ""    ""    
-#>  8 seq.3190.43 3190-43 <NA>             <NA>      <NA>           <NA>  <NA>     <NA>    <NA>  <NA>  
-#>  9 seq.3440.7  3440-7  GZMA             granzyme… Granzyme A     Prot… 20%      P12544  ""    ""    
-#> 10 seq.4703.87 4703-87 LTA              TNF-b     Lymphotoxin-a… Prot… 20%      P01374  ""    ""
+#> # A tibble: 10 × 5
+#>    seq         SeqId   EntrezGeneSymbol Target                         TargetFullName               
+#>    <chr>       <chr>   <chr>            <chr>                          <chr>                        
+#>  1 seq.4500.50 4500-50 CLEC11A          SCGF-alpha                     Stem Cell Growth Factor-alpha
+#>  2 seq.2654.19 2654-19 TNFRSF1A         TNF sR-I                       Tumor necrosis factor recept…
+#>  3 seq.4993.16 4993-16 GSTA3            GSTA3                          Glutathione S-transferase A3 
+#>  4 seq.3074.6  3074-6  LBP              LBP                            Lipopolysaccharide-binding p…
+#>  5 seq.4721.54 4721-54 TFF3             TFF3                           Trefoil factor 3             
+#>  6 seq.3516.60 3516-60 CXCL12           SDF-1                          Stromal cell-derived factor 1
+#>  7 seq.3194.36 3194-36 GP6              GPVI                           Platelet glycoprotein VI     
+#>  8 seq.3197.70 3197-70 IDE              IDE                            Insulin-degrading enzyme     
+#>  9 seq.3448.13 3448-13 INSR             IR                             Insulin receptor             
+#> 10 seq.4719.58 4719-58 PDIA3            Protein disulfide isomerase A3 Protein disulfide-isomerase …
 ```

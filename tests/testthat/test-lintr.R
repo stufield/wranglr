@@ -1,5 +1,5 @@
 
-test_that("splyr is in style compliance", {
+test_that("`wranglr` is in style compliance", {
   helpr::skip_on_check() # don't run in devtools::check()
   skip_on_covr()         # don't run if in 'covr'
   skip_if_not_installed("lintr")

@@ -8,7 +8,7 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-library(splyr)
+library(wranglr)
 library(recipes)
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -61,7 +61,7 @@ it overcomes.
 # Base example
 
 We start with a typical pre-processing that can be achieved via
-`dplyr::mutate()` and `splyr` S3 dplyr-methods tools.
+`dplyr::mutate()` and `wranglr` S3 dplyr-methods tools.
 Combined with the function `log10()`, pre-processing can
 be as simple as the following:
 

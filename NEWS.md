@@ -1,3 +1,3 @@
-# splyr 0.0.1
+# wranglr 0.0.1
 
 - Initial release!

@@ -1,4 +1,4 @@
 library(testthat)
-library(splyr)
+library(wranglr)
 
-test_check("splyr")
+test_check("wranglr")

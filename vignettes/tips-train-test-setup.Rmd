@@ -15,7 +15,7 @@ vignette: >
 
 ```{r setup, include = FALSE}
 library(helpr)
-library(splyr)
+library(wranglr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"

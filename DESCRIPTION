@@ -1,5 +1,5 @@
 Type: Package
-Package: splyr
+Package: wranglr
 Title: Manipulate and Wrangle Data
 Version: 0.0.1
 Authors@R: c(
@@ -9,9 +9,9 @@ Authors@R: c(
            email = "stu.g.field@gmail.com",
            comment = c(ORCID = "0000-0002-1024-5859"))
     )
-Description: The splyr package contains the general functions
-    necessary to manipulate internal R representations of `*.adat`
-    files and wrangle those data into convenient form for analysis.
+Description: The wranglr package contains the general functions
+    necessary to manipulate and wrangle internal R representations
+    of proteomic data into convenient forms for analysis.
 License: GPL-3 | file LICENSE
 Depends:
     R (>= 4.4.0),
