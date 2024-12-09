@@ -13,9 +13,9 @@
       
       --- Steps:
     Message
-      * log10-transformed     v
-      * Centered (mean = 0)   v
-      * Scaled (sd = 1)       v
+      * log10-transformed      v
+      * Centered (mean = 0)    v
+      * Scaled (sd = 1)        v
     Output
       
       ================================================================================

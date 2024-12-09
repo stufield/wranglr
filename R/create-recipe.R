@@ -98,14 +98,18 @@ print.rcp <- function(x, ...) {
 
   cat(line3, "Steps:\n")
 
-  .pad22("log10-transformed") |> paste0(ifelse(x$log10_lgl, tick, cross)) |>
-    signal_todo()
-  .pad22("Centered (mean = 0)") |> paste0(ifelse(x$center_lgl, tick, cross)) |>
-    signal_todo()
-  .pad22("Scaled (sd = 1)") |>
-    paste0(ifelse(x$scale_lgl, tick, cross)) |>
-    signal_todo()
+  signal_todo(
+    .pad22("log10-transformed"), ifelse(x$log10_lgl, tick, cross)
+  )
+  signal_todo(
+    .pad22("Centered (mean = 0)"), ifelse(x$center_lgl, tick, cross)
+  )
+  signal_todo(
+    .pad22("Scaled (sd = 1)"), ifelse(x$scale_lgl, tick, cross)
+  )
+
   cat("\n")
+
   # unknown arguments via `...`
   .dots <- x$call[x$dot_vars]
   if ( length(.dots) ) {
