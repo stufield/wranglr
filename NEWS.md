@@ -1,3 +1,4 @@
-# wranglr 0.0.1
+# wranglr 0.0.1 :tada:
 
-* Initial release! :party:
+* Initial release! :partying_face:
+  - this is `v0.0.1` tagged and released
