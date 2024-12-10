@@ -41,63 +41,67 @@ articles:
   - title: Safe Operations for Data Science
     navbar: ~
     desc: >
-      Examples of how to 'safely' perform some stanard data science operations.
+      Tips on how to 'safely' perform some stanard data science operations.
     contents:
-    - safely-map-values-join
-    - safely-rename-df
-    - train-test-setup
+    - tips-safely-map-values
+    - tips-safely-rename-df
+    - tips-train-test-setup
 
   - title: Pre-processing Data
     navbar: ~
     desc: >
-      Data transformation and preprocessing via simplified recipes.
+      Data transformation and pre-processing via simplified recipes.
     contents:
     - simplified-recipes
+
 
 reference:
   - title: Manipulating data
     desc: >
       Functions to manipulate data `R` objects.
     contents:
+    - bind
+    - create_kfold
+    - distinct_rows
+    - feature_matrix
     - group_labels
+    - rearrange
     - rename
     - refactor_data
-    - rearrange
-    - rbindIntersect
-    - feature_matrix
-    - create_kfold
+    - match_samples
 
   - title: Adding and augmenting
     desc: >
       Functions to create summaries and add summary data to objects.
     contents:
+    - calc_cv
     - create_summ_tbl
-    - calc_cv_decomp
 
   - title: Transforming data
     desc: >
       Functions to transform data `R` objects.
     contents:
-    - center_scale_data
     - starts_with("impute")
+    - center_scale
     - cast_numeric
     - create_recipe
     - get_recipe_params
     - scale_features
     - rebalance
+    - remove_outliers
 
-  - title: Proteomic Annotations
+  - title: Proteomic annotations
     desc: >
       Useful helpers for matching, exploring, and looking up
-      protein annotations based on `Seqid`.
+      protein annotations based on `SeqId`s.
     contents:
     - anno
-    - match_samples
 
   - title: Data
-    desc: Package data objects.
+    desc: >
+      A simulated proteomic data set for data science analyses.
     contents:
-    - objects
+    - simdata
 
 news:
   - one_page: true
