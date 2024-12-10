@@ -8,6 +8,13 @@
 \description{
 The wranglr package contains the general functions necessary to manipulate and wrangle internal R representations of proteomic data into convenient forms for analysis.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://stufield.github.io/wranglr}
+}
+
+}
 \author{
 \strong{Maintainer}: Stu Field \email{stu.g.field@gmail.com} (\href{https://orcid.org/0000-0002-1024-5859}{ORCID}) [copyright holder]
 

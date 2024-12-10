@@ -13,6 +13,7 @@ Description: The wranglr package contains the general functions
     necessary to manipulate and wrangle internal R representations
     of proteomic data into convenient forms for analysis.
 License: GPL-3 | file LICENSE
+URL: https://stufield.github.io/wranglr
 Depends:
     R (>= 4.4.0),
     dplyr (>= 1.0.3)
