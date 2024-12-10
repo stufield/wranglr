@@ -1,8 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-    ## [1] "en_US.UTF-8"
-
 # The `wranglr` package
 
 <!-- badges: start -->
