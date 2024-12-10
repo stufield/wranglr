@@ -1,39 +1,42 @@
-url: https://confluence.sladmin.com/display/BITOOLS/somaverse
+url: https://stufield.github.io/wranglr/
 
-home:
-  strip_header: true
-  links:
-  - text: Bitbucket
-    href: http://bitbucket.sladmin.com/projects/SV/repos/somaplyr/browse
-  - text: Report a bug
-    href: bitools@somalogic.com
-  - text: Learn more about SomaScan
-    href: http://www.somalogic.com
-  - text: The tidyverse
-    href: https://www.tidyverse.org
-
-template:
-  bootstrap: 5
-  bslib:
-    #bg: "#202123"      # dark theme
-    #fg: "#B8BCC2"      # dark theme
-    primary: "#0054AD"
-    border-radius: 0.5rem
-    btn-border-radius: 0.25rem
-    base_font: {google: "Roboto"}
+development:
+  mode: auto
 
 authors:
   Stu Field:
     href: https://github.com/stufield
 
-development:
-  mode: auto
+home:
+  links:
+  - text: Learn more about me
+    href: https://github.com/stufield
+
+template:
+  bootstrap: 5
+  package: tidytemplate
+  bslib:
+    bg: "#202123"      # dark theme
+    fg: "#B8BCC2"      # dark theme
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+    base_font: {google: "Roboto"}
+
+navbar:
+  structure:
+    left: [intro, reference, articles, workflows, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get Started
+      href: articles/wranglr.html
 
 articles:
   - title: Getting Started
     navbar: ~
     contents:
-    - SomaPlyr
+    - wranglr
 
   - title: Safe Operations for Data Science
     navbar: ~
@@ -44,75 +47,52 @@ articles:
     - safely-rename-df
     - train-test-setup
 
-  - title: The problem with GeneID-AptNames
+  - title: Pre-processing Data
     navbar: ~
     desc: >
-      Why are GeneIDs in AptNames so problematic to reproducible research.
+      Data transformation and preprocessing via simplified recipes.
     contents:
-    - GeneIDs-AptNames
-
-  - title: Get Umbrella Analyte Annotations
-    navbar: ~
-    desc: >
-      Get annotations from the Umbrella database.
-    contents:
-    - get-annotations
-
-  - title: Preprocessing SomaScan Data
-    navbar: ~
-    desc: >
-      Data transformation and preprocessing via somaverse recipes.
-    contents:
-    - somaverse-recipes
+    - simplified-recipes
 
 reference:
   - title: Manipulating data
     desc: >
-      Functions to manipulate data, particulraly `soma_adat` (ADAT) objects.
+      Functions to manipulate data `R` objects.
     contents:
-    - createChildAttributes
-    - removeBufferSamples
     - group_labels
     - rename
-    - refactorData
+    - refactor_data
     - rearrange
     - rbindIntersect
-    - distinctAt
-    - pivotLong
-    - stripMeta
+    - feature_matrix
     - create_kfold
 
   - title: Adding and augmenting
-    desc:  Functions to create summaries and add summary data to objects.
+    desc: >
+      Functions to create summaries and add summary data to objects.
     contents:
-    - starts_with("add[A-Z]")
-    - createSummaryTable
-    - calcCVdecomp
+    - create_summ_tbl
+    - calc_cv_decomp
 
   - title: Transforming data
     desc: >
-      Functions to transform data, particulraly `soma_adat` (ADAT) objects.
+      Functions to transform data `R` objects.
     contents:
-    - centerScaleData
+    - center_scale_data
     - starts_with("impute")
-    - makeNumeric
-    - somaRecipe
-    - getRecipeParams
-    - transform
-    - scaleAnalytes
-    - createLogRatioAdat
-    - sampleImbalance
+    - cast_numeric
+    - create_recipe
+    - get_recipe_params
+    - scale_features
+    - rebalance
 
-  - title: Annotations
+  - title: Proteomic Annotations
     desc: >
       Useful helpers for matching, exploring, and looking up
-      analyte annotations based on `Seqid`.
+      protein annotations based on `Seqid`.
     contents:
-    - getAnnotations
-    - seqLookup
-    - matchSamples
-    - revertAptNames
-    - lookupAnnotations
+    - anno
+    - match_samples
 
   - title: Data
     desc: Package data objects.
