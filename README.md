@@ -21,16 +21,20 @@ MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.
 
 ## Overview
 
-The `wranglr` package contains the general functions necessary to
-manipulate and wrangle internal `R` representations of proteomic data
-into convenient forms for analysis.
+The `wranglr` package contains general functions necessary to manipulate
+and wrangle internal `R` representations of proteomic data into
+convenient forms for analysis.
 
 ------------------------------------------------------------------------
 
 ## Installation
 
 ``` r
-remotes::install_github("wranglr")
+# current dev version
+remotes::install_github("stufield/wranglr")
+
+# or a specific version
+remotes::install_github("stufield/wranglr@v0.0.1")
 ```
 
 ------------------------------------------------------------------------

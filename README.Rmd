@@ -35,7 +35,7 @@ sample_df <- wranglr:::sample_df
 
 ## Overview
 
-The `wranglr` package contains the general functions
+The `wranglr` package contains general functions
 necessary to manipulate and wrangle internal `R` representations
 of proteomic data into convenient forms for analysis.
 
@@ -46,7 +46,11 @@ of proteomic data into convenient forms for analysis.
 ## Installation
 
 ```{r install-git, eval = FALSE}
-remotes::install_github("wranglr")
+# current dev version
+remotes::install_github("stufield/wranglr")
+
+# or a specific version
+remotes::install_github("stufield/wranglr@v0.0.1")
 ```
 
 

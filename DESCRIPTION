@@ -9,7 +9,7 @@ Authors@R: c(
            email = "stu.g.field@gmail.com",
            comment = c(ORCID = "0000-0002-1024-5859"))
     )
-Description: The wranglr package contains the general functions
+Description: The wranglr package contains general functions
     necessary to manipulate and wrangle internal R representations
     of proteomic data into convenient forms for analysis.
 License: GPL-3 | file LICENSE
