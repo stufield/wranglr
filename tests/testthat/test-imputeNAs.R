@@ -1,18 +1,19 @@
 
-test_that("the `imputeNAs` charcter method errors out", {
+test_that("the `imputeNAs()` charcter method errors out", {
   expect_error(imputeNAs(letters), "Cannot")
 })
 
 
-test_that("the `imputeNAs` factor method errors out", {
+test_that("the `imputeNAs()` factor method errors out", {
   expect_error(imputeNAs(factor(letters)), "Cannot")
 })
 
 
-test_that("the `imputeNAs` numeric method is correct", {
-  set.seed(101)
-  x      <- rnorm(100)
-  NAs    <- sample(length(x), 5)
+test_that("the `imputeNAs()` numeric method is correct", {
+  withr::with_seed(101, {
+    x    <- rnorm(100)
+    NAs  <- sample(length(x), 5L)
+  })
   x[NAs] <- NA
   x_med  <- median(x, na.rm = TRUE)
   y      <- imputeNAs(x)
@@ -32,7 +33,7 @@ test_that("the `imputeNAs` numeric method is correct", {
 })
 
 
-test_that("the `imputeNAs.soma_adat()` method is correct", {
+test_that("the `imputeNAs()` soma_adat method is correct", {
   n    <- 150L
   vals <- sample_df[[n]]
   z    <- imputeNAs(sample_df)
@@ -43,8 +44,8 @@ test_that("the `imputeNAs.soma_adat()` method is correct", {
 })
 
 
-test_that("the `imputeNAs` data.frame method is correct", {
-  x <- matrix(1:100, ncol = 10)
+test_that("the `imputeNAs()` data.frame method is correct", {
+  x <- matrix(1:100, ncol = 10L)
   diag(x) <- NA
   x <- data.frame(x)
   expect_s3_class(x, "data.frame")
@@ -57,8 +58,8 @@ test_that("the `imputeNAs` data.frame method is correct", {
 })
 
 
-test_that("the `imputeNAs` matrix method is correct", {
-  x <- matrix(1:100, ncol = 10)
+test_that("the `imputeNAs()` matrix method is correct", {
+  x <- matrix(1:100, ncol = 10L)
   expect_true(is.matrix(x))
   diag(x) <- NA
   expect_equal(sum(x, na.rm = TRUE), 4545)   # pre-impute

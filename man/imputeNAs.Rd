@@ -40,7 +40,7 @@ imputeNAs(x)
 table(imputeNAs(x)) |> sort() |> tail()
 }
 \seealso{
-\code{\link[=median]{median()}}, \code{\link[=modify_if]{modify_if()}}
+\code{\link[=median]{median()}}
 
 Other impute: 
 \code{\link{impute_outliers}()},

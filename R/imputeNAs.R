@@ -13,7 +13,7 @@
 #'   corresponding vector.
 #'
 #' @author Stu Field
-#' @seealso [median()], [modify_if()]
+#' @seealso [median()]
 #'
 #' @examples
 #' adat <- simdata
@@ -62,12 +62,11 @@ imputeNAs.factor <- function(x) {
 }
 
 #' @noRd
-#' @importFrom purrr modify_if
 #' @export
 imputeNAs.data.frame <- function(x) {
-  # function to get only cols with NAs & numerics
+  # function to get only cols with NAs & numeric
   .nas <- function(x) is.numeric(x) & any(is.na(x))
-  modify_if(x, .nas, imputeNAs.numeric)
+  .modify_if(x, .nas, imputeNAs.numeric)
 }
 
 #' @noRd
@@ -82,16 +81,21 @@ imputeNAs.soma_adat <- function(x) {
 #' @noRd
 #' @export
 imputeNAs.matrix <- function(x) {
-  as.data.frame(x) |>
-    imputeNAs() |>
-    data.matrix()
+  apply(x, 2, imputeNAs)
 }
 
 #' @noRd
-#' @importFrom purrr modify_if
 #' @importFrom stats median
 #' @export
 imputeNAs.numeric <- function(x) {
-  med <- median(x, na.rm = TRUE)   # nolint: object_usage_linter.
-  modify_if(x, is.na, ~ med)
+  x[is.na(x)] <- median(x, na.rm = TRUE)
+  x
+}
+
+.modify_if  <- function(x, p, f) {
+  lgl <- vapply(x, p, NA)
+  for ( i in seq(which(lgl)) ) {
+    x[[i]] <- f(x[[i]])
+  }
+  x
 }
