@@ -90,9 +90,9 @@ each. I recommend one of these below:</p>
 <ol style="list-style-type: decimal">
 <li>base R data frame indexing with [sample()] and <code>[</code>
 </li>
-<li>use <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice_sample()</a></code> or
-<code><a href="https://dplyr.tidyverse.org/reference/sample_n.html" class="external-link">dplyr::sample_frac()</a></code> in combination with
-<code><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">dplyr::anti_join()</a></code>
+<li>use <code><a href="https://rdrr.io/pkg/dplyr/man/slice.html" class="external-link">dplyr::slice_sample()</a></code> or
+<code><a href="https://rdrr.io/pkg/dplyr/man/sample_n.html" class="external-link">dplyr::sample_frac()</a></code> in combination with
+<code><a href="https://rdrr.io/pkg/dplyr/man/filter-joins.html" class="external-link">dplyr::anti_join()</a></code>
 </li>
 <li>use the <a href="https://rsample.tidymodels.org" class="external-link"><code>rsample</code></a> package
 (not demonstrated)</li>
@@ -156,13 +156,13 @@ that you must split randomly into training and test sets.</p>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># sample random 50% (n = 5)</span></span>
-<span><span class="va">train</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_seed.html" class="external-link">with_seed</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span><span class="va">raw</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="va">n</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">train</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_seed.html" class="external-link">with_seed</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span><span class="va">raw</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="va">n</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># or using `dplyr::sample_frac()`</span></span>
 <span><span class="co"># train &lt;- withr::with_seed(1, dplyr::sample_frac(raw, size = 0.5))</span></span>
 <span></span>
 <span><span class="co"># use anti_join() to get the sample setdiff</span></span>
-<span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">raw</span>, <span class="va">train</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">raw</span>, <span class="va">train</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span><span class="va">train</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 13</span></span></span>
 <span><span class="co">#&gt;      id CarModel         mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
