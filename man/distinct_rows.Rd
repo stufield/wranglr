@@ -2,21 +2,22 @@
 % Please edit documentation in R/distinct-rows.R
 \name{distinct_rows}
 \alias{distinct_rows}
-\title{Select Distinct Rows by a Selection of Variables}
+\title{Select Distinct Rows}
 \usage{
 distinct_rows(x, ...)
 }
 \arguments{
 \item{x}{A data frame or tibble object.}
 
-\item{...}{Additional arguments to \code{\link[=select]{select()}}.}
+\item{...}{Additional arguments to \code{\link[dplyr:select]{dplyr::select()}}.}
 }
 \value{
 A data frame or tibble object, same class as \code{x}.
 }
 \description{
-Extract distinct rows. Additional arguments allow
-specification of variables to check for unique identity.
+Extract distinct rows by selection variables. Additional
+arguments allow specification of variables that are
+combined and checked for uniqueness.
 }
 \examples{
 withr::with_seed(111, {
@@ -30,7 +31,7 @@ df
 
 distinct_rows(df, a_ie, b_ie)
 
-# or with dplyr helper verbs ...
+# or with tidyselect-helpers
 distinct_rows(df, ends_with("ie"))
 }
 \author{

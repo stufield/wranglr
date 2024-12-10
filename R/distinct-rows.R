@@ -1,10 +1,11 @@
-#' Select Distinct Rows by a Selection of Variables
+#' Select Distinct Rows
 #'
-#' Extract distinct rows. Additional arguments allow
-#'   specification of variables to check for unique identity.
+#' Extract distinct rows by selection variables. Additional
+#'   arguments allow specification of variables that are
+#'   combined and checked for uniqueness.
 #'
 #' @param x A data frame or tibble object.
-#' @param ... Additional arguments to [select()].
+#' @param ... Additional arguments to [dplyr::select()].
 #'
 #' @return A data frame or tibble object, same class as `x`.
 #'
@@ -22,7 +23,7 @@
 #'
 #' distinct_rows(df, a_ie, b_ie)
 #'
-#' # or with dplyr helper verbs ...
+#' # or with tidyselect-helpers
 #' distinct_rows(df, ends_with("ie"))
 #' @importFrom helpr rm_rn
 #' @export
