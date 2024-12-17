@@ -72,9 +72,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     "`data` must be a `data.frame`." = !missing(data) && is.data.frame(data),
     "`k` must be a positive integer." = is_int(k) && k > 0,
     "`repeats` must be a positive integer." = is_int(repeats) && repeats > 0,
-    # This is not a thorough test of the breaks input;
-    # relying on downstream calls to fully vet
-    "`breaks` must be NULL or a list of length 1 or 2." =
+    "`breaks` must be `NULL` or a list of length 1 or 2." =
       is.null(breaks) || (is.list(breaks) && length(breaks) %in% 1:2L)
   )
 
@@ -122,19 +120,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'
 #' @return See description section of `create_kfolds()`.
 #' @importFrom tibble tibble
-#' @importFrom helpr is_int
 #' @noRd
 .vfold_splits <- function(data, k = 10L, breaks = NULL, depth = 20L) {
-  # local testing of only those variables used in this function
-  # we do not test those that are merely passed to other functions
-  stopifnot(
-    "`data` must be a `data.frame`." =
-      !missing(data) && is.data.frame(data),
-    "`k` must be a positive integer." = is_int(k) && k > 0,
-    "`breaks` must be NULL or a list of length 1 or 2." =
-      is.null(breaks) || (is.list(breaks) && length(breaks) %in% 1:2L)
-  )
-
   strata <- names(breaks)
 
   if ( is.list(breaks) && is.null(strata) ) {
@@ -142,8 +129,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   }
 
   if ( !is.null(strata) ) {
-    # .getStrataIndices expects strata to be a data.frame of values
-    # as.data.frame removes possible added classes to base data.frame class
+    # .get_indices expects strata to be a data.frame of values
+    # as.data.frame() removes possible super-classes
     strata <- tryCatch(as.data.frame(data[, strata, drop = FALSE]),
                        error = function(e) {
                          stop("Unable to retrieve stratification variable(s) ",
@@ -153,9 +140,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   n <- nrow(data)
 
-  indices <- .getStrataIndices(strata, breaks = breaks,
-                               k = k, idx = seq_len(n),
-                               depth = depth)
+  indices <- .get_indices(strata, breaks = breaks, k = k, idx = seq_len(n),
+                          depth = depth)
 
   indices <- lapply(indices, function(.ind) {
                     list(analysis   = setdiff(seq_len(n), .ind),
@@ -286,7 +272,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'
 #' @importFrom helpr has_length is_int is_int_vec
 #' @noRd
-.getStrataIndices_one <- function(x, breaks, k, idx, depth) {
+.get_indices_one <- function(x, breaks, k, idx, depth) {
   # local testing of only those variables used in this function
   # we do not test those that are merely passed to other functions
   stopifnot(
@@ -322,7 +308,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   These are intended to be the "assessment" sample.
 #' @importFrom purrr transpose
 #' @noRd
-.getStrataIndices_two <- function(x, breaks, k, idx, depth) {
+.get_indices_two <- function(x, breaks, k, idx, depth) {
   # local testing of only those variables used in this function
   # we do not test those that are merely passed to other functions
   stopifnot(
@@ -343,9 +329,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   # stratify each element of stratas_1 using second stratification variable
   lapply(stratas_1, function(.i) {
-    .getStrataIndices(x[.i, 2L, drop = FALSE],
-                      breaks = breaks[2:2L],
-                      k = k, idx = .i, depth = depth)
+    .get_indices(x[.i, 2L, drop = FALSE], breaks = breaks[2:2L],
+                 k = k, idx = .i, depth = depth)
   }) |>
     transpose() |>        # invert the list
     lapply(base::unlist)  # concatenate within elements (folds)
@@ -366,7 +351,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'
 #' @importFrom helpr has_length is_int is_int_vec value
 #' @noRd
-.getStrataIndices <- function(x, k, idx, breaks, ...) {
+.get_indices <- function(x, k, idx, breaks, ...) {
   stopifnot(
     "`idx` must be an integer vector." = is_int_vec(idx) && all(idx > 0),
     "`idx` must have same dimension as `x`" = (!is.null(x) &&
@@ -378,15 +363,15 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     result <- unname(split(idx, folds))
   } else if ( is.data.frame(x) ) {
     result <- switch(ncol(x),
-                     .getStrataIndices_one(x[, 1L], k = k, idx = idx,
+                     .get_indices_one(x[, 1L], k = k, idx = idx,
                                            breaks = breaks[[1L]], ...),
-                     .getStrataIndices_two(x, k = k, idx = idx,
+                     .get_indices_two(x, k = k, idx = idx,
                                            breaks = breaks, ...),
                      stop("`x` has inappropriate dimensions. ",
                           "Please contact package manager.",
                           call. = FALSE))
   } else {
-    stop("`x` is of an unexpected class: ", value(class(strata)),
+    stop("`x` is of an unexpected class: ", value(class(x)),
          "Please contact package manager.", call. = FALSE)
   }
   result
