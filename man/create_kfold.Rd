@@ -16,93 +16,85 @@ analysis(object, i = NULL)
 assessment(object, i = NULL)
 }
 \arguments{
-\item{data}{A \code{data.frame} class object. The data to be subset.}
+\item{data}{A \code{data.frame} containing the data to be subset.}
 
-\item{k}{\code{integer(1)}. The number of partitions of the data set.}
+\item{k}{\code{integer(1)}. The number of partitions (folds) to create.}
 
-\item{repeats}{\code{integer(1)}The number of times to repeat the k-fold partitioning.}
+\item{repeats}{\code{integer(1)}The number of times to repeat the \emph{k}-fold
+partitioning.}
 
-\item{breaks}{A \emph{named} list or \code{NULL}. If \code{NULL}, no stratification is performed.
-If a named list, must be of length 1 or 2, where the name of the \emph{i^th} element
-indicates the column header of \code{data} containing the \emph{ith} stratification
-variable and the value of the \emph{i^th} element specifies the stratification
-structure for that variable. See Details for further information.}
+\item{breaks}{Stratification control. Either \code{NULL} or a \emph{named} list.
+If \code{NULL}, no stratification is performed. See \code{Details}.}
 
-\item{...}{Variables to be passed to stratification step. Currently limited
+\item{...}{Parameters to be passed to stratification step. Currently limited
 to \code{depth}. The number of stratification bins are based on
-\code{min(5, floor(n / depth))},  where \code{n = length(x)}.}
+\code{min(5, floor(n / depth))}, where \code{n = length(x)}.}
 
 \item{x}{An \code{R} object to test.}
 
 \item{object}{A \code{x_split} object.}
 
-\item{i}{An integer or \code{NULL}. If an integer, the split for which the
+\item{i}{\code{integer(1)} or \code{NULL}. If an integer, the split for which the
 analysis or assessment data is to be retrieved.}
 }
 \value{
-A \code{x_split} object (extension of the list class). Element \code{data}
-contains the original data. Element \code{splits} contains a tibble. Each row
-of the tibble corresponds to an individual split. Column \code{split} contains
-lists with named elements "analysis" and "assessment". These
-elements contain the indices of \code{data} to be used for each category.
+A \code{x_split} object. Element \code{data} contains the original data.
+Element \code{splits} is a tibble where each row of corresponds to an
+individual split. The \code{split} column contains lists named either
+"analysis" and "assessment" containing the indices of \code{data} to be
+used for each fold and category.
 Columns \code{Fold} and \code{Repeat} provide fold and repeat indices for
 each corresponding split.
 
 \code{\link[=is.x_split]{is.x_split()}}: Logical. \code{TRUE} if \code{x} inherits from
 class \code{x_split}.
 
-\code{\link[=analysis]{analysis()}}: A list ... each element containing an object of
-class \code{data.frame}.
+\code{\link[=analysis]{analysis()}}: A list of data frames corresponding to
+the analysis indices.
 
-\code{\link[=assessment]{assessment()}}: A list ... each element containing an object of
-class \code{data.frame}.
+\code{\link[=assessment]{assessment()}}: A list of data frames corresponding to
+the assessment indices.
 }
 \description{
-Adaptation of the \code{rsample::vfold_cv()} function and its utilities. Modified
-to remove testing and class structures not required for local usage and to
-accommodate two-level stratification.
+Adaptation of the \code{rsample::vfold_cv()} function and its utilities.
+Modified for simplicity and to accommodate two-level stratification.
 Up to 2 levels of stratification can be specified through
 the \code{breaks} parameter:
 \itemize{
 \item{No stratification: \code{breaks = NULL}}
-\item{One level stratification: \code{breaks} is a list of length 1, where
-the name of the list element specifies the stratification variable and the
-value of the element specifies the stratification structure.
-}
-\item{Two level stratification: \code{breaks} is a list of length 2, where
-the name of the first element specifies the first level stratification
-variable and the value of the first element specifies its stratification
-structure. Similarly, the name of the second element specifies the
-second level stratification variable and its value specifies its
-stratification structure.
-}
+\item{One level stratification: \code{breaks} is a \code{list(1)}, where
+the name of the list element specifies the stratification
+variable and the value of the element specifies the
+stratification.}
+\item{Two level stratification: \code{breaks} is a \code{list(2)}, where
+the list names specify the stratification variables and the
+corresponding values specify the stratification.}
 }
 
-\code{\link[=analysis]{analysis()}} : \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#questioning}{\figure{lifecycle-questioning.svg}{options: alt='[Questioning]'}}}{\strong{[Questioning]}}
 
-\code{\link[=assessment]{assessment()}} : \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#questioning}{\figure{lifecycle-questioning.svg}{options: alt='[Questioning]'}}}{\strong{[Questioning]}}
+
+
 }
 \details{
-For stratification variables that are factor, character, or numeric with
-5 or fewer unique values, the stratification structure should be set
-as \code{NA}. For example, if stratifying only on status, a binary variable,
+For stratification variables that are factor, character, or discrete with
+5 or fewer unique levels, the stratification structure should be set
+to \code{NA}. For example, if \code{status} is a binary variable,
 \code{breaks = list(status = NA)}.
 
-If the stratification variable is continuous or has more than 5 unique
-values, the stratification structure can be specified as either the
+If the stratification variable has more than 5 unique levels,
+the stratification structure can be specified as either the
 number of quantile-based stratification bins or as a numeric vector
 providing the bin boundaries (must fully span the range of the
-stratification variable). For example, if the stratification variable,
-\code{x}, is a continuous variable in \verb{[0,1]}, \code{breaks = list(x = 4)} indicates
-stratification into 4 bins, the boundaries of which are determined
-internally using
+stratification variable). For example, for a continuous variable
+in \verb{[0,1]}, \code{breaks = list(x = 4)} indicates stratification
+into 4 bins, the boundaries of which are determined internally using
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{quantile(x, probs = seq(0.0, 1.0, length.out = 5))
 }\if{html}{\out{</div>}}
 
 and \code{breaks = list(x = c(0.0, 0.25, 0.75, 1.0))} specifies a 3 bin
 structure: \verb{[0, 0.25]}, \verb{(0.25, 0.75]}, and \verb{(0.75, 1.0]}.
-\strong{Note:} the lowest boundary is always taken as inclusive.
+\strong{Note:} the lowest bin is \emph{always} inclusive.
 }
 \examples{
 # no stratification
@@ -119,12 +111,12 @@ sample_two <- create_kfold(simdata, k = 4L, repeats = 2L,
 # retrieve analysis data for 2nd split
 an_2 <- analysis(sample_no_strat, 2L)
 
-# retrieve analysis data for all splits
+# retrieve all splits
 an_all <- analysis(sample_no_strat)
 
 # retrieve assessment data for 2nd split
 ass_2 <- assessment(sample_no_strat, 2L)
 
-# retrieve assessment data for all splits
+# retrieve all splits
 ass_all <- assessment(sample_no_strat)
 }

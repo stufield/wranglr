@@ -1,7 +1,7 @@
 # `.make_strata()` returns expected results and warnings
 
     Code
-      out <- .make_strata(x, breaks = 10, depth = 50)
+      out <- .make_strata(x, breaks = 10, depth = 50L)
     Condition
       Warning:
       The number of observations in each quantile is below the recommended threshold of 50.
@@ -11,7 +11,7 @@
 ---
 
     Code
-      out <- .make_strata(x, breaks = 10, depth = 70)
+      out <- .make_strata(x, breaks = 10, depth = 70L)
     Condition
       Warning:
       The number of observations in each quantile is below the recommended threshold of 70.
@@ -33,7 +33,7 @@
       Warning:
       Too little data to stratify. Non-stratified resampling will be used.
 
-# `print.x_split()` returns expected messaging
+# `S3 print()` returns expected class `x_split`
 
     Code
       create_kfold(simdata, k = 4L, repeats = 1L)

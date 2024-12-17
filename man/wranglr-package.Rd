@@ -6,7 +6,7 @@
 \alias{wranglr-package}
 \title{wranglr: Manipulate and Wrangle Data}
 \description{
-The wranglr package contains the general functions necessary to manipulate and wrangle internal R representations of proteomic data into convenient forms for analysis.
+The wranglr package contains general functions necessary to manipulate and wrangle internal R representations of proteomic data into convenient forms for analysis.
 }
 \seealso{
 Useful links:
