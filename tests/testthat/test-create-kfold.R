@@ -92,24 +92,21 @@ test_that("`.make_strata()` returns expected results and warnings", {
   x <- withr::with_seed(1234L, sample(letters[1:8], 100, TRUE))
   expect_equal(.make_strata(x), factor(x))
 
-  # A factor variable with any number of values should return as an unmodified
-  # character factor vector
+  # A factor with any number of values should return an
+  # unmodified character -> factor vector
   x <- factor(withr::with_seed(1234L, sample(1:10, 100, TRUE)))
   expect_equal(.make_strata(x), factor(as.character(x)))
 
   # numeric vector with depth large enough to change break to >= 2
   x <- withr::with_seed(42L, stats::runif(100))
-  expect_snapshot( out <- .make_strata(x, breaks = 10, depth = 50L) )
+  expect_error(
+    .make_strata(x, breaks = 10, depth = 50L),
+    "Too little data to stratify."
+  ) |> expect_warning("The number of observations in each quantile")
 
   breaks <- quantile(x, probs = c(0.0, 0.5, 1.0))
   expected <- cut(x, breaks = breaks, include.lowest = TRUE)
-  expect_equal(out, expected)
   expect_equal(.make_strata(x, breaks = breaks, depth = 50L), expected)
-
-  # numeric vector with depth large enough to change break to < 2
-  expect_snapshot( out <- .make_strata(x, breaks = 10, depth = 70L) )
-
-  expect_equal(out, factor(rep("strata1", 100)))
 
   # numeric vector with depth small enough to leave breaks unchanged
   breaks <- quantile(x, probs = c(0.0, 0.25, 0.5, 0.75, 1.0))
@@ -118,33 +115,24 @@ test_that("`.make_strata()` returns expected results and warnings", {
   expect_equal(.make_strata(x, breaks = breaks, depth = 10L), expected)
 
   # imputed values continuous
+  # imputed median is in the 2nd cut
   x <- c(x, NA_real_)
-  expected2 <- factor(append(as.character(expected),
-                             withr::with_seed(2345L, sample(levels(expected), 1))),
-                      levels = levels(expected))
-  expect_message(
-    out <- withr::with_seed(2345L, .make_strata(x, breaks = 4, depth = 10L)),
-    "Imputed stratification structure for 1 missing value."
-  )
+  expected2 <- c(expected, factor(levels(expected)[2L]))
+  out <- withr::with_seed(2345L, .make_strata(x, breaks = 4, depth = 10L))
   expect_equal(out, expected2)
 
   x <- c(x, NA_real_)
-  expected2 <- factor(append(as.character(expected),
-                             withr::with_seed(2345L, sample(levels(expected), 2))),
-                      levels = levels(expected))
-  expect_message(
-    out <- withr::with_seed(2345L, .make_strata(x, breaks = breaks, depth = 10L)),
-    "Imputed stratification structure for 2 missing values."
-  )
-  expect_equal(out, expected2)
+  expected3 <- c(expected2, factor(levels(expected)[2L]))
+  out <- withr::with_seed(2345L, .make_strata(x, breaks = breaks, depth = 10L))
+  expect_equal(out, expected3)
 
-  # imputed values discrete
+  # imputed values discrete/character/factor
   x <- c(0L, 1L, 0L, 1L, 0L, NA_integer_)
   expected <- factor(as.character(x))
   expected[6L] <- withr::with_seed(2345L, sample(levels(expected), 1))
   expect_message(
     out <- withr::with_seed(2345L, .make_strata(x, breaks = 4, depth = 10L)),
-    "Imputed stratification structure for 1 missing value."
+    "Imputed stratification for 1 missing value."
   )
   expect_equal(out, expected)
 
@@ -456,7 +444,7 @@ test_that("`.vfold_splits()` returns expected results", {
       indices_2[[i]] <- list(analysis   = setdiff(1L:n, indices[[i]]),
                              assessment = sort(unique(indices[[i]])))
     }
-    tibble::tibble(split = indices_2, Fold = seq_len(k))
+    tibble::tibble(split = indices_2, fold = seq_len(k))
   }
 
   # No stratification
@@ -559,25 +547,10 @@ test_that("`create_kfold()` returns expected results for repeats = 1", {
   # local implementation
   .local_imp <- function(data, k, breaks, depth) {
     split_objs <- .vfold_splits(data = data, k = k, breaks = breaks, depth = depth)
-    split_objs$Repeat <- NA_integer_
+    split_objs[["repeat"]] <- NA_integer_
     return_obj <- list(data = data, splits = split_objs)
     structure(add_class(return_obj, "x_split"), breaks = breaks)
   }
-
-  # test that depth is properly understood
-  # easiest check a case that will generate a warning
-  expect_snapshot(
-    out <- withr::with_seed(234L,
-      create_kfold(simdata, breaks = list(time = 4L), depth  = 70L))
-  )
-
-  expect_equal(
-    out,
-    withr::with_seed(234L,
-      suppressWarnings(.local_imp(data   = simdata, k = 10L,
-                                  breaks = list(time = 4L), depth = 70L))),
-    ignore_attr = TRUE   # call attr differs
-  )
 
   # each input is properly passed along
   expect_equal(
@@ -612,7 +585,7 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
                          function(.i) {
                            tmp <- .vfold_splits(data = data, k = k,
                                                 breaks = breaks, depth = depth)
-                           tmp$Repeat <- .i
+                           tmp[["repeat"]] <- .i
                            tmp
                          })
     names(split_objs) <- seq_len(repeats)

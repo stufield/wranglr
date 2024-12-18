@@ -77,8 +77,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   )
 
   # user can currently only pass `depth` through ...
-  # potentially expand this to allow for n_unique
-  # both are used by the stratification step
+  # could expand to allow for `n_unique`
+  # both are used in stratification
   args    <- dots_list2(...)
   depth   <- args$depth %||% 20L
   repeats <- as.integer(round(repeats, 0L))
@@ -87,13 +87,13 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     .vfold_splits(data = data, k = k, breaks = breaks, depth = depth),
     simplify = FALSE
   ) |>
-    bind_rows(.id = "Repeat") |>
-    relocate(-"Repeat")
+    bind_rows(.id = "repeat") |>
+    relocate(-"repeat")
 
   if ( repeats == 1L ) {
-    splits$Repeat <- NA_integer_
+    splits[["repeat"]] <- NA_integer_
   } else {
-    splits$Repeat <- as.integer(splits$Repeat)
+    splits[["repeat"]] <- as.integer(splits[["repeat"]])
   }
 
   return_obj <- list(data = data, splits = splits)
@@ -119,11 +119,12 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   rows in the data set (when `depth = 20L`) to conduct stratified sampling.
 #'
 #' @return See description section of `create_kfolds()`.
+#'
 #' @importFrom tibble tibble
 #' @noRd
 .vfold_splits <- function(data, k = 10L, breaks = NULL, depth = 20L) {
-  strata <- names(breaks)
 
+  strata <- names(breaks)
   if ( is.list(breaks) && is.null(strata) ) {
     stop("`breaks` must be a named list.", call. = FALSE)
   }
@@ -147,13 +148,13 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
                     list(analysis   = setdiff(seq_len(n), .ind),
                          assessment = sort(unique(.ind)))
                     })
-  tibble(split = indices, Fold = seq_len(k))
+  tibble(split = indices, fold = seq_len(k))
 }
 
 
 #' Single stratification variable
 #'
-#' @param x The vector to be used for stratification.
+#' @param x A vector to be used for stratification.
 #' @param breaks `integer(1)`, `numeric(n)`, or `NA`.
 #'   If integer, the number of bins desired to stratify a numeric
 #'   stratification variable. If a numeric vector,
@@ -166,9 +167,10 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   input to `create_kfold()`.
 #'   At this time, this value cannot be changed by the user.
 #' @param depth `integer(1)`. Used to determine the best number of bins that
-#'   should be used. The number of bins are based on `min(5, floor(n / depth))`
+#'   should be used. The number of bins is based on `min(5, floor(n / depth))`
 #'   where `n = length(x)`. If `x` is numeric, there must be at least 40 rows in
 #'   the data set (when `depth = 20`) to conduct stratified sampling.
+#'
 #' @return A factor vector indicating the stratum for each `x`.
 #'
 #' @importFrom helpr has_length is_int value len_one
@@ -190,13 +192,19 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     # no binning necessary
     # not yet returned as there may be NA values that need to be imputed
     out <- factor(as.character(x))
+    # impute levels for missing values in `x`
+    if ( any(x_is_na <- is.na(x)) ) {
+      signal_info("Imputed stratification for", sum(x_is_na),
+                  "missing", ifelse(sum(x_is_na) > 1, "values.", "value."))
+      out[x_is_na] <- sample(levels(out), sum(x_is_na), TRUE)
+    }
   } else {
-    if ( len_one(breaks) ) {
-      # breaks provides the number of bins
+    if ( len_one(breaks) ) { # breaks provides the number of bins
       if ( is.na(breaks) ) {
         stop("`x` has ", value(length(num_vals)),
              " unique values. `breaks` cannot be NA.", call. = FALSE)
       }
+
       n <- length(x)
 
       # ensure that the stratification will lead to "reasonable" numbers of
@@ -209,37 +217,29 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
                 "To override this limit, provide `depth` as input.",
                 call. = FALSE)
         breaks <- min(breaks, floor(n / depth))
-        if ( breaks < 2 ) {
-          warning("Too little data to stratify. ",
-                  "Non-stratified resampling will be used.", call. = FALSE)
-          return(factor(rep("strata1", n)))
+        if ( breaks <= 2 ) {
+          stop("Too little data to stratify.\n",
+               "Please consider non-stratified resampling via `breaks = NULL`.",
+               call. = FALSE)
         }
       }
-
       breaks <- quantile(x, probs = seq(0.0, 1.0, length.out = breaks + 1L),
                          na.rm = TRUE)
     }
-    breaks <- unique(breaks)
-    out <- cut(x, breaks = breaks, include.lowest = TRUE)
+
+    out <- cut(imputeNAs(x), breaks = unique(breaks), include.lowest = TRUE)
+
+    if ( any(is.na(out)) ) {
+      # cut returns NA for values outside the range of `breaks`.
+      # Require user provide a more appropriate `breaks` input.
+      stop("Provided `breaks` does not span data.\n\t",
+           "Range of stratification variable: ", value(range(x, na.rm = TRUE)),
+           "\n\tProvided `breaks = ", value(breaks), "`.",
+           call. = FALSE
+      )
+    }
   }
 
-  # impute levels for missing values in `x`
-  x_is_na <- is.na(x)
-  if ( any(x_is_na) ) {
-    signal_info("Imputed stratification structure for", sum(x_is_na),
-                "missing", ifelse(sum(x_is_na) > 1, "values.", "value."))
-    out[x_is_na] <- sample(levels(out), sum(x_is_na), TRUE)
-  }
-
-  if ( any(is.na(out)) ) {
-    # cut will return NA for values that are outside the range of `breaks`.
-    # Require that user provide a more appropriate `breaks` input.
-    stop("Provided `breaks` does not span data.\n\t",
-         "Range of stratification variable: ", value(range(x, na.rm = TRUE)),
-         "\n\tProvided `breaks = ", value(breaks), "`.",
-         call. = FALSE
-    )
-  }
   out
 }
 
@@ -259,11 +259,53 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   TRUE
 }
 
+
+#' Select the stratification function
+#'
+#' @param x `NULL` or a `data.frame` with either 1 or 2 columns.
+#'   If `data.frame`, contains the values for stratification.
+#' @param k `integer(1)`. See `create_kfold()`
+#' @param idx `integer(n)`. The indices of the data to be stratified.
+#' @param breaks A list. Each element an integer, numeric vector, or `NA`.
+#' @param ... Inputs passed on to stratification functions. Must contain `depth`.
+#'
+#' @return A list, each element providing the indices of the assessment data for
+#'   a single fold.
+#'
+#' @importFrom helpr has_length is_int_vec value
+#' @noRd
+.get_indices <- function(x, k, idx, breaks, ...) {
+  stopifnot(
+    "`idx` must be an integer vector." = is_int_vec(idx) && all(idx > 0)
+  )
+  if ( !is.null(x) && (length(idx) != nrow(x)) ) {
+    stop("`idx` must have same dimension as `x`.", call. = FALSE)
+  }
+
+  if ( is.null(x) ) {
+    folds  <- sample(rep(seq_len(k), length.out = length(idx)))
+    result <- unname(split(idx, folds))
+  } else if ( is.data.frame(x) ) {
+    result <- switch(ncol(x),
+                     .get_indices_one(x[, 1L], k = k, idx = idx,
+                                           breaks = breaks[[1L]], ...),
+                     .get_indices_two(x, k = k, idx = idx,
+                                           breaks = breaks, ...),
+                     stop("`x` has inappropriate dimensions. ",
+                          "Please contact package manager.",
+                          call. = FALSE))
+  } else {
+    stop("`x` is of an unexpected class: ", value(class(x)),
+         "Please contact package manager.", call. = FALSE)
+  }
+  result
+}
+
 #' Stratification: 1 stratification variable
 #'
 #' @param x A vector of values to stratify.
 #' @param breaks Passed to .make_strata()
-#' @param k `integer(1)`. The number of partitions of the data set.
+#' @param k `integer(1)`. See `create_kfold()`
 #' @param idx `integer(n)`. The indices of the data to be stratified.
 #' @param depth Passed to .make_strata()
 #'
@@ -297,7 +339,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' @param strata A `data.frame` class object. The values of
 #'   the stratification variables. Must have exactly *2* columns.
 #' @param breaks A list. Each element an integer, numeric vector, or NA.
-#' @param k `integer(1)`. The number of partitions of the data set.
+#' @param k `integer(1)`. See `create_kfold()`
 #' @param idx `integer(n)`. The indices of the data to be stratified.
 #' @param depth `integer(1)`. Used to determine the best number of percentiles that
 #'   should be used. The number of bins are based on `min(5, floor(n / depth))`
@@ -324,11 +366,11 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   )
 
   # stratify on first variable
-  stratas_1 <- .make_strata(x[, 1L], breaks = breaks[[1L]], depth = depth)
-  stratas_1 <- unname(split(idx, stratas_1))
+  strat1 <- .make_strata(x[, 1L], breaks = breaks[[1L]], depth = depth)
+  strat1 <- unname(split(idx, strat1))
 
-  # stratify each element of stratas_1 using second stratification variable
-  lapply(stratas_1, function(.i) {
+  # stratify each element of strat1 using second stratification variable
+  lapply(strat1, function(.i) {
     .get_indices(x[.i, 2L, drop = FALSE], breaks = breaks[2:2L],
                  k = k, idx = .i, depth = depth)
   }) |>
@@ -337,45 +379,6 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 }
 
 
-#' Internal function to select the stratification function
-#'
-#' @param x `NULL` or a `data.frame` with 1 or 2 columns.
-#'   If `data.frame`, contains the values of the stratification variable(s).
-#' @param k `integer(1)`. The number of partitions of the data set.
-#' @param idx `integer(n)`. The indices of the data to be stratified.
-#' @param breaks A list. Each element an integer, numeric vector, or `NA`.
-#' @param ... Inputs passed on to stratification functions. Must contain `depth`.
-#'
-#' @return A list, each element providing the indices of the assessment data for
-#'   a single fold.
-#'
-#' @importFrom helpr has_length is_int is_int_vec value
-#' @noRd
-.get_indices <- function(x, k, idx, breaks, ...) {
-  stopifnot(
-    "`idx` must be an integer vector." = is_int_vec(idx) && all(idx > 0),
-    "`idx` must have same dimension as `x`" = (!is.null(x) &&
-      (length(idx) == nrow(x))) || is.null(x)
-  )
-
-  if ( is.null(x) ) {
-    folds  <- sample(rep(seq_len(k), length.out = length(idx)))
-    result <- unname(split(idx, folds))
-  } else if ( is.data.frame(x) ) {
-    result <- switch(ncol(x),
-                     .get_indices_one(x[, 1L], k = k, idx = idx,
-                                           breaks = breaks[[1L]], ...),
-                     .get_indices_two(x, k = k, idx = idx,
-                                           breaks = breaks, ...),
-                     stop("`x` has inappropriate dimensions. ",
-                          "Please contact package manager.",
-                          call. = FALSE))
-  } else {
-    stop("`x` is of an unexpected class: ", value(class(x)),
-         "Please contact package manager.", call. = FALSE)
-  }
-  result
-}
 
 
 #' Test for object class "x_split"
