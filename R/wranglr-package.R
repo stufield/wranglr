@@ -14,6 +14,11 @@ NULL
 
   # this is to register the internal S3 methods
   # this avoids having to export the methods in the NAMESPACE file
+  register_s3_method("wranglr", ".get_indices", "default")
+  register_s3_method("wranglr", ".get_indices", "numeric")
+  register_s3_method("wranglr", ".get_indices", "data.frame")
+  register_s3_method("wranglr", ".get_indices", "character")
+  register_s3_method("wranglr", ".get_indices", "factor")
   invisible()
 }
 
