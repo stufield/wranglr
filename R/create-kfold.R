@@ -348,11 +348,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'
 #' @return A list containing the selected indices for each fold.
 #'   These are intended to be the "assessment" sample.
-#' @importFrom purrr transpose
 #' @noRd
 .get_indices_two <- function(x, breaks, k, idx, depth) {
-  # local testing of only those variables used in this function
-  # we do not test those that are merely passed to other functions
   stopifnot(
     "`x` must be a `data.frame` with 2 columns." =
       is.data.frame(x) && ncol(x) == 2L,
@@ -371,11 +368,11 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   # stratify each element of strat1 using second stratification variable
   lapply(strat1, function(.i) {
-    .get_indices(x[.i, 2L, drop = FALSE], breaks = breaks[2:2L],
+    .get_indices(x[.i, 2L, drop = FALSE], breaks = breaks[2L],
                  k = k, idx = .i, depth = depth)
   }) |>
-    transpose() |>        # invert the list
-    lapply(base::unlist)  # concatenate within elements (folds)
+    c(f = c) |> # invert and concatenate within elements (folds)
+    do.call(what = "Map")
 }
 
 
