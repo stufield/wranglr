@@ -50,15 +50,20 @@ imputeNAs.default <- function(x) {
 #' @noRd
 #' @export
 imputeNAs.character <- function(x) {
-  stop("Cannot impute values for `character` class!",
-       call. = FALSE)
+  nas <- which(is.na(x))
+  if ( length(nas) == 0L ) {
+    return(x)
+  }
+  repl <- sample(na.omit(unique(x)), length(nas), prob = prop.table(table(x)))
+  x[nas] <- repl
+  x
 }
 
 #' @noRd
 #' @export
 imputeNAs.factor <- function(x) {
-  stop("Cannot impute values for `factor` class!",
-       call. = FALSE)
+  out <- imputeNAs(as.character(x))
+  factor(out, levels = levels(x))
 }
 
 #' @noRd

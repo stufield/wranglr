@@ -1,13 +1,21 @@
 
-test_that("the `imputeNAs()` charcter method errors out", {
-  expect_error(imputeNAs(letters), "Cannot")
-})
+x <- withr::with_seed(101, sample(c("fat", "moose", "cat"), 10L, replace = TRUE))
+x <- c(x, NA_character_)
 
+test_that("the `imputeNAs()` charcter method returns correct value", {
+  expect_equal(
+    withr::with_seed(1, imputeNAs(x)),
+    c(x[-11L], "moose")   # chooses 'moose'
+  )
+})
 
 test_that("the `imputeNAs()` factor method errors out", {
-  expect_error(imputeNAs(factor(letters)), "Cannot")
+  y <- factor(x)
+  expect_equal(
+    withr::with_seed(1, imputeNAs(y)),
+    c(y[-11L], factor("moose"))   # chooses 'moose'
+  )
 })
-
 
 test_that("the `imputeNAs()` numeric method is correct", {
   withr::with_seed(101, {
@@ -32,7 +40,6 @@ test_that("the `imputeNAs()` numeric method is correct", {
   expect_true(all(y == x, na.rm = TRUE))
 })
 
-
 test_that("the `imputeNAs()` soma_adat method is correct", {
   n    <- 150L
   vals <- sample_df[[n]]
@@ -42,7 +49,6 @@ test_that("the `imputeNAs()` soma_adat method is correct", {
   expect_equal(imputeNAs(sample_df[[n]]), z[[n]]) # nothing changed
   expect_equal(imputeNAs(sample_df[[n]]), vals)   # nothing changed
 })
-
 
 test_that("the `imputeNAs()` data.frame method is correct", {
   x <- matrix(1:100, ncol = 10L)
@@ -56,7 +62,6 @@ test_that("the `imputeNAs()` data.frame method is correct", {
   expect_equal(data.matrix(y) |> diag(),
                c(6, 16, 26, 36, 46, 55, 65, 75, 85, 95))  # check diag
 })
-
 
 test_that("the `imputeNAs()` matrix method is correct", {
   x <- matrix(1:100, ncol = 10L)
