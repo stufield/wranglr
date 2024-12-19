@@ -78,8 +78,8 @@ corresponding values specify the stratification.}
 \details{
 For stratification variables that are factor, character, or discrete with
 5 or fewer unique levels, the stratification structure should be set
-to \code{NA}. For example, if \code{status} is a binary variable,
-\code{breaks = list(status = NA)}.
+to \code{NULL}. For example, if \code{status} is a binary variable,
+\code{breaks = list(status = NULL)}.
 
 If the stratification variable has more than 5 unique levels,
 the stratification structure can be specified as either the
@@ -98,25 +98,25 @@ structure: \verb{[0, 0.25]}, \verb{(0.25, 0.75]}, and \verb{(0.75, 1.0]}.
 }
 \examples{
 # no stratification
-sample_no_strat <- create_kfold(simdata, k = 4L, repeats = 2L)
+no_strat <- create_kfold(mtcars, k = 4L, repeats = 2L)
 
 # stratification on 1 discrete variable
-sample_one <- create_kfold(simdata, k = 4L, repeats = 2L,
-                           breaks = list(status = NA))
+sample_one <- create_kfold(mtcars, k = 4L, repeats = 2L,
+                           breaks = list(vs = NULL))
 
 # stratification on 2 variables; 1 continuous + 1 discrete
-sample_two <- create_kfold(simdata, k = 4L, repeats = 2L,
-                           breaks = list(time = 4L, status = NA))
+sample_two <- create_kfold(mtcars, k = 4L, repeats = 2L,
+                           breaks = list(gear = 4L, vs = NULL))
 
 # retrieve analysis data for 2nd split
-an_2 <- analysis(sample_no_strat, 2L)
+an_2 <- analysis(no_strat, 2L)
 
 # retrieve all splits
-an_all <- analysis(sample_no_strat)
+an_all <- analysis(no_strat)
 
 # retrieve assessment data for 2nd split
-ass_2 <- assessment(sample_no_strat, 2L)
+ass_2 <- assessment(no_strat, 2L)
 
 # retrieve all splits
-ass_all <- assessment(sample_no_strat)
+ass_all <- assessment(no_strat)
 }

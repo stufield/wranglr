@@ -11,6 +11,7 @@ if ( getRversion() >= "2.15.1" ) {
       "group_var",
       "feature",
       "Feature",
+      ".repeat",
       "name",
       "List",
       "rangeLower",

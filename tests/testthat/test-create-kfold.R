@@ -254,7 +254,7 @@ test_that("`.get_indices()` data.frame S3 method returns expected errors", {
   expect_error(
     .get_indices(data.frame("x" = 1, "Y" = 2, "Z" = 3),
                  breaks = breaks, k = 4L, idx = 1:30L, depth = 2L),
-    "`x` must be a `data.frame` with 2 columns."
+    "`data.frame` must have exactly 2 columns."
   )
 
   expect_error(
@@ -387,31 +387,6 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
   )
 })
 
-test_that("`.get_indices()` default method returns expected results", {
-  folds <- withr::with_seed(42L, sample(rep(1:3L, length.out = 30L)))
-  expected <- list(
-    (1:30L)[folds == 1L],
-    (1:30L)[folds == 2L],
-    (1:30L)[folds == 3L]
-  )
-
-  expect_equal(
-    withr::with_seed(42L, .get_indices(NULL, 3L, 1:30L, NULL)),
-    expected
-  )
-
-  idx <- withr::with_seed(1234L, sample(1:30L, 30L, TRUE))
-  folds <- withr::with_seed(42L, sample(rep(1:4L, length.out = 30L)))
-  expected <- list(idx[folds == 1L],
-                   idx[folds == 2L],
-                   idx[folds == 3L],
-                   idx[folds == 4L])
-
-  expect_equal(
-    withr::with_seed(42L, .get_indices(NULL, 4L, idx, NULL)),
-    expected
-  )
-})
 
 # .vfold_splits ----
 # This function calls `.get_indices()` and manipulates the output.

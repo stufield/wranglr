@@ -54,15 +54,15 @@
 #'
 #' @examples
 #' # no stratification
-#' no_strat <- create_kfold(simdata, k = 4L, repeats = 2L)
+#' no_strat <- create_kfold(mtcars, k = 4L, repeats = 2L)
 #'
 #' # stratification on 1 discrete variable
-#' sample_one <- create_kfold(simdata, k = 4L, repeats = 2L,
-#'                            breaks = list(status = NULL))
+#' sample_one <- create_kfold(mtcars, k = 4L, repeats = 2L,
+#'                            breaks = list(vs = NULL))
 #'
 #' # stratification on 2 variables; 1 continuous + 1 discrete
-#' sample_two <- create_kfold(simdata, k = 4L, repeats = 2L,
-#'                            breaks = list(time = 4L, status = NULL))
+#' sample_two <- create_kfold(mtcars, k = 4L, repeats = 2L,
+#'                            breaks = list(gear = 4L, vs = NULL))
 #'
 #' @importFrom helpr is_int add_class dots_list2
 #' @export
@@ -140,6 +140,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     }
   }
 
+  idx <- seq_len(nrow(data))
+
   if ( !is.null(strata) ) {
     # `drop = TRUE` ensures proper .get_indices() dispatch below
     x <- tryCatch(data.frame(data)[, strata, drop = TRUE],
@@ -147,19 +149,18 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
                   stop("Unable to retrieve stratification variable(s) ",
                        "from `data`.\n\t", e$message, call. = FALSE)
                  })
+    indices <- .get_indices(x, breaks = breaks, k = k, idx = idx, depth = depth)
   } else {
-    x <- strata  # no strat; .get_indices.default()
+    # no strat
+    folds  <- sample(rep(seq_len(k), length.out = length(idx)))
+    indices <- unname(split(idx, folds))
   }
 
-  idx <- seq_len(nrow(data))
-
-  # get the indices for the assessment group
-  indices <- .get_indices(x, breaks = breaks, k = k, idx = idx, depth = depth)
-
+  # indices for the *assessment* group
   indices <- lapply(indices, function(.ind) {
                list(analysis   = setdiff(idx, .ind),
                     assessment = sort(unique(.ind)))
-  })
+    })
 
   tibble(split = indices, fold = seq_len(k))
 }
@@ -167,10 +168,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
 #' Select the stratification function
 #'
-#' @param x `NULL` or a `data.frame` with either 1 or 2 columns.
-#'   If `data.frame`, contains the values for stratification.
 #' @param k `integer(1)`. See `create_kfold()`
-#' @param ... Inputs passed on to `.create_strata()`.
+#' @param ... For extensibility to downstream methods.
 #'
 #' @return A list, each element providing the indices of the assessment data for
 #'   a single fold.
@@ -181,18 +180,9 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
 
 #' @noRd
-.get_indices.default <- function(x, k, idx, ...) {
-  stopifnot(
-    "`idx` must be an integer vector." = is_int_vec(idx) && all(idx > 0)
-  )
-  # NULL is the only case for the default method
-  if ( is.null(x) ) {
-    folds  <- sample(rep(seq_len(k), length.out = length(idx)))
-    unname(split(idx, folds))
-  } else {
-    stop("`x` is of an unexpected class: ", value(class(x)),
+.get_indices.default <- function(x, k, ...) {
+  stop("Unable to dispatch on `x` with unexpected class: ", value(class(x)),
          call. = FALSE)
-  }
 }
 
 
@@ -227,9 +217,9 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   # this produces a list of length(breaks)
   stratas <- unname(split(idx, stratas))
   stratas <- lapply(stratas, function(.x) {
-                    list(idx   = .x,
-                         folds = sample(rep(seq_len(k), length.out = length(.x))))
-                    })
+               list(idx   = .x,
+               folds = sample(rep(seq_len(k), length.out = length(.x))))
+              })
   stratas <- bind_rows(stratas)
   unname(split(stratas$idx, stratas$folds))
 }
@@ -244,13 +234,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
       is_int_vec(idx) && is.vector(idx) && length(idx) == length(x) && all(idx > 0)
   )
 
-  stratas <- factor(x)
-
-  if ( any(x_is_na <- is.na(x)) ) {
-    signal_info("Imputed stratification for", sum(x_is_na),
-                "missing", ifelse(sum(x_is_na) > 1, "values.", "value."))
-    stratas <- imputeNAs(stratas)
-  }
+  stratas <- strat_and_impute(factor(x))
   stratas <- unname(split(idx, stratas))
   stratas <- lapply(stratas, function(.x) {
                     list(idx   = .x,
@@ -269,29 +253,31 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' @param x A `data.frame` must have exactly *2* columns.
 #' @param breaks A list. Each element an integer, numeric vector, or NA.
 #' @param k `integer(1)`. See `create_kfold()`
-#' @param idx `integer(n)`. The indices of the data to be stratified.
 #' @param depth `integer(1)`. Used to determine the best number of percentiles that
 #'   should be used. The number of bins are based on `min(5, floor(n / depth))`
 #'   where `n = length(x)`. If `x` is numeric, there must be at least 40 rows in
 #'   the data set (when `depth = 20`) to conduct stratified sampling.
 #'
 #' @noRd
-.get_indices.data.frame <- function(x, k, idx, breaks, depth, ...) {
+.get_indices.data.frame <- function(x, k, breaks, depth, ...) {
+
   stopifnot(
-    "`x` must be a `data.frame` with 2 columns." = ncol(x) == 2L,
-    "`breaks` must be a list of length 2." = is.list(breaks) && length(breaks) == 2L,
-    "`idx` must be an integer vector." = is_int_vec(idx) &&
-      is.vector(idx) && length(idx) == nrow(x) && all(idx > 0)
+    "`data.frame` must have exactly 2 columns." = ncol(x) == 2L,
+    "`breaks` must be a list of length 2." = is.list(breaks) && length(breaks) == 2L
   )
 
+  b1 <- breaks[[1L]]
+  b2 <- breaks[[2L]]
+
   # stratify on first variable
-  strat1 <- .create_strata(x[[1L]], breaks = breaks[[1L]], depth = depth)
-  strat1 <- unname(split(idx, strat1))
+  strat1 <- .create_strata(x[[1L]], breaks = b1, depth = depth)
+  strat1 <- unname(split(seq_len(nrow(x)), strat1))
 
   # stratify each element of strat1 using second stratification variable
+  # should now be a vector: numeric, factor, or character
   lapply(strat1, function(.i) {
-    .get_indices(x[.i, 2L, drop = TRUE], breaks = breaks[[2L]],
-                 k = k, idx = .i, depth = depth)
+    .get_indices(x[.i, 2L, drop = TRUE], k = k,
+                 breaks = b2, idx = .i, depth = depth)
   }) |>
     c(f = c) |> # invert and concatenate within elements (folds)
     do.call(what = "Map")
@@ -337,12 +323,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   # stratification variable has few unique values
   # no binning necessary; early return
   if ( length(n_vals) <= n_unique ) {
-    out <- factor(as.character(x))
-    if ( any(x_is_na <- is.na(x)) ) {
-      signal_info("Imputed stratification for", sum(x_is_na),
-                  "missing", ifelse(sum(x_is_na) > 1, "values.", "value."))
-      out <- imputeNAs(out)
-    }
+    out <- strat_and_impute(factor(as.character(x)))
     return(out)
   }
 
@@ -420,17 +401,17 @@ is.x_split <- function(x) {
 #'   the analysis indices.
 #' @examples
 #' # retrieve analysis data for 2nd split
-#' an_2 <- analysis(sample_no_strat, 2L)
+#' an_2 <- analysis(no_strat, 2L)
 #'
 #' # retrieve all splits
-#' an_all <- analysis(sample_no_strat)
+#' an_all <- analysis(no_strat)
 #'
 #' @importFrom helpr is_int
 #' @export
 analysis <- function(object, i = NULL) {
   stopifnot(
     "`object` must be a `x_split` object." = is.x_split(object),
-    "`i` must be a positive integer." = is.null(i) || (is_int(i) && i > 0),
+    "`i` must be a positive integer." = is.null(i) || check_int(i),
     "`i` cannot exceed the number of splits." = is.null(i) ||
       (is_int(i) && i <= length(object$splits$split))
   )
@@ -454,16 +435,16 @@ analysis <- function(object, i = NULL) {
 #'
 #' @examples
 #' # retrieve assessment data for 2nd split
-#' ass_2 <- assessment(sample_no_strat, 2L)
+#' ass_2 <- assessment(no_strat, 2L)
 #'
 #' # retrieve all splits
-#' ass_all <- assessment(sample_no_strat)
+#' ass_all <- assessment(no_strat)
 #' @importFrom helpr is_int
 #' @export
 assessment <- function(object, i = NULL) {
   stopifnot(
     "`object` must be a `x_split` object." = is.x_split(object),
-    "`i` must be a positive integer." = is.null(i) || (is_int(i) && i > 0),
+    "`i` must be a positive integer." = is.null(i) || check_int(i),
     "`i` cannot exceed the number of splits." = is.null(i) ||
       (is_int(i) && i <= length(object$splits$split))
   )
@@ -534,4 +515,17 @@ check_int <- function(x) {
     stop(sprintf("`%s` must be a positive integer.", str), call. = FALSE)
   }
   invisible(TRUE)
+}
+
+# used in factor/character with low num levels
+# or numeric with few discrete values
+#' @noRd
+strat_and_impute <- function(x) {
+  if ( any(x_is_na <- is.na(x)) ) {
+    signal_info(
+      "Imputed stratification for", sum(x_is_na), "missing",
+      ifelse(sum(x_is_na) == 1, "value.", "values.")
+    )
+  }
+  imputeNAs(x)
 }
