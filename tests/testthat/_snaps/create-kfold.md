@@ -10,12 +10,12 @@
       • orig data    simdata
       -- split info ------------------------------------------------------------------
       # A tibble: 4 x 3
-        split             fold `repeat`
-        <list>           <int>    <int>
-      1 <named list [2]>     1       NA
-      2 <named list [2]>     2       NA
-      3 <named list [2]>     3       NA
-      4 <named list [2]>     4       NA
+        split             fold .repeat
+        <list>           <int>   <int>
+      1 <named list [2]>     1      NA
+      2 <named list [2]>     2      NA
+      3 <named list [2]>     3      NA
+      4 <named list [2]>     4      NA
       ================================================================================
 
 ---
@@ -30,20 +30,20 @@
       • orig data    simdata
       -- split info ------------------------------------------------------------------
       # A tibble: 12 x 3
-         split             fold `repeat`
-         <list>           <int>    <int>
-       1 <named list [2]>     1        1
-       2 <named list [2]>     2        1
-       3 <named list [2]>     3        1
-       4 <named list [2]>     4        1
-       5 <named list [2]>     1        2
-       6 <named list [2]>     2        2
-       7 <named list [2]>     3        2
-       8 <named list [2]>     4        2
-       9 <named list [2]>     1        3
-      10 <named list [2]>     2        3
-      11 <named list [2]>     3        3
-      12 <named list [2]>     4        3
+         split             fold .repeat
+         <list>           <int>   <int>
+       1 <named list [2]>     1       1
+       2 <named list [2]>     2       1
+       3 <named list [2]>     3       1
+       4 <named list [2]>     4       1
+       5 <named list [2]>     1       2
+       6 <named list [2]>     2       2
+       7 <named list [2]>     3       2
+       8 <named list [2]>     4       2
+       9 <named list [2]>     1       3
+      10 <named list [2]>     2       3
+      11 <named list [2]>     3       3
+      12 <named list [2]>     4       3
       ================================================================================
 
 ---
@@ -59,13 +59,13 @@
       • orig data    df
       -- split info ------------------------------------------------------------------
       # A tibble: 5 x 3
-        split             fold `repeat`
-        <list>           <int>    <int>
-      1 <named list [2]>     1       NA
-      2 <named list [2]>     2       NA
-      3 <named list [2]>     3       NA
-      4 <named list [2]>     4       NA
-      5 <named list [2]>     5       NA
+        split             fold .repeat
+        <list>           <int>   <int>
+      1 <named list [2]>     1      NA
+      2 <named list [2]>     2      NA
+      3 <named list [2]>     3      NA
+      4 <named list [2]>     4      NA
+      5 <named list [2]>     5      NA
       ================================================================================
 
 ---
@@ -80,13 +80,13 @@
       • orig data    simdata
       -- split info ------------------------------------------------------------------
       # A tibble: 5 x 3
-        split             fold `repeat`
-        <list>           <int>    <int>
-      1 <named list [2]>     1       NA
-      2 <named list [2]>     2       NA
-      3 <named list [2]>     3       NA
-      4 <named list [2]>     4       NA
-      5 <named list [2]>     5       NA
+        split             fold .repeat
+        <list>           <int>   <int>
+      1 <named list [2]>     1      NA
+      2 <named list [2]>     2      NA
+      3 <named list [2]>     3      NA
+      4 <named list [2]>     4      NA
+      5 <named list [2]>     5      NA
       ================================================================================
 
 ---
@@ -101,22 +101,22 @@
       • orig data    simdata
       -- split info ------------------------------------------------------------------
       # A tibble: 15 x 3
-         split             fold `repeat`
-         <list>           <int>    <int>
-       1 <named list [2]>     1        1
-       2 <named list [2]>     2        1
-       3 <named list [2]>     3        1
-       4 <named list [2]>     4        1
-       5 <named list [2]>     5        1
-       6 <named list [2]>     1        2
-       7 <named list [2]>     2        2
-       8 <named list [2]>     3        2
-       9 <named list [2]>     4        2
-      10 <named list [2]>     5        2
-      11 <named list [2]>     1        3
-      12 <named list [2]>     2        3
-      13 <named list [2]>     3        3
-      14 <named list [2]>     4        3
-      15 <named list [2]>     5        3
+         split             fold .repeat
+         <list>           <int>   <int>
+       1 <named list [2]>     1       1
+       2 <named list [2]>     2       1
+       3 <named list [2]>     3       1
+       4 <named list [2]>     4       1
+       5 <named list [2]>     5       1
+       6 <named list [2]>     1       2
+       7 <named list [2]>     2       2
+       8 <named list [2]>     3       2
+       9 <named list [2]>     4       2
+      10 <named list [2]>     5       2
+      11 <named list [2]>     1       3
+      12 <named list [2]>     2       3
+      13 <named list [2]>     3       3
+      14 <named list [2]>     4       3
+      15 <named list [2]>     5       3
       ================================================================================
 

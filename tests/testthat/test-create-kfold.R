@@ -249,6 +249,7 @@ test_that("`.get_indices()` factor and char S3 method returns expected values", 
 test_that("`.get_indices()` data.frame S3 method returns expected errors", {
   strata <- simdata[, c("time", "status")]
   breaks <- list(time = 4L, status = NA)
+  create_kfold(simdata, breaks = list(time = 4L, status = NA))
 
   expect_error(
     .get_indices(data.frame("x" = 1, "Y" = 2, "Z" = 3),

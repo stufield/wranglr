@@ -17,8 +17,8 @@
 #'
 #' For stratification variables that are factor, character, or discrete with
 #'   5 or fewer unique levels, the stratification structure should be set
-#'   to `NA`. For example, if `status` is a binary variable,
-#'   `breaks = list(status = NA)`.
+#'   to `NULL`. For example, if `status` is a binary variable,
+#'   `breaks = list(status = NULL)`.
 #'
 #' If the stratification variable has more than 5 unique levels,
 #'   the stratification structure can be specified as either the
@@ -54,15 +54,15 @@
 #'
 #' @examples
 #' # no stratification
-#' sample_no_strat <- create_kfold(simdata, k = 4L, repeats = 2L)
+#' no_strat <- create_kfold(simdata, k = 4L, repeats = 2L)
 #'
 #' # stratification on 1 discrete variable
 #' sample_one <- create_kfold(simdata, k = 4L, repeats = 2L,
-#'                            breaks = list(status = NA))
+#'                            breaks = list(status = NULL))
 #'
 #' # stratification on 2 variables; 1 continuous + 1 discrete
 #' sample_two <- create_kfold(simdata, k = 4L, repeats = 2L,
-#'                            breaks = list(time = 4L, status = NA))
+#'                            breaks = list(time = 4L, status = NULL))
 #'
 #' @importFrom helpr is_int add_class dots_list2
 #' @export
@@ -70,11 +70,12 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   stopifnot(
     "`data` must be a `data.frame`." = !missing(data) && is.data.frame(data),
-    "`k` must be a positive integer." = is_int(k) && k > 0,
-    "`repeats` must be a positive integer." = is_int(repeats) && repeats > 0,
     "`breaks` must be `NULL` or a list of length 1 or 2." =
       is.null(breaks) || (is.list(breaks) && length(breaks) %in% 1:2L)
   )
+
+  check_int(k)
+  check_int(repeats)
 
   # user can currently only pass `depth` through ...
   # could expand to allow for `n_unique`
@@ -87,13 +88,13 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     .vfold_splits(data = data, k = k, breaks = breaks, depth = depth),
     simplify = FALSE
   ) |>
-    bind_rows(.id = "repeat") |>
-    relocate(-"repeat")
+    bind_rows(.id = ".repeat") |>
+    relocate(-.repeat)
 
   if ( repeats == 1L ) {
-    splits[["repeat"]] <- NA_integer_
+    splits$.repeat <- NA_integer_
   } else {
-    splits[["repeat"]] <- as.integer(splits[["repeat"]])
+    splits$.repeat <- as.integer(splits$.repeat)
   }
 
   return_obj <- list(data = data, splits = splits)
@@ -115,7 +116,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   and post-processes the stratification result into a tibble.
 #'
 #' @param data A `data.frame` class object. The data to be subset.
-#' @param k `integer(1)`. The number of partitions of the data set.
+#' @param k `integer(1)`. The number of partitions to create.
 #' @param breaks See `create_kfolds()`.
 #' @param depth `integer(1)`. Used to determine the best number of bins
 #'   to be used. The number of bins are based on `min(5, floor(n / depth))`
@@ -140,9 +141,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   }
 
   if ( !is.null(strata) ) {
-    # .get_indices expects strata to be a data.frame of values
-    # as.data.frame() removes possible super-classes
-    # drop = TRUE ensures proper .get_indices() dispatch below
+    # `drop = TRUE` ensures proper .get_indices() dispatch below
     x <- tryCatch(data.frame(data)[, strata, drop = TRUE],
                   error = function(e) {
                   stop("Unable to retrieve stratification variable(s) ",
@@ -166,15 +165,12 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 }
 
 
-
 #' Select the stratification function
 #'
 #' @param x `NULL` or a `data.frame` with either 1 or 2 columns.
 #'   If `data.frame`, contains the values for stratification.
 #' @param k `integer(1)`. See `create_kfold()`
-#' @param idx `integer(n)`. The indices of the data to be stratified.
-#' @param breaks A list. Each element an integer, numeric vector, or `NA`.
-#' @param ... Inputs passed on to `.create_strata()`. Must contain `depth`.
+#' @param ... Inputs passed on to `.create_strata()`.
 #'
 #' @return A list, each element providing the indices of the assessment data for
 #'   a single fold.
@@ -202,11 +198,11 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
 #' S3 numeric method: 1 stratification variable
 #'
-#' @param x A vector of values to stratify.
-#' @param breaks Passed to .create_strata()
+#' @param x A vector of numeric values to stratify.
+#' @param breaks Passed to `.create_strata()`
 #' @param k `integer(1)`. See `create_kfold()`
 #' @param idx `integer(n)`. The indices of the data to be stratified.
-#' @param depth Passed to .create_strata()
+#' @param depth Passed to `.create_strata()`
 #'
 #' @importFrom helpr is_int_vec
 #' @noRd
@@ -307,12 +303,11 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' @param x A *numeric* vector to be used for stratification.
 #'   Character and factor classes are handled outside this function
 #'   in `.get_indices()` methods.
-#' @param breaks `integer(1)`, `numeric(n)`, or `NA`.
+#' @param breaks `integer(1)` or `numeric(n)`.
 #'   If integer, the number of bins desired to stratify a numeric
 #'   stratification variable. If a numeric vector,
 #'   the bin boundaries to be used for stratification of a numeric
-#'   stratification variable. If `NA`, `x` must be discrete with
-#'   `n_unique` or fewer unique cases.
+#'   stratification variable.
 #' @param n_unique `integer(1)`. The number of unique value threshold
 #'   in the algorithm. Currently there is no access point to this input.
 #'   A natural extension is to allow the user to specify this as an
@@ -324,7 +319,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'
 #' @return A factor vector indicating the stratum for each `x`.
 #'
-#' @importFrom helpr has_length is_int value len_one
+#' @importFrom helpr has_length value len_one
 #' @importFrom stats na.omit quantile
 #' @noRd
 .create_strata <- function(x, breaks = 4L, n_unique = 5L, depth = 20L) {
@@ -338,11 +333,10 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   check_int(n_unique)
   n_vals <- unique(na.omit(x))
 
-  # Do this part first; for branch where coerced `x` is simply returned
-  #if ( length(n_vals) <= n_unique || is.character(x) || is.factor(x) ) {
+  # Do this part first
+  # stratification variable has few unique values
+  # no binning necessary; early return
   if ( length(n_vals) <= n_unique ) {
-    # stratification variable is a character, factor, or has few unique values
-    # no binning necessary; early return
     out <- factor(as.character(x))
     if ( any(x_is_na <- is.na(x)) ) {
       signal_info("Imputed stratification for", sum(x_is_na),
@@ -352,16 +346,13 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     return(out)
   }
 
+  # now do the rest
   # now check breaks
   stopifnot(
     "`breaks` must be an integer or a numeric vector." = .breaks_check(breaks)
   )
 
   if ( len_one(breaks) ) { # breaks provides the number of bins
-    if ( is.na(breaks) ) {
-      stop("`x` has ", value(length(n_vals)),
-           " unique values. `breaks` cannot be NA.", call. = FALSE)
-    }
 
     n <- length(x)
 
