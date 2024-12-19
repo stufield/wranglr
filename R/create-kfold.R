@@ -206,11 +206,11 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     # no binning necessary
     # not yet returned as there may be NA values that need to be imputed
     out <- factor(as.character(x))
-    # impute levels for missing values in `x`
     if ( any(x_is_na <- is.na(x)) ) {
+      # impute levels for missing values in `x`
       signal_info("Imputed stratification for", sum(x_is_na),
                   "missing", ifelse(sum(x_is_na) > 1, "values.", "value."))
-      out[x_is_na] <- sample(levels(out), sum(x_is_na), TRUE)
+      out <- imputeNAs(out)
     }
   } else {
     if ( len_one(breaks) ) { # breaks provides the number of bins
@@ -325,11 +325,11 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
       is_int_vec(idx) && is.vector(idx) && length(idx) == length(x) && all(idx > 0)
   )
   if ( is.matrix(x) ) {
-    stop("`x` must be numeric, not a ", value("matrix"), call.= FALSE)
+    stop("`x` must be numeric, not a ", value("matrix"), call. = FALSE)
   }
   if ( is.list(breaks) ) {
     stop("`breaks` must be a vector of cutoffs, not a ", value("list"),
-         call.= FALSE)
+         call. = FALSE)
   }
 
   stratas <- .create_strata(x = x, breaks = breaks, depth = depth)
