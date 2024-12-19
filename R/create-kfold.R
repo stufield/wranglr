@@ -116,7 +116,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'
 #' @param data A `data.frame` class object. The data to be subset.
 #' @param k `integer(1)`. The number of partitions of the data set.
-#' @param breaks See description section of `create_kfolds()`.
+#' @param breaks See `create_kfolds()`.
 #' @param depth `integer(1)`. Used to determine the best number of bins
 #'   to be used. The number of bins are based on `min(5, floor(n / depth))`
 #'   where `n = length(x)`. If `x` is numeric, there must be at least 40
@@ -166,114 +166,6 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 }
 
 
-#' Single stratification variable
-#'
-#' @param x A vector to be used for stratification.
-#' @param breaks `integer(1)`, `numeric(n)`, or `NA`.
-#'   If integer, the number of bins desired to stratify a numeric
-#'   stratification variable. If a numeric vector,
-#'   the bin boundaries to be used for stratification of a numeric
-#'   stratification variable. If `NA`, `x` must be discrete with
-#'   `n_unique` or fewer unique cases.
-#' @param n_unique `integer(1)`. The number of unique value threshold
-#'   in the algorithm. Currently there is no access point to this input.
-#'   A natural extension is to allow the user to specify this as an
-#'   input to `create_kfold()`.
-#'   At this time, this value cannot be changed by the user.
-#' @param depth `integer(1)`. Used to determine the best number of bins that
-#'   should be used. The number of bins is based on `min(5, floor(n / depth))`
-#'   where `n = length(x)`. If `x` is numeric, there must be at least 40 rows in
-#'   the data set (when `depth = 20`) to conduct stratified sampling.
-#'
-#' @return A factor vector indicating the stratum for each `x`.
-#'
-#' @importFrom helpr has_length is_int value len_one
-#' @importFrom stats na.omit quantile
-#' @noRd
-.create_strata <- function(x, breaks = 4L, n_unique = 5L, depth = 20L) {
-
-  stopifnot(
-    "`x` must be a vector." = (is.vector(x) || is.factor(x)) && has_length(x),
-    "`breaks` must be an integer or a numeric vector." = .breaks_check(breaks),
-    "`depth` must be a positive integer."    = is_int(depth) && depth > 0,
-    "`n_unique` must be a positive integer." = is_int(n_unique) && n_unique > 0
-  )
-
-  num_vals <- unique(na.omit(x))
-
-  if ( length(num_vals) <= n_unique || is.character(x) || is.factor(x) ) {
-    # stratification variable is a character, factor or has few unique values,
-    # no binning necessary
-    # not yet returned as there may be NA values that need to be imputed
-    out <- factor(as.character(x))
-    if ( any(x_is_na <- is.na(x)) ) {
-      # impute levels for missing values in `x`
-      signal_info("Imputed stratification for", sum(x_is_na),
-                  "missing", ifelse(sum(x_is_na) > 1, "values.", "value."))
-      out <- imputeNAs(out)
-    }
-  } else {
-    if ( len_one(breaks) ) { # breaks provides the number of bins
-      if ( is.na(breaks) ) {
-        stop("`x` has ", value(length(num_vals)),
-             " unique values. `breaks` cannot be NA.", call. = FALSE)
-      }
-
-      n <- length(x)
-
-      # ensure that the stratification will lead to "reasonable" numbers of
-      # cases in each bin on average
-      if ( floor(n / breaks) < depth ) {
-        warning("The number of observations in each quantile is ",
-                "below the recommended threshold of ", depth, ".\n",
-                "Stratification will be done with ", floor(n / depth),
-                " breaks instead.\n",
-                "To override this limit, provide `depth` as input.",
-                call. = FALSE)
-        breaks <- min(breaks, floor(n / depth))
-        if ( breaks <= 2 ) {
-          stop("Too little data to stratify.\n",
-               "Please consider non-stratified resampling via `breaks = NULL`.",
-               call. = FALSE)
-        }
-      }
-      breaks <- quantile(x,
-                         probs = seq(0.0, 1.0, length.out = breaks + 1L),
-                         na.rm = TRUE)
-    }
-
-    out <- cut(imputeNAs(x), breaks = unique(breaks), include.lowest = TRUE)
-
-    if ( any(is.na(out)) ) {
-      # cut returns NA for values outside the range of `breaks`.
-      # Require user provide a more appropriate `breaks` input.
-      stop("Provided `breaks` does not span data.\n\t",
-           "Range of stratification variable: ", value(range(x, na.rm = TRUE)),
-           "\n\tProvided `breaks = ", value(breaks), "`.",
-           call. = FALSE
-      )
-    }
-  }
-
-  out
-}
-
-# function to check complex breaks argument
-.breaks_check <- function(x) {
-  if ( len_one(x) ) {
-    if ( is.nan(x) ) return(FALSE)
-    if ( is.na(x) || is_int(x) ) return(TRUE)
-  } else {
-    if ( !inherits(x, c("numeric", "factor")) ) {
-      return(FALSE)
-    }
-    if ( any(is.na(x)) || any(is.nan(x)) ) {
-      return(FALSE)
-    }
-  }
-  TRUE
-}
-
 
 #' Select the stratification function
 #'
@@ -282,7 +174,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' @param k `integer(1)`. See `create_kfold()`
 #' @param idx `integer(n)`. The indices of the data to be stratified.
 #' @param breaks A list. Each element an integer, numeric vector, or `NA`.
-#' @param ... Inputs passed on to stratification functions. Must contain `depth`.
+#' @param ... Inputs passed on to `.create_strata()`. Must contain `depth`.
 #'
 #' @return A list, each element providing the indices of the assessment data for
 #'   a single fold.
@@ -316,14 +208,17 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' @param idx `integer(n)`. The indices of the data to be stratified.
 #' @param depth Passed to .create_strata()
 #'
-#' @importFrom helpr has_length is_int is_int_vec
+#' @importFrom helpr is_int_vec
 #' @noRd
-.get_indices.numeric <- function(x, k, idx, breaks, depth, ...) {
+.get_indices.numeric <- function(x, k, idx, breaks, ...) {
+
+  check_int(k)
+
   stopifnot(
-    "`k` must be a positive integer." = is_int(k) && k > 0,
     "`idx` must be an integer vector with dimension matching `x`." =
       is_int_vec(idx) && is.vector(idx) && length(idx) == length(x) && all(idx > 0)
   )
+
   if ( is.matrix(x) ) {
     stop("`x` must be numeric, not a ", value("matrix"), call. = FALSE)
   }
@@ -332,8 +227,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
          call. = FALSE)
   }
 
-  stratas <- .create_strata(x = x, breaks = breaks, depth = depth)
-  # this produces a list of length n_breaks
+  stratas <- .create_strata(x = x, breaks = breaks, ...)
+  # this produces a list of length(breaks)
   stratas <- unname(split(idx, stratas))
   stratas <- lapply(stratas, function(.x) {
                     list(idx   = .x,
@@ -344,10 +239,33 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 }
 
 #' @noRd
-.get_indices.character <- .get_indices.numeric
+.get_indices.character <- function(x, k, idx, ...) {
+
+  check_int(k)
+
+  stopifnot(
+    "`idx` must be an integer vector with dimension matching `x`." =
+      is_int_vec(idx) && is.vector(idx) && length(idx) == length(x) && all(idx > 0)
+  )
+
+  stratas <- factor(x)
+
+  if ( any(x_is_na <- is.na(x)) ) {
+    signal_info("Imputed stratification for", sum(x_is_na),
+                "missing", ifelse(sum(x_is_na) > 1, "values.", "value."))
+    stratas <- imputeNAs(stratas)
+  }
+  stratas <- unname(split(idx, stratas))
+  stratas <- lapply(stratas, function(.x) {
+                    list(idx   = .x,
+                         folds = sample(rep(seq_len(k), length.out = length(.x))))
+                    })
+  stratas <- bind_rows(stratas)
+  unname(split(stratas$idx, stratas$folds))
+}
 
 #' @noRd
-.get_indices.factor <- .get_indices.numeric
+.get_indices.factor <- .get_indices.character
 
 
 #' S3 data frame method: 2 stratification variables
@@ -381,6 +299,105 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   }) |>
     c(f = c) |> # invert and concatenate within elements (folds)
     do.call(what = "Map")
+}
+
+
+#' Single stratification variable
+#'
+#' @param x A *numeric* vector to be used for stratification.
+#'   Character and factor classes are handled outside this function
+#'   in `.get_indices()` methods.
+#' @param breaks `integer(1)`, `numeric(n)`, or `NA`.
+#'   If integer, the number of bins desired to stratify a numeric
+#'   stratification variable. If a numeric vector,
+#'   the bin boundaries to be used for stratification of a numeric
+#'   stratification variable. If `NA`, `x` must be discrete with
+#'   `n_unique` or fewer unique cases.
+#' @param n_unique `integer(1)`. The number of unique value threshold
+#'   in the algorithm. Currently there is no access point to this input.
+#'   A natural extension is to allow the user to specify this as an
+#'   input to `create_kfold()`.
+#' @param depth `integer(1)`. Used to determine the best number of bins that
+#'   should be used. The number of bins is based on `min(5, floor(n / depth))`
+#'   where `n = length(x)`. If `x` is numeric, there must be at least 40 rows in
+#'   the data set (when `depth = 20`) to conduct stratified sampling.
+#'
+#' @return A factor vector indicating the stratum for each `x`.
+#'
+#' @importFrom helpr has_length is_int value len_one
+#' @importFrom stats na.omit quantile
+#' @noRd
+.create_strata <- function(x, breaks = 4L, n_unique = 5L, depth = 20L) {
+
+  stopifnot(
+    "`x` must be a numeric vector." = inherits(x, c("numeric", "integer")) &&
+      has_length(x)
+  )
+
+  check_int(depth)
+  check_int(n_unique)
+  n_vals <- unique(na.omit(x))
+
+  # Do this part first; for branch where coerced `x` is simply returned
+  #if ( length(n_vals) <= n_unique || is.character(x) || is.factor(x) ) {
+  if ( length(n_vals) <= n_unique ) {
+    # stratification variable is a character, factor, or has few unique values
+    # no binning necessary; early return
+    out <- factor(as.character(x))
+    if ( any(x_is_na <- is.na(x)) ) {
+      signal_info("Imputed stratification for", sum(x_is_na),
+                  "missing", ifelse(sum(x_is_na) > 1, "values.", "value."))
+      out <- imputeNAs(out)
+    }
+    return(out)
+  }
+
+  # now check breaks
+  stopifnot(
+    "`breaks` must be an integer or a numeric vector." = .breaks_check(breaks)
+  )
+
+  if ( len_one(breaks) ) { # breaks provides the number of bins
+    if ( is.na(breaks) ) {
+      stop("`x` has ", value(length(n_vals)),
+           " unique values. `breaks` cannot be NA.", call. = FALSE)
+    }
+
+    n <- length(x)
+
+    # ensure that the stratification will lead to "reasonable"
+    # numbers of cases per bin
+    if ( floor(n / breaks) < depth ) {
+      warning("The number of observations in each quantile is ",
+              "below the recommended threshold of ", depth, ".\n",
+              "Stratification will be done with ", floor(n / depth),
+              " breaks instead.\n",
+              "To override this limit, provide `depth` as input.",
+              call. = FALSE)
+      breaks <- min(breaks, floor(n / depth))
+      if ( breaks <= 2 ) {
+        stop("Too little data to stratify.\n",
+             "Please consider non-stratified resampling via `breaks = NULL`.",
+             call. = FALSE)
+      }
+    }
+    breaks <- quantile(x,
+                       probs = seq(0.0, 1.0, length.out = breaks + 1L),
+                       na.rm = TRUE)
+  }
+
+  out <- cut(imputeNAs(x), breaks = unique(breaks), include.lowest = TRUE)
+
+  if ( any(is.na(out)) ) {
+    # cut returns NA for values outside the range of `breaks`.
+    stop("Provided `breaks` does not span data.\n\t",
+         "Range of stratification variable: ", value(range(x, na.rm = TRUE)),
+         "\n\tProvided `breaks = ", value(breaks), "`.",
+         call. = FALSE
+    )
+  }
+
+  out
 }
 
 
@@ -492,4 +509,38 @@ print.x_split <- function(x, ...) {
   print(x$splits)
   signal_rule("", lty = "double", line_col = "green")
   invisible(x)
+}
+
+# Checks ----
+#' function to check complex breaks argument
+#' @importFrom helpr is_int len_one
+#' @noRd
+.breaks_check <- function(x) {
+  if ( len_one(x) ) {
+    if ( is.nan(x) ) {
+      return(FALSE)
+    }
+    if ( is.na(x) ) {
+      return(FALSE)
+    }
+  } else {
+    if ( !inherits(x, c("numeric", "factor")) ) {
+      return(FALSE)
+    }
+    if ( any(is.na(x)) || any(is.nan(x)) ) {
+      return(FALSE)
+    }
+  }
+  TRUE
+}
+
+#' check values of `k`
+#' @importFrom helpr is_int
+#' @noRd
+check_int <- function(x) {
+  str <- deparse(substitute(x))
+  if ( !is_int(x) || x <= 0L ) {
+    stop(sprintf("`%s` must be a positive integer.", str), call. = FALSE)
+  }
+  invisible(TRUE)
 }

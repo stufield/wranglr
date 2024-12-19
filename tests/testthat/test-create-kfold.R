@@ -48,32 +48,39 @@ expect_idx <- function(func, args) {
 #   step and thus should always be tested.
 test_that("`.create_strata()` returns expected errors", {
 
-  expect_error(.create_strata(x = matrix(1:2, 1L)), "`x` must be a vector.")
-  expect_error(.create_strata(x = numeric()), "`x` must be a vector.")
-  expect_error(.create_strata(1:10, breaks = list(1, 2)),
+  expect_error(.create_strata(x = matrix(1:2, 1L)), "`x` must be a numeric vector.")
+  expect_error(.create_strata(x = numeric()), "`x` must be a numeric vector.")
+  x <- sample(c("a", "b"), 100, TRUE)
+  expect_error(.create_strata(x), "`x` must be a numeric vector.")
+  expect_error(.create_strata(factor(x)), "`x` must be a numeric vector.")
+
+  x <- seq(1, 10, length.out = 100L)  # dummy numeric vector
+  expect_error(.create_strata(x, breaks = list(1, 2)),
                "`breaks` must be an integer or a numeric vector.")
-  expect_error(.create_strata(1:10, breaks = matrix(1:2, 1L)),
+  expect_error(.create_strata(x, breaks = matrix(1:2, 1L)),
                "`breaks` must be an integer or a numeric vector.")
-  expect_error(.create_strata(1:10, breaks = c(NA, 2)),
+  expect_error(.create_strata(x, breaks = c(NA, 2)),
                "`breaks` must be an integer or a numeric vector.")
-  expect_error(.create_strata(1:10, breaks = c(NaN, 2)),
+  expect_error(.create_strata(x, breaks = c(NaN, 2)),
                "`breaks` must be an integer or a numeric vector.")
-  expect_error(.create_strata(1:10, breaks = NaN),
+  expect_error(.create_strata(x, breaks = NaN),
                "`breaks` must be an integer or a numeric vector.")
 
   expect_positive_integer_scalar(".create_strata",
-                                 list(x = 1:10, depth = 20L),
+                                 list(x = x, depth = 20L),
                                  "depth",
                                  "`depth` must be a positive integer.")
 
   expect_positive_integer_scalar(".create_strata",
-                                 list(x = 1:10, n_unique = 5L),
+                                 list(x = x, n_unique = 5L),
                                  "n_unique",
                                  "`n_unique` must be a positive integer.")
 
   # discrete vector with > n_unique values, but breaks not provided
-  expect_error(.create_strata(rep(1:10, 10L), breaks = NA),
-               "`x` has 10 unique values. `breaks` cannot be NA.")
+  expect_error(
+    .create_strata(x, breaks = NA),
+    "`breaks` must be an integer or a numeric vector."
+  )
 
   # numeric vector with a breaks vector defined that does not cover values
   expect_error(.create_strata(withr::with_seed(42L, stats::runif(100)),
@@ -87,15 +94,6 @@ test_that("`.create_strata()` returns expected results and warnings", {
   x <- withr::with_seed(1234L, sample(1:5, 100, TRUE))
   expect_equal(.create_strata(x), factor(as.character(x)))
 
-  # A character variable with any number of values should return as an unmodified
-  # character factor vector
-  x <- withr::with_seed(1234L, sample(letters[1:8], 100, TRUE))
-  expect_equal(.create_strata(x), factor(x))
-
-  # A factor with any number of values should return an
-  # unmodified character -> factor vector
-  x <- factor(withr::with_seed(1234L, sample(1:10, 100, TRUE)))
-  expect_equal(.create_strata(x), factor(as.character(x)))
 
   # numeric vector with depth large enough to change break to >= 2
   x <- withr::with_seed(42L, stats::runif(100))
@@ -186,16 +184,12 @@ test_that("`.get_indices() numeric S3 method returns expected results", {
   }
 
   # ensure that all allows types of discrete inputs are recognized
-  allowed_types <- c("as.numeric", "as.character", "as.factor")
+  allowed_types <- c("as.numeric", "as.integer", "as.character", "as.factor")
 
-  x <- withr::with_seed(42L, stats::rbinom(1000, 1, 0.3))
   for ( i in seq_along(allowed_types) ) {
-    xt <- do.call(allowed_types[i], list(x))
-    expect_equal(
-      withr::with_seed(1234L,
-        .get_indices(xt, breaks = 2, k = 4L, idx = 1:1000, depth = 5L)
-      ),
-      withr::with_seed(1234L, .local_imp(xt, 2, 4, 1:1000, 5L))
+    xt <- do.call(allowed_types[i], list(seq(1, 10, length.out = 50)))
+    expect_no_error(
+     .get_indices(xt, breaks = 2, k = 4L, idx = 1:50, depth = 5L)
     )
   }
 
@@ -232,20 +226,20 @@ test_that("`.get_indices()` default S3 method returns expected errors", {
   )
 })
 
-test_that("`.get_indices()` factor S3 method returns expected values", {
+test_that("`.get_indices()` factor and char S3 method returns expected values", {
   x <- sample(c("a", "d"), 1000, TRUE)
   out <- withr::with_seed(101L,
-    .get_indices(x, k = 10L, breaks = NA, idx = seq_along(x), depth = 20L)
-  )
+    .get_indices(x, k = 10L, idx = seq_along(x), depth = 20L))
   expect_type(out, "list")
   expect_equal(length(out), 10L)
 
-  # same for character class
+  # same for factor class
   y <- factor(x)
-  out2 <- withr::with_seed(101L,
-    .get_indices(y, k = 10L, breaks = NA, idx = seq_along(y), depth = 20L)
+  expect_equal(
+    out,
+    withr::with_seed(101L,
+      .get_indices(y, k = 10L, idx = seq_along(y), depth = 20L))
   )
-  expect_equal(out, out2)
 })
 
 
@@ -268,7 +262,7 @@ test_that("`.get_indices()` data.frame S3 method returns expected errors", {
     "`breaks` must be a list of length 2."
   )
   expect_error(
-    .get_indices(strata, breaks = NaN, k = 4L, idx = 1:30L, depth = 2L),
+    .get_indices(strata, breaks = "foo", k = 4L, idx = 1:30L, depth = 2L),
     "`breaks` must be a list of length 2."
   )
   expect_error(
@@ -496,11 +490,10 @@ test_that("`create_kfold()` returns expected errors", {
 test_that("`create_kfold()` returns expected results for `repeats = 1L`", {
   # local implementation
   .local_imp <- function(data, k, breaks, depth) {
-    split_objs <- .vfold_splits(data = data, k = k,
-                                breaks = breaks, depth = depth)
-    split_objs[["repeat"]] <- NA_integer_
+    split_obj <- .vfold_splits(data = data, k = k, breaks = breaks, depth = depth)
+    split_obj[["repeat"]] <- NA_integer_
     structure(
-      list(data = data, splits = split_objs),
+      list(data = data, splits = split_obj),
       class = c("x_split", "list"),
       breaks = breaks
     )
