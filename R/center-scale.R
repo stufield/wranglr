@@ -54,7 +54,7 @@ center_scale.default <- function(data, par_tbl = NULL, feat = NULL,
 }
 
 #' @noRd
-#' @importFrom purrr pmap
+#' @importFrom helpr piter
 #' @export
 center_scale.data.frame <- function(data, par_tbl = NULL, feat = NULL,
                                     center = TRUE, scale = TRUE) {
@@ -72,18 +72,20 @@ center_scale.data.frame <- function(data, par_tbl = NULL, feat = NULL,
   }
 
   feats <- par_tbl$feature
-  pars  <- list(data = data[, feats], means = par_tbl$means, sds = par_tbl$sds)
+  pars  <- list(data = data[, feats],
+                means = par_tbl$means,
+                sds  = par_tbl$sds)
 
   if ( center && scale ) {
-    ret_data <- pmap(pars, function(data, means, sds) (data - means) / sds)
+    ret_data <- piter(pars, ~ (data - means) / sds) |> data.frame()
   } else if ( center ) {
-    ret_data <- pmap(pars, function(data, means, ...) (data - means))
+    ret_data <- piter(pars, ~ data - means) |> data.frame()
   } else if ( scale ) {
-    ret_data <- pmap(pars, function(data, sds, ...) data / sds)
+    ret_data <- piter(pars, ~ data / sds) |> data.frame()
   } else {
     stop("At least 1 of 'center' or 'scale' must be `TRUE`.", call. = FALSE)
   }
-  data[, feats] <- as.data.frame(ret_data) # replace un-scaled -> scaled
+  data[, feats] <- ret_data[, feats] # replace un-scaled -> scaled
 
   if ( !(center && scale) ) {
     par_tbl$means <- 0
@@ -149,7 +151,7 @@ is_center_scaled <- function(data) {
 #' all.equal(test, old)
 #'
 #' @importFrom stats sd
-#' @importFrom purrr pmap
+#' @importFrom helpr piter
 #' @export
 undo_center_scale <- function(data, feat = NULL) {
   # do some checking
@@ -171,11 +173,11 @@ undo_center_scale <- function(data, feat = NULL) {
   pars$data <- data[, feats]    # add `data`
 
   if ( center && scale ) {
-    ret_data <- pmap(pars, function(data, means, sds, ...) data * sds + means)
+    ret_data <- piter(pars, ~ data * sds + means) |> data.frame()
   } else if ( center ) {
-    ret_data <- pmap(pars, function(data, means, ...) data + means)
+    ret_data <- piter(pars, ~ data + means) |> data.frame()
   } else if ( scale ) {
-    ret_data <- pmap(pars, function(data, sds, ...) data * sds)
+    ret_data <- piter(pars, ~ data * sds) |> data.frame()
   } else {
     stop(
       "The `par_tbl` attribute is wrong. Check ",
@@ -183,7 +185,7 @@ undo_center_scale <- function(data, feat = NULL) {
     )
   }
 
-  data[, feats] <- data.frame(ret_data)  # replace un-scaled -> scaled data
+  data[, feats] <- ret_data[, feats]  # replace un-scaled -> scaled data
   # remove scaling parameters so you cannot 'double' undo
   structure(data, par_tbl = NULL, center_lgl = NULL, scale_lgl = NULL)
 }
