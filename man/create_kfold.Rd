@@ -34,8 +34,9 @@ to \code{depth}. The number of stratification bins are based on
 
 \item{object}{A \code{x_split} object.}
 
-\item{i}{\code{integer(1)} or \code{NULL}. If an integer, the split for which the
-analysis or assessment data is to be retrieved.}
+\item{i}{\code{integer(1)} or \code{NULL}. If an integer, the split corresponding
+to the analysis or assessment data to be retrieved, otherwise a list of
+\emph{all} data splits.}
 }
 \value{
 A \code{x_split} object. Element \code{data} contains the original data.

@@ -1,5 +1,13 @@
 
 # Setup -----
+n <- 100L
+mtcars2 <- withr::with_seed(101L, dplyr::sample_n(mtcars, n, replace = TRUE))
+mtcars2$disp <- withr::with_seed(101, jitter(mtcars2$disp)) # continuous
+mtcars2$vs   <- factor(mtcars2$vs)        # binary 0/1
+mtcars2$cyl  <- as.character(mtcars2$cyl) # character 3 levels
+split_obj    <- create_kfold(mtcars2, k = 4L)
+
+
 expect_positive_integer_scalar <- function(func, args, arg_name, msg) {
   # this is instead of quasi_label(), which requires rlang::enquo()
   act <- list(val = func, lab = encodeString(func, quote = "\""))
@@ -42,6 +50,7 @@ expect_idx <- function(func, args) {
   invisible(act$val)
 }
 
+
 # Testing ----
 # .create_strata() ----
 # This function is the meat of the stratification
@@ -83,17 +92,19 @@ test_that("`.create_strata()` returns expected errors", {
   )
 
   # numeric vector with a breaks vector defined that does not cover values
-  expect_error(.create_strata(withr::with_seed(42L, stats::runif(100)),
-                            breaks = c(0.25, 0.5, 0.75)),
-               "Provided `breaks` does not span data.")
+  expect_error(
+    .create_strata(withr::with_seed(42L, stats::runif(100)),
+                   breaks = c(0.25, 0.5, 0.75)),
+    "Provided `breaks` does not span data."
+  )
 })
+
 
 test_that("`.create_strata()` returns expected results and warnings", {
   # A discrete variable with 5 or fewer values should return as an unmodified
   # character factor vector
   x <- withr::with_seed(1234L, sample(1:5, 100, TRUE))
   expect_equal(.create_strata(x), factor(as.character(x)))
-
 
   # numeric vector with depth large enough to change break to >= 2
   x <- withr::with_seed(42L, stats::runif(100))
@@ -139,8 +150,10 @@ test_that("`.create_strata()` returns expected results and warnings", {
   breaks   <- c(0.0, 0.25, 1.0)
   expected <- cut(x, breaks = breaks, include.lowest = TRUE)
   expect_equal(.create_strata(x, breaks = 4, depth = 1L), expected)
-  expect_equal(.create_strata(x, breaks = c(0.0, 0.0, 0.25, 1.0, 1.0), depth = 1L),
-               expected)
+  expect_equal(
+    .create_strata(x, breaks = c(0.0, 0.0, 0.25, 1.0, 1.0), depth = 1L),
+    expected
+  )
 })
 
 
@@ -163,6 +176,7 @@ test_that("`.get_indices() numeric S3 method returns expected errors", {
 
   expect_idx(".get_indices.numeric", args)
 })
+
 
 test_that("`.get_indices() numeric S3 method returns expected results", {
   # local implementation of function
@@ -214,7 +228,7 @@ test_that("`.get_indices() numeric S3 method returns expected results", {
 })
 
 
-test_that("`.get_indices()` default S3 method returns expected errors", {
+test_that("`.get_indices()` numeric S3 method returns expected errors", {
   expect_error(
     .get_indices(matrix(1:30, ncol = 1L), breaks = breaks, k = 4L,
                  idx = 1:30L, depth = 2L),
@@ -226,6 +240,8 @@ test_that("`.get_indices()` default S3 method returns expected errors", {
   )
 })
 
+
+# .get_indices() character ----
 test_that("`.get_indices()` factor and char S3 method returns expected values", {
   x <- sample(c("a", "d"), 1000, TRUE)
   out <- withr::with_seed(101L,
@@ -244,16 +260,13 @@ test_that("`.get_indices()` factor and char S3 method returns expected values", 
 
 
 # .get_indices() data.frame ----
-# This function calls `.create_strata()` and `.get_indices_one()` (which
-# in turn calls `.create_strata()`) and manipulates the output.
 test_that("`.get_indices()` data.frame S3 method returns expected errors", {
-  strata <- simdata[, c("time", "status")]
-  breaks <- list(time = 4L, status = NA)
-  create_kfold(simdata, breaks = list(time = 4L, status = NA))
+  strata <- mtcars2[, c("disp", "vs")]
+  breaks <- list(disp = 3L, vs = NULL)
 
   expect_error(
-    .get_indices(data.frame("x" = 1, "Y" = 2, "Z" = 3),
-                 breaks = breaks, k = 4L, idx = 1:30L, depth = 2L),
+    .get_indices(data.frame(x = 1, Y = 2, Z = 3), breaks = breaks,
+                 k = 4L, idx = 1:30L, depth = 2L),
     "`data.frame` must have exactly 2 columns."
   )
 
@@ -262,15 +275,18 @@ test_that("`.get_indices()` data.frame S3 method returns expected errors", {
                  idx = 1:30L, depth = 2L),
     "`breaks` must be a list of length 2."
   )
+
   expect_error(
     .get_indices(strata, breaks = "foo", k = 4L, idx = 1:30L, depth = 2L),
     "`breaks` must be a list of length 2."
   )
+
   expect_error(
     .get_indices(strata, breaks = list(1, 2, 3), k = 4L,
                  idx = 1:30L, depth = 2L),
     "`breaks` must be a list of length 2."
   )
+
   expect_error(
     .get_indices(strata, breaks = list(), k = 4L, idx = 1:30L, depth = 2L),
     "`breaks` must be a list of length 2."
@@ -287,6 +303,7 @@ test_that("`.get_indices()` data.frame S3 method returns expected errors", {
 
   expect_idx(".get_indices.numeric", args)
 })
+
 
 test_that("`.get_indices()` data.frame S3 method returns expected results", {
   # local implementation
@@ -311,79 +328,83 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
     results
   }
 
-  # data.frame with two discrete variables
-  x <- withr::with_seed(42L, data.frame(s1 = stats::rbinom(1000, 1, 0.5),
-                                        s2 = stats::rbinom(1000, 1, 0.3)))
-  # breaks should be ignored -- provide an inappropriate value to ensure
-  breaks <- list(s1 = 4L, s2 = c(0.25, 0.5, 1.0))
+  n <- 1000L
+  # data.frame with two discrete variables both with < 5 levels
+  x <- withr::with_seed(42L, data.frame(s1 = stats::rbinom(n, 1, 0.5),
+                                        s2 = stats::rbinom(n, 1, 0.3)))
+  # breaks should be ignored with early return
+  # provide inappropriate value to ensure
+  breaks <- list(s1 = "foo", s2 = "bar")
 
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:1000, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
     ),
-    withr::with_seed(1234L, .local_imp(x, list(NA, NA), 4L, 1:1000, 5L))
+    withr::with_seed(1234L, .local_imp(x, breaks = breaks,
+                                       k = 4L, idx = 1:n, depth = 5L))
   )
 
-  # data.frame with one continuous and one discrete
-  x <- withr::with_seed(42L, data.frame(s1 = stats::runif(1000),
-                                        s2 = stats::rbinom(1000, 1, 0.3)))
+  # data.frame with 1 continuous and 1 discrete
+  x <- withr::with_seed(42L, data.frame(s1 = stats::runif(n),
+                                        s2 = stats::rbinom(n, 1, 0.3)))
   # breaks[[1]] is number of bins
   # breaks[[2]] should be ignored -- provide inappropriate value to ensure
-  breaks <- list(s1 = 4L, s2 = c(0.25, 0.5, 1.0))
+  breaks <- list(s1 = 4L, s2 = "foo")
+
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:1000, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
     ),
-    withr::with_seed(1234L, .local_imp(x, list(4, NA), 4L, 1:1000, 5L))
+    withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
 
   # breaks[[1]] is a vector of bin boundaries
   # breaks[[2]] should be ignored -- provide an inappropriate value to ensure
-  breaks <- list(s1 = c(0.0, 0.5, 1.0), s2 = c(0.25, 0.5, 1.0))
+  breaks <- list(s1 = c(0.0, 0.5, 1.0), s2 = "foo")
+
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 5L, idx = 1:1000, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 5L, idx = 1:n, depth = 5L)
     ),
     withr::with_seed(1234L,
-      .local_imp(x, breaks = list(breaks[[1L]], NA), k = 5L,
-                 idx = 1:1000, depth = 5L)
+      .local_imp(x, breaks, k = 5L, idx = 1:n, depth = 5L)
     )
   )
 
   # two continuous variables with all combination of breaks
-  x <- withr::with_seed(42L, data.frame(s1 = stats::runif(1000),
-                                        s2 = stats::runif(1000)))
+  x <- withr::with_seed(42L, data.frame(s1 = stats::runif(n),
+                                        s2 = stats::runif(n)))
 
   breaks <- list(s1 = 4L, s2 = 5L)
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:1000, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
     ),
-    withr::with_seed(1234L, .local_imp(x, list(4, 5), 4L, 1:1000, 5L))
+    withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
 
   breaks <- list(s1 = c(0.0, 0.6, 1.0), s2 = 5L)
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:1000, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
     ),
-    withr::with_seed(1234L, .local_imp(x, list(breaks[[1L]], 5), 4L, 1:1000, 5L))
+    withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
 
   breaks <- list(s1 = 4L, s2 = c(0.0, 0.6, 0.8, 1.0))
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:1000, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
     ),
-    withr::with_seed(1234L, .local_imp(x, list(4, breaks[[2]]), 4L, 1:1000, 5L))
+    withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
 
   breaks <- list(s1 = c(0.0, 0.5, 1.0), s2 = c(0.0, 0.6, 0.8, 1.0))
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:1000, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
     ),
-    withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:1000, 5L))
+    withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
 })
 
@@ -394,35 +415,34 @@ test_that("`.vfold_splits()` returns expected results", {
   skip("Add specific unit tests for `.vfold_splits()`")
   # No stratification
   expect_equal(
-    withr::with_seed(1234L, .vfold_splits(simdata)),
+    withr::with_seed(1234L, .vfold_splits(mtcars2)),
   )
 
   # stratify on 1 variable with # of bins
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(simdata, k = 4L, breaks = list(time = 4))
+      .vfold_splits(mtcars2, k = 4L, breaks = list(time = 4))
     )
   )
 
   # stratify on 1 variable with vector of bins
-  breaks_vec <- seq(min(simdata$time), max(simdata$time), length.out = 5)
+  breaks_vec <- seq(min(mtcars2$disp), max(mtcars$disp), length.out = 5)
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(simdata, k = 4L, breaks = list(time = breaks_vec))
+      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = breaks_vec))
     )
   )
 
   # stratify on 2 variable with all combinations of breaks
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(simdata, k = 4L, breaks = list(time = 5L, status = 100L))
+      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = 3L, mpg = 3L))
     )
   )
 
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(simdata, k = 4L, breaks = list(time   = breaks_vec,
-                                                   status = NA))
+      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = breaks_vec, vs = NULL))
     )
   )
 })
@@ -435,39 +455,44 @@ test_that("`create_kfold()` returns expected errors", {
     "`data` must be a `data.frame`."
   )
   expect_error(
-    create_kfold(1:100),
+    create_kfold(seq(5)),
+    "`data` must be a `data.frame`."
+  )
+  expect_error(
+    create_kfold(letters),
     "`data` must be a `data.frame`."
   )
 
   expect_positive_integer_scalar("create_kfold",
-                                 list(data = simdata, k = 10L),
+                                 list(data = mtcars2, k = 10L),
                                  "k",
                                  "`k` must be a positive integer.")
 
   expect_positive_integer_scalar("create_kfold",
-                                 list(data = simdata, repeats = 10L),
+                                 list(data = mtcars2, repeats = 10L),
                                  "repeats",
                                  "`repeats` must be a positive integer.")
 
   expect_error(
-    create_kfold(simdata, breaks = list()),
+    create_kfold(mtcars2, breaks = list()),
     "`breaks` must be `NULL` or a list of length 1 or 2."
   )
   expect_error(
-    create_kfold(simdata, breaks = list("a", "b", "c")),
+    create_kfold(mtcars2, breaks = list("a", "b", "c")),
     "`breaks` must be `NULL` or a list of length 1 or 2."
   )
   expect_error(
-    create_kfold(simdata, breaks = NA),
+    create_kfold(mtcars2, breaks = NA),
     "`breaks` must be `NULL` or a list of length 1 or 2."
   )
 })
 
+
 test_that("`create_kfold()` returns expected results for `repeats = 1L`", {
   # local implementation
   .local_imp <- function(data, k, breaks, depth) {
-    split_obj <- .vfold_splits(data = data, k = k, breaks = breaks, depth = depth)
-    split_obj[["repeat"]] <- NA_integer_
+    split_obj <- .vfold_splits(data, k, breaks, depth)
+    split_obj$.repeat <- NA_integer_
     structure(
       list(data = data, splits = split_obj),
       class = c("x_split", "list"),
@@ -477,39 +502,38 @@ test_that("`create_kfold()` returns expected results for `repeats = 1L`", {
 
   # each input is properly passed along
   expect_equal(
-    withr::with_seed(1234L, create_kfold(simdata, k = 5L)),
+    withr::with_seed(1234L, create_kfold(mtcars2, k = 5L)),
     withr::with_seed(1234L,
-      .local_imp(data = simdata, k = 5L, breaks = NULL, depth = 20L)
+      .local_imp(data = mtcars2, k = 5L, breaks = NULL, depth = 20L)
     ),
     ignore_attr = TRUE   # call attr differs
   )
 
   expect_equal(
-    withr::with_seed(1234L, create_kfold(simdata, breaks = list(time = 4L))),
+    withr::with_seed(1234L, create_kfold(mtcars2, breaks = list(disp = 3L))),
     withr::with_seed(1234L,
-      .local_imp(data = simdata, k = 10L, breaks = list(time = 4L), depth = 10L)
+      .local_imp(data = mtcars2, k = 10L, breaks = list(disp = 3L), depth = 10L)
     ),
     ignore_attr = TRUE   # call attr differs
   )
 
   expect_equal(
-    withr::with_seed(1234L, create_kfold(simdata, breaks = list(time = 5L))),
+    withr::with_seed(1234L, create_kfold(mtcars2, breaks = list(disp = 3L))),
     withr::with_seed(1234L,
-      .local_imp(data = simdata, k = 10L, breaks = list(time = 5L), depth = 20L)
+      .local_imp(data = mtcars2, k = 10L, breaks = list(disp = 3L), depth = 20L)
     ),
     ignore_attr = TRUE   # call attr differs
   )
 })
+
 
 test_that("`create_kfold()` returns expected results for repeats != 1", {
   # local implementation
   .local_imp <- function(data, k, repeats, breaks, depth) {
     split_objs <- lapply(set_Names(seq_len(repeats)),
                          function(.i) {
-                           tmp <- .vfold_splits(data = data, k = k,
-                                                breaks = breaks,
-                                                depth = depth)
-                           tmp[["repeat"]] <- .i
+                           tmp <- .vfold_splits(data, k, breaks, depth)
+                           tmp$.repeat <- .i
                            tmp
                          }) |>
       bind_rows() |>
@@ -523,9 +547,9 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
 
   # each input is properly passed along
   expect_equal(
-    withr::with_seed(1234L, create_kfold(simdata, k = 5L, repeats = 2L)),
+    withr::with_seed(1234L, create_kfold(mtcars2, k = 5L, repeats = 2L)),
     withr::with_seed(1234L,
-      .local_imp(simdata, k = 5L, repeats = 2, breaks = NULL, depth = 20L)
+      .local_imp(mtcars2, k = 5L, repeats = 2, breaks = NULL, depth = 20L)
     ),
     ignore_attr = TRUE  # call attribute differs
   )
@@ -534,9 +558,8 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
 
 # assessment ----
 test_that("`assessment()` returns expected errors", {
-  split_obj <- create_kfold(simdata, k = 4L)
   expect_error(
-    assessment(simdata),
+    assessment(mtcars2),
     "`object` must be a `x_split` object."
   )
   expect_positive_integer_scalar("assessment",
@@ -549,11 +572,11 @@ test_that("`assessment()` returns expected errors", {
   )
 })
 
+
 test_that("`assessment()` returns expected values", {
-  split_obj <- create_kfold(simdata, k = 4L)
   expected  <- vector("list", 4L)
   for ( i in seq_len(4L) ) {
-    expected[[i]] <- simdata[split_obj$splits$split[[i]]$assessment, ]
+    expected[[i]] <- mtcars2[split_obj$splits$split[[i]]$assessment, ]
   }
   expect_length(out <- assessment(split_obj), 4L)
   expect_equal(out, expected)
@@ -566,9 +589,8 @@ test_that("`assessment()` returns expected values", {
 
 # analysis ----
 test_that("`analysis()` returns expected errors", {
-  split_obj <- create_kfold(simdata, k = 4L)
   expect_error(
-    analysis(simdata),
+    analysis(mtcars2),
     "`object` must be a `x_split` object."
   )
   expect_positive_integer_scalar("analysis",
@@ -581,11 +603,11 @@ test_that("`analysis()` returns expected errors", {
   )
 })
 
+
 test_that("`analysis()` returns expected values", {
-  split_obj <- create_kfold(simdata, k = 4L)
   expected <- vector("list", 4L)
   for ( i in seq_len(4L) ) {
-    expected[[i]] <- simdata[split_obj$splits$split[[i]]$analysis, ]
+    expected[[i]] <- mtcars2[split_obj$splits$split[[i]]$analysis, ]
   }
 
   expect_length(out <- analysis(split_obj), 4L)
@@ -602,36 +624,34 @@ test_that("`S3 print()` returns expected class `x_split`", {
 
   # no stratification; no repeats
   expect_snapshot(
-    create_kfold(simdata, k = 4L, repeats = 1L)
+    create_kfold(mtcars2, k = 4L, repeats = 1L)
   )
 
   # no stratification; w/ repeats
   expect_snapshot(
-    create_kfold(simdata, k = 4L, repeats = 3L)
+    create_kfold(mtcars2, k = 4L, repeats = 3L)
   )
 
   # no stratification; no repeats; based on a data.frame
   expect_snapshot({
-    df <- as.data.frame(simdata[, c("time", "status")])
+    df <- data.frame(mtcars2[, c("disp", "vs")])
     create_kfold(df, k = 5L)
   })
 
   # stratification on 1 discrete variable
   expect_snapshot(
-    create_kfold(simdata, k = 5L, breaks = list(status = NA))
+    create_kfold(mtcars2, k = 5L, breaks = list(vs = NULL))  # vs => binary
   )
 
   # stratification on 2 variables; 1 continuous + 1 discrete
   expect_snapshot(
-    create_kfold(simdata, k = 5L, repeats = 3L,
-                 breaks = list(time = 4L, status = NA))
+    create_kfold(mtcars2, k = 5L, repeats = 3L, breaks = list(disp = 3L, vs = NULL))
   )
 })
 
+
 # is.x_split ----
 test_that("`is.x_split()` returns expected results", {
-  obj <- create_kfold(simdata, k = 5L, repeats = 3L,
-                      breaks = list(time = 4L, status = NA))
-  expect_true(is.x_split(obj))
-  expect_false(is.x_split(unclass(obj)))
+  expect_true(is.x_split(split_obj))
+  expect_false(is.x_split(unclass(split_obj)))
 })

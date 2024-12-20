@@ -251,11 +251,12 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' S3 data frame method: 2 stratification variables
 #'
 #' @param x A `data.frame` must have exactly *2* columns.
-#' @param breaks A list. Each element an integer, numeric vector, or NA.
+#' @param breaks A `list(2)`. Each element an integer or numeric vector.
 #' @param k `integer(1)`. See `create_kfold()`
-#' @param depth `integer(1)`. Used to determine the best number of percentiles that
-#'   should be used. The number of bins are based on `min(5, floor(n / depth))`
-#'   where `n = length(x)`. If `x` is numeric, there must be at least 40 rows in
+#' @param depth `integer(1)`. Used to determine the optimal number
+#'   of percentiles to be used. The number of bins are based on
+#'   `min(5, floor(n / depth))` where `n = length(x)`.
+#'   If `x` is numeric, there must be at least 40 rows in
 #'   the data set (when `depth = 20`) to conduct stratified sampling.
 #'
 #' @noRd
@@ -291,9 +292,9 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   in `.get_indices()` methods.
 #' @param breaks `integer(1)` or `numeric(n)`.
 #'   If integer, the number of bins desired to stratify a numeric
-#'   stratification variable. If a numeric vector,
-#'   the bin boundaries to be used for stratification of a numeric
 #'   stratification variable.
+#'   If a numeric vector, the bin boundaries to be used for
+#'   stratification of a numeric stratification variable.
 #' @param n_unique `integer(1)`. The number of unique value threshold
 #'   in the algorithm. Currently there is no access point to this input.
 #'   A natural extension is to allow the user to specify this as an
@@ -328,17 +329,18 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   }
 
   # now do the rest
-  # now check breaks
+  # first check breaks
   stopifnot(
     "`breaks` must be an integer or a numeric vector." = .breaks_check(breaks)
   )
 
-  if ( len_one(breaks) ) { # breaks provides the number of bins
+  # breaks provides the number of bins
+  if ( len_one(breaks) ) {
+    # ensure that the stratification will lead to "reasonable"
+    # numbers of cases per bin
 
     n <- length(x)
 
-    # ensure that the stratification will lead to "reasonable"
-    # numbers of cases per bin
     if ( floor(n / breaks) < depth ) {
       warning("The number of observations in each quantile is ",
               "below the recommended threshold of ", depth, ".\n",
@@ -353,8 +355,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
              call. = FALSE)
       }
     }
-    breaks <- quantile(x,
-                       probs = seq(0.0, 1.0, length.out = breaks + 1L),
+    breaks <- quantile(x, probs = seq(0.0, 1.0, length.out = breaks + 1L),
                        na.rm = TRUE)
   }
 
@@ -394,8 +395,9 @@ is.x_split <- function(x) {
 #' @rdname create_kfold
 #'
 #' @param object A `x_split` object.
-#' @param i `integer(1)` or `NULL`. If an integer, the split for which the
-#'   analysis or assessment data is to be retrieved.
+#' @param i `integer(1)` or `NULL`. If an integer, the split corresponding
+#'   to the analysis or assessment data to be retrieved, otherwise a list of
+#'   *all* data splits.
 #'
 #' @return [analysis()]: A list of data frames corresponding to
 #'   the analysis indices.
