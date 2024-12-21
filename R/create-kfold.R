@@ -98,55 +98,48 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     splits$.repeat <- as.integer(splits$.repeat)
   }
 
-  return_obj <- list(data = data, splits = splits)
-  .call <- match.call()
-
   structure(
-    return_obj,
+    list(data = data, splits = splits),
     class = c("x_split", "list"),
     k = k,
     repeats = repeats,
     breaks = breaks,
-    call = .call
+    call = match.call()
   )
 }
 
-#' Adaptation of `rsample::vfold_splits()` function to return only indices
-#'
-#' Function processes stratification variable, calls stratification function,
+#' Processes stratification variable, calls stratification function,
 #'   and post-processes the stratification result into a tibble.
 #'
-#' @param data A `data.frame` class object. The data to be subset.
-#' @param k `integer(1)`. The number of partitions to create.
+#' @param data A `data.frame` object.
+#' @param k See `create_kfolds()`.
 #' @param breaks See `create_kfolds()`.
 #' @param depth `integer(1)`. Used to determine the best number of bins
 #'   to be used. The number of bins are based on `min(5, floor(n / depth))`
 #'   where `n = length(x)`. Also, if `x` is numeric, there must be at least 40
 #'   rows in the data set (when `depth = 20L`) to conduct stratified sampling.
 #'
-#' @return See description section of `create_kfolds()`.
+#' @return A single repeat of `create_kfolds()`. A tibble of the indices.
 #'
 #' @importFrom tibble tibble
 #' @noRd
 .vfold_splits <- function(data, k = 10L, breaks = NULL, depth = 20L) {
 
-  if ( is.list(breaks) ) {
-    if ( is.null(names(breaks)) ) {
-      stop("`breaks` must be a *named* list.", call. = FALSE)
-    }
-    if ( length(breaks) == 1L ) {
-      breaks <- unlist(breaks)
-    }
-  }
-
   rows <- seq_len(nrow(data))
 
   if ( !is.null(breaks) ) {
+    if ( is.null(names(breaks)) ) {
+      stop("`breaks` must be a *named* list.", call. = FALSE)
+    }
+    strat_vars <- names(breaks)
+    if ( length(breaks) == 1L ) {
+      breaks <- unlist(breaks)
+    }
     # `drop = TRUE` ensures proper .get_indices() dispatch below
-    x <- tryCatch(data.frame(data)[, names(breaks), drop = TRUE],
+    x <- tryCatch(data.frame(data)[, strat_vars, drop = TRUE],
                   error = function(e) {
                   stop("Unable to retrieve stratification variable(s) ",
-                       "from `data`.\n\t", e$message, call. = FALSE)
+                       "from `data`.\n", value(e$message), call. = FALSE)
                  })
     indices <- .get_indices(x, breaks = breaks, k = k, depth = depth)
   } else {
@@ -319,17 +312,17 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     n <- length(x)
 
     if ( floor(n / breaks) < depth ) {
-      warning("The number of observations in each quantile is ",
-              "below the recommended threshold of ", depth, ".\n",
-              "Stratification will be done with ", floor(n / depth),
-              " breaks instead.\n",
-              "To override this limit, provide `depth` as input.",
-              call. = FALSE)
+      signal_info(
+        "The number of observations in each quantile is below\n ",
+        "the recommended threshold of", value(depth), ".\n ",
+        "Trying stratification with", value(floor(n / depth)),
+        "breaks instead.\n  To override, pass a `depth =` argument.")
       breaks <- min(breaks, floor(n / depth))
       if ( breaks <= 2 ) {
-        stop("Too little data to stratify.\n",
-             "Please consider non-stratified resampling via `breaks = NULL`.",
-             call. = FALSE)
+        stop("Too little data to stratify.\nPlease consider:\n",
+             "  1) non-stratified resampling via `breaks = NULL`\n",
+             "  2) modifying the `depth =` argument ",
+             "(currently ", value(depth), ")", call. = FALSE)
       }
     }
     breaks <- quantile(x, probs = seq(0.0, 1.0, length.out = breaks + 1L),

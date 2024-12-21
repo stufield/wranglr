@@ -82,8 +82,8 @@ test_that("`.create_strata()` returns expected errors", {
 
 
 test_that("`.create_strata()` returns expected results and warnings", {
-  # A discrete variable with 5 or fewer values should return as an unmodified
-  # character factor vector
+  # A discrete variable with 5 or fewer values should return an
+  # unmodified character factor vector
   x <- withr::with_seed(1234L, sample(1:5, 100, TRUE))
   expect_equal(.create_strata(x), factor(as.character(x)))
 
@@ -92,7 +92,7 @@ test_that("`.create_strata()` returns expected results and warnings", {
   expect_error(
     .create_strata(x, breaks = 10, depth = 50L),
     "Too little data to stratify."
-  ) |> expect_warning("The number of observations in each quantile")
+  ) |> expect_message("The number of observations in each quantile")
 
   breaks <- quantile(x, probs = c(0.0, 0.5, 1.0))
   expected <- cut(x, breaks = breaks, include.lowest = TRUE)
@@ -376,41 +376,56 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
 
 
 # .vfold_splits ----
-# This function calls `.get_indices()` and manipulates the output.
-test_that("`.vfold_splits()` returns expected results", {
-  skip("Add specific unit tests for `.vfold_splits()`")
-  # No stratification
-  expect_equal(
-    withr::with_seed(1234L, .vfold_splits(mtcars2)),
-  )
+# called directly by `create_kfold()` n repeats times.
+# calls `.get_indices()` and manipulates the output.
+test_that("`.vfold_splits()` returns expected output for given inputs", {
+  # test with snapshots rather than static output
+  # should be easier to create truths and simplify updates
+  expect_snapshot(variant = "vfold_splits", {
+    # No stratification
+    out <- withr::with_seed(101L, .vfold_splits(mtcars2, k = 3L))
+    out
+    out$split
+  })
 
-  # stratify on 1 variable with # of bins
-  expect_equal(
-    withr::with_seed(1234L,
-      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = 3))
+  expect_snapshot(variant = "vfold_splits", {
+    # stratify on disp only with 3 bins
+    out <- withr::with_seed(101L,
+      .vfold_splits(mtcars2, k = 3L, breaks = list(disp = 3L))
     )
-  )
+    out
+    out$split
+  })
 
-  # stratify on 1 variable with vector of bins
-  breaks_vec <- seq(min(mtcars2$disp), max(mtcars$disp), length.out = 5)
-  expect_equal(
-    withr::with_seed(1234L,
-      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = breaks_vec))
+  expect_snapshot(variant = "vfold_splits", {
+    # stratify on disp with vector of bins
+    breaks_vec <- seq(min(mtcars2$disp), max(mtcars2$disp), length.out = 5L)
+    out <- withr::with_seed(101L,
+      .vfold_splits(mtcars2, k = 3L, breaks = list(disp = breaks_vec))
     )
-  )
+    out
+    out$split
+  })
 
-  # stratify on 2 variable with all combinations of breaks
-  expect_equal(
-    withr::with_seed(1234L,
-      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = 3L, mpg = 5L))
+  expect_snapshot(variant = "vfold_splits", {
+    # stratify on disp and mpg with combinations of breaks
+    # must modify default depth to avoid error (too little data)
+    out <- withr::with_seed(101L,
+      .vfold_splits(mtcars2, k = 3L, breaks = list(disp = 3L, mpg = 5L),
+                    depth = 5L)
     )
-  )
+    out
+    out$split
+  })
 
-  expect_equal(
-    withr::with_seed(1234L,
-      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = breaks_vec, vs = NULL))
+  expect_snapshot(variant = "vfold_splits", {
+    # stratify on disp and mpg with vector of bins and binary vs NULL
+    out <- withr::with_seed(101L,
+      .vfold_splits(mtcars2, k = 3L, breaks = list(disp = breaks_vec, vs = NULL))
     )
-  )
+    out
+    out$split
+  })
 })
 
 
