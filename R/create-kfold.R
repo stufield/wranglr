@@ -75,8 +75,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
       is.null(breaks) || (is.list(breaks) && length(breaks) %in% 1:2L)
   )
 
-  check_int(k)
-  check_int(repeats)
+  .check_int(k)
+  .check_int(repeats)
 
   # user can currently only pass `depth` through ...
   # could expand to allow for `n_unique`
@@ -197,7 +197,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #' @noRd
 .get_indices.numeric <- function(x, k, breaks, ...) {
 
-  check_int(k)
+  .check_int(k)
 
   if ( is.matrix(x) ) {
     stop("`x` must be numeric, not a ", value("matrix"), call. = FALSE)
@@ -213,7 +213,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
 #' @noRd
 .get_indices.character <- function(x, k, ...) {
-  check_int(k)
+  .check_int(k)
   levs <- strat_and_impute(factor(x))
   .collect_and_assign(x, levs, k)
 }
@@ -293,8 +293,8 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
       has_length(x)
   )
 
-  check_int(depth)
-  check_int(n_unique)
+  .check_int(depth)
+  .check_int(n_unique)
   n_vals <- unique(na.omit(x))
 
   # Do this part first
@@ -390,7 +390,7 @@ is.x_split <- function(x) {
 analysis <- function(object, i = NULL) {
   stopifnot(
     "`object` must be a `x_split` object." = is.x_split(object),
-    "`i` must be a positive integer." = is.null(i) || check_int(i),
+    "`i` must be a positive integer." = is.null(i) || .check_int(i),
     "`i` cannot exceed the number of splits." = is.null(i) ||
       (is_int(i) && i <= length(object$splits$split))
   )
@@ -423,7 +423,7 @@ analysis <- function(object, i = NULL) {
 assessment <- function(object, i = NULL) {
   stopifnot(
     "`object` must be a `x_split` object." = is.x_split(object),
-    "`i` must be a positive integer." = is.null(i) || check_int(i),
+    "`i` must be a positive integer." = is.null(i) || .check_int(i),
     "`i` cannot exceed the number of splits." = is.null(i) ||
       (is_int(i) && i <= length(object$splits$split))
   )
@@ -486,10 +486,13 @@ print.x_split <- function(x, ...) {
 }
 
 #' check values of `k`
-#' @importFrom helpr is_int
+#' @importFrom helpr is_int is_dbl
 #' @noRd
-check_int <- function(x) {
+.check_int <- function(x) {
   str <- deparse(substitute(x))
+  if ( is_dbl(x) && floor(x) == x ) {
+    x <- as.integer(x)
+  }
   if ( !is_int(x) || x <= 0L ) {
     stop(sprintf("`%s` must be a positive integer.", str), call. = FALSE)
   }
