@@ -207,30 +207,15 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
          call. = FALSE)
   }
   cuts <- .create_strata(x = x, breaks = breaks, ...)
-  # attr only exists if coming from data frame method
-  idx <- attr(x, "idx") %||% seq_along(x)
-  stratas <- unname(split(idx, cuts))
-  stratas <- lapply(stratas, function(.x) {
-               list(id   = .x,
-                    fold = sample(rep_len(seq_len(k), length(.x))))
-              }) |> bind_rows()
-  unname(split(stratas$id, stratas$fold))
+  .collect_and_assign(x, cuts, k)
 }
+
 
 #' @noRd
 .get_indices.character <- function(x, k, ...) {
-
   check_int(k)
-
   levs <- strat_and_impute(factor(x))
-  # attr only exists if coming from data frame method
-  idx <- attr(x, "idx") %||% seq_along(x)
-  stratas <- unname(split(idx, levs))
-  stratas <- lapply(stratas, function(.x) {
-                    list(id   = .x,
-                         fold = sample(rep_len(seq_len(k), length(.x))))
-                    }) |> bind_rows()
-  unname(split(stratas$id, stratas$fold))
+  .collect_and_assign(x, levs, k)
 }
 
 #' @noRd
@@ -511,6 +496,19 @@ check_int <- function(x) {
   invisible(TRUE)
 }
 
+# collect (possibly stratified) indices
+# and assign randomly into folds
+.collect_and_assign <- function(x, groups, k) {
+  # attr only exists if coming from data frame method
+  idx <- attr(x, "idx") %||% seq_along(x)
+  idx_list <- unname(split(idx, groups))
+  idx_df <- lapply(idx_list, function(.x) {
+              tibble(
+                id   = .x,
+                fold = sample(rep_len(seq_len(k), length(.x))))
+         }) |> bind_rows()
+  unname(split(idx_df$id, idx_df$fold))
+}
 
 # used in factor/character with low num levels
 # or numeric with few discrete values
