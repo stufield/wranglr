@@ -26,8 +26,9 @@ partitioning.}
 \item{breaks}{Stratification control. Either \code{NULL} or a \emph{named} list.
 If \code{NULL}, no stratification is performed. See \code{Details}.}
 
-\item{...}{Parameters to be passed to stratification step. Currently limited
-to \code{depth}. The number of stratification bins are based on
+\item{...}{For eventual extensibility. Parameters to be
+passed to internal stratification machinery but currently limited
+to a \code{depth} argument. The number of stratification bins is based on
 \code{min(5, floor(n / depth))}, where \code{n = length(x)}.}
 
 \item{x}{An \code{R} object to test.}
@@ -44,7 +45,7 @@ Element \code{splits} is a tibble where each row of corresponds to an
 individual split. The \code{split} column contains lists named either
 "analysis" and "assessment" containing the indices of \code{data} to be
 used for each fold and category.
-Columns \code{Fold} and \code{Repeat} provide fold and repeat indices for
+Columns \code{fold} and \code{.repeat} provide fold and repeat indices for
 each corresponding split.
 
 \code{\link[=is.x_split]{is.x_split()}}: Logical. \code{TRUE} if \code{x} inherits from

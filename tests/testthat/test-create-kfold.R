@@ -31,25 +31,6 @@ expect_positive_integer_scalar <- function(func, args, arg_name, msg) {
   invisible(act$val)
 }
 
-expect_idx <- function(func, args) {
-  act <- list(val = func, lab = encodeString(func, quote = "\""))
-  msg <- "`idx` must be an integer vector."
-  args$idx <- matrix(1L, 1L, 1L)
-  expect_error(do.call(func, args), msg)
-
-  args$idx <- integer()
-  expect_error(do.call(func, args), msg)
-
-  args$idx <- c(-1L, 2L, 3L, 4L)
-  expect_error(do.call(func, args), msg)
-
-  args$idx <- c(0L, 2L, 3L, 4L)
-  expect_error(do.call(func, args), msg)
-
-  succeed()
-  invisible(act$val)
-}
-
 
 # Testing ----
 # .create_strata() ----
@@ -162,19 +143,16 @@ test_that("`.create_strata()` returns expected results and warnings", {
 test_that("`.get_indices() numeric S3 method returns expected errors", {
   expect_error(
     .get_indices(1:100, breaks = list(s1 = c(0.0, 0.25, 0.75, 1.0)),
-                 k = 5L, idx = 1:100, depth = 5L),
+                 k = 5L, depth = 5L),
     "`breaks` must be a vector of cutoffs, not a 'list'"
   )
   args <- list(x      = withr::with_seed(42L, sample(1L:2L, 30L, TRUE)),
                breaks = 4L,
                k      = 10L,
-               idx    = 1:100L,
                depth  = 20L)
 
   expect_positive_integer_scalar(".get_indices.numeric", args, "k",
                                  "`k` must be a positive integer.")
-
-  expect_idx(".get_indices.numeric", args)
 })
 
 
@@ -203,7 +181,7 @@ test_that("`.get_indices() numeric S3 method returns expected results", {
   for ( i in seq_along(allowed_types) ) {
     xt <- do.call(allowed_types[i], list(seq(1, 10, length.out = 50)))
     expect_no_error(
-     .get_indices(xt, breaks = 2, k = 4L, idx = 1:50, depth = 5L)
+     .get_indices(xt, breaks = 2, k = 4L, depth = 5L)
     )
   }
 
@@ -211,7 +189,7 @@ test_that("`.get_indices() numeric S3 method returns expected results", {
   x <- withr::with_seed(42L, stats::runif(1000))
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = 4L, k = 5L, idx = 1:1000, depth = 5L)
+      .get_indices(x, breaks = 4L, k = 5L, depth = 5L)
     ),
     withr::with_seed(1234L, .local_imp(x, 4L, 5, 1:1000, 5L))
   )
@@ -221,7 +199,7 @@ test_that("`.get_indices() numeric S3 method returns expected results", {
   expect_equal(
     withr::with_seed(1234L,
       .get_indices(x, breaks = c(0.0, 0.25, 0.75, 1.0),
-                   k = 5L, idx = 1:1000, depth = 5L)
+                   k = 5L, depth = 5L)
     ),
     withr::with_seed(1234L, .local_imp(x, c(0.0, 0.25, 0.75, 1.0), 5, 1:1000, 5L))
   )
@@ -230,13 +208,8 @@ test_that("`.get_indices() numeric S3 method returns expected results", {
 
 test_that("`.get_indices()` numeric S3 method returns expected errors", {
   expect_error(
-    .get_indices(matrix(1:30, ncol = 1L), breaks = breaks, k = 4L,
-                 idx = 1:30L, depth = 2L),
+    .get_indices(matrix(1:30, ncol = 1L), breaks = breaks, k = 4L, depth = 2L),
     "`x` must be numeric, not a 'matrix'"
-  )
-  expect_error(
-    .get_indices(1:3, breaks = breaks, k = 4L, idx = 1:30L, depth = 2L),
-    "`idx` must be an integer vector with dimension matching `x`."
   )
 })
 
@@ -245,7 +218,7 @@ test_that("`.get_indices()` numeric S3 method returns expected errors", {
 test_that("`.get_indices()` factor and char S3 method returns expected values", {
   x <- sample(c("a", "d"), 1000, TRUE)
   out <- withr::with_seed(101L,
-    .get_indices(x, k = 10L, idx = seq_along(x), depth = 20L))
+    .get_indices(x, k = 10L, depth = 20L))
   expect_type(out, "list")
   expect_equal(length(out), 10L)
 
@@ -254,7 +227,7 @@ test_that("`.get_indices()` factor and char S3 method returns expected values", 
   expect_equal(
     out,
     withr::with_seed(101L,
-      .get_indices(y, k = 10L, idx = seq_along(y), depth = 20L))
+      .get_indices(y, k = 10L, depth = 20L))
   )
 })
 
@@ -266,66 +239,58 @@ test_that("`.get_indices()` data.frame S3 method returns expected errors", {
 
   expect_error(
     .get_indices(data.frame(x = 1, Y = 2, Z = 3), breaks = breaks,
-                 k = 4L, idx = 1:30L, depth = 2L),
+                 k = 4L, depth = 2L),
     "`data.frame` must have exactly 2 columns."
   )
 
   expect_error(
-    .get_indices(strata, breaks = breaks[[1L]], k = 4L,
-                 idx = 1:30L, depth = 2L),
+    .get_indices(strata, breaks = breaks[[1L]], k = 4L, depth = 2L),
     "`breaks` must be a list of length 2."
   )
 
   expect_error(
-    .get_indices(strata, breaks = "foo", k = 4L, idx = 1:30L, depth = 2L),
+    .get_indices(strata, breaks = "foo", k = 4L, depth = 2L),
     "`breaks` must be a list of length 2."
   )
 
   expect_error(
-    .get_indices(strata, breaks = list(1, 2, 3), k = 4L,
-                 idx = 1:30L, depth = 2L),
+    .get_indices(strata, breaks = list(1, 2, 3), k = 4L, depth = 2L),
     "`breaks` must be a list of length 2."
   )
 
   expect_error(
-    .get_indices(strata, breaks = list(), k = 4L, idx = 1:30L, depth = 2L),
+    .get_indices(strata, breaks = list(), k = 4L, depth = 2L),
     "`breaks` must be a list of length 2."
   )
 
   args <- list(x      = strata,
                breaks = breaks,
                k      = 10L,
-               idx    = 1:100L,
                depth  = 20L)
 
   expect_positive_integer_scalar(".get_indices.data.frame", args, "k",
                                  "`k` must be a positive integer.")
-
-  expect_idx(".get_indices.numeric", args)
 })
 
 
 test_that("`.get_indices()` data.frame S3 method returns expected results", {
   # local implementation
   .local_imp <- function(strata, breaks, k, idx, depth) {
-    stratas_1 <- data.frame(idx    = idx,
-                            strata = .create_strata(strata[, 1L],
-                                                    breaks = breaks[[1L]],
-                                                    depth  = depth))
+    stratas_1 <- data.frame(
+      idx    = idx,
+      strata = .create_strata(strata[, 1L], breaks = breaks[[1L]], depth  = depth)
+    )
     stratas_1 <- unname(split(stratas_1, stratas_1$strata))
-
-    results <- vector("list", k)
+    res <- vector("list", k)
     for ( i in seq_along(stratas_1) ) {
-      tmp <- .get_indices(strata[stratas_1[[i]]$idx, 2L],
-                          breaks = breaks[[2L]],
-                          k = k, idx = stratas_1[[i]]$idx,
-                          depth = depth)
+      vec <- strata[stratas_1[[i]]$idx, 2L]
+      attr(vec, "idx") <- stratas_1[[i]]$idx
+      tmp <- .get_indices(vec, breaks = breaks[[2L]], k = k, depth = depth)
       for ( j in seq_len(k) ) {
-        results[[j]] <- c(results[[j]], tmp[[j]])
+        res[[j]] <- c(res[[j]], tmp[[j]])
       }
-
     }
-    results
+    res
   }
 
   n <- 1000L
@@ -338,10 +303,11 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
 
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, depth = 5L)
     ),
-    withr::with_seed(1234L, .local_imp(x, breaks = breaks,
-                                       k = 4L, idx = 1:n, depth = 5L))
+    withr::with_seed(1234L,
+      .local_imp(x, breaks, 1:n, k = 4L, depth = 5L)
+    )
   )
 
   # data.frame with 1 continuous and 1 discrete
@@ -353,7 +319,7 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
 
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, depth = 5L)
     ),
     withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
@@ -364,10 +330,10 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
 
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 5L, idx = 1:n, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 5L, depth = 5L)
     ),
     withr::with_seed(1234L,
-      .local_imp(x, breaks, k = 5L, idx = 1:n, depth = 5L)
+      .local_imp(x, breaks, k = 5L, 1:n, depth = 5L)
     )
   )
 
@@ -378,7 +344,7 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
   breaks <- list(s1 = 4L, s2 = 5L)
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, depth = 5L)
     ),
     withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
@@ -386,7 +352,7 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
   breaks <- list(s1 = c(0.0, 0.6, 1.0), s2 = 5L)
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, depth = 5L)
     ),
     withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
@@ -394,7 +360,7 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
   breaks <- list(s1 = 4L, s2 = c(0.0, 0.6, 0.8, 1.0))
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, depth = 5L)
     ),
     withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
@@ -402,7 +368,7 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
   breaks <- list(s1 = c(0.0, 0.5, 1.0), s2 = c(0.0, 0.6, 0.8, 1.0))
   expect_equal(
     withr::with_seed(1234L,
-      .get_indices(x, breaks = breaks, k = 4L, idx = 1:n, depth = 5L)
+      .get_indices(x, breaks = breaks, k = 4L, depth = 5L)
     ),
     withr::with_seed(1234L, .local_imp(x, breaks, 4L, 1:n, 5L))
   )
@@ -421,7 +387,7 @@ test_that("`.vfold_splits()` returns expected results", {
   # stratify on 1 variable with # of bins
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(mtcars2, k = 4L, breaks = list(time = 4))
+      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = 3))
     )
   )
 
@@ -436,7 +402,7 @@ test_that("`.vfold_splits()` returns expected results", {
   # stratify on 2 variable with all combinations of breaks
   expect_equal(
     withr::with_seed(1234L,
-      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = 3L, mpg = 3L))
+      .vfold_splits(mtcars2, k = 4L, breaks = list(disp = 3L, mpg = 5L))
     )
   )
 
