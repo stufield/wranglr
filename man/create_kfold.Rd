@@ -2,14 +2,14 @@
 % Please edit documentation in R/create-kfold.R
 \name{create_kfold}
 \alias{create_kfold}
-\alias{is.x_split}
+\alias{is.k_split}
 \alias{analysis}
 \alias{assessment}
 \title{Create k-Fold Partitioning}
 \usage{
 create_kfold(data, k = 10L, repeats = 1L, breaks = NULL, ...)
 
-is.x_split(x)
+is.k_split(x)
 
 analysis(object, i = NULL)
 
@@ -33,14 +33,14 @@ to a \code{depth} argument. The number of stratification bins is based on
 
 \item{x}{An \code{R} object to test.}
 
-\item{object}{A \code{x_split} object.}
+\item{object}{A \code{k_split} object.}
 
 \item{i}{\code{integer(1)} or \code{NULL}. If an integer, the split corresponding
 to the analysis or assessment data to be retrieved, otherwise a list of
 \emph{all} data splits.}
 }
 \value{
-A \code{x_split} object. Element \code{data} contains the original data.
+A \code{k_split} object. Element \code{data} contains the original data.
 Element \code{splits} is a tibble where each row of corresponds to an
 individual split. The \code{split} column contains lists named either
 "analysis" and "assessment" containing the indices of \code{data} to be
@@ -48,8 +48,8 @@ used for each fold and category.
 Columns \code{fold} and \code{.repeat} provide fold and repeat indices for
 each corresponding split.
 
-\code{\link[=is.x_split]{is.x_split()}}: Logical. \code{TRUE} if \code{x} inherits from
-class \code{x_split}.
+\code{\link[=is.k_split]{is.k_split()}}: Logical. \code{TRUE} if \code{x} inherits from
+class \code{k_split}.
 
 \code{\link[=analysis]{analysis()}}: A list of data frames corresponding to
 the analysis indices.

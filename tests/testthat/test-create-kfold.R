@@ -476,7 +476,7 @@ test_that("`create_kfold()` returns expected results for `repeats = 1L`", {
     split_obj$.repeat <- NA_integer_
     structure(
       list(data = data, splits = split_obj),
-      class = c("x_split", "list"),
+      class = c("k_split", "list"),
       breaks = breaks
     )
   }
@@ -521,7 +521,7 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
       tibble()
     structure(
       list(data = data, splits = split_objs),
-      class = c("x_split", "list"),
+      class = c("k_split", "list"),
       breaks = breaks
     )
   }
@@ -541,7 +541,7 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
 test_that("`assessment()` returns expected errors", {
   expect_error(
     assessment(mtcars2),
-    "`object` must be a `x_split` object."
+    "`object` must be a `k_split` object."
   )
   expect_positive_integer_scalar("assessment",
                                  list(object = split_obj, i = 10L),
@@ -572,7 +572,7 @@ test_that("`assessment()` returns expected values", {
 test_that("`analysis()` returns expected errors", {
   expect_error(
     analysis(mtcars2),
-    "`object` must be a `x_split` object."
+    "`object` must be a `k_split` object."
   )
   expect_positive_integer_scalar("analysis",
                                  list(object = split_obj, i = 10L),
@@ -601,7 +601,7 @@ test_that("`analysis()` returns expected values", {
 
 
 # S3 print ----
-test_that("`S3 print()` returns expected class `x_split`", {
+test_that("`S3 print()` returns expected class `k_split`", {
 
   # no stratification; no repeats
   expect_snapshot(
@@ -631,8 +631,8 @@ test_that("`S3 print()` returns expected class `x_split`", {
 })
 
 
-# is.x_split ----
-test_that("`is.x_split()` returns expected results", {
-  expect_true(is.x_split(split_obj))
-  expect_false(is.x_split(unclass(split_obj)))
+# is.k_split ----
+test_that("`is.k_split()` returns expected results", {
+  expect_true(is.k_split(split_obj))
+  expect_false(is.k_split(unclass(split_obj)))
 })

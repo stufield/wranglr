@@ -1,9 +1,9 @@
-# `S3 print()` returns expected class `x_split`
+# `S3 print()` returns expected class `k_split`
 
     Code
       create_kfold(mtcars2, k = 4L, repeats = 1L)
     Output
-      == A `x_split` object ==========================================================
+      == A `k_split` object ==========================================================
       • k            4
       • repeats      1
       • stratified   'NULL'
@@ -23,7 +23,7 @@
     Code
       create_kfold(mtcars2, k = 4L, repeats = 3L)
     Output
-      == A `x_split` object ==========================================================
+      == A `k_split` object ==========================================================
       • k            4
       • repeats      3
       • stratified   'NULL'
@@ -52,7 +52,7 @@
       df <- data.frame(mtcars2[, c("disp", "vs")])
       create_kfold(df, k = 5L)
     Output
-      == A `x_split` object ==========================================================
+      == A `k_split` object ==========================================================
       • k            5
       • repeats      1
       • stratified   'NULL'
@@ -73,7 +73,7 @@
     Code
       create_kfold(mtcars2, k = 5L, breaks = list(vs = NULL))
     Output
-      == A `x_split` object ==========================================================
+      == A `k_split` object ==========================================================
       • k            5
       • repeats      1
       • stratified   'list(vs = NULL)'
@@ -94,7 +94,7 @@
     Code
       create_kfold(mtcars2, k = 5L, repeats = 3L, breaks = list(disp = 3L, vs = NULL))
     Output
-      == A `x_split` object ==========================================================
+      == A `k_split` object ==========================================================
       • k            5
       • repeats      3
       • stratified   'list(disp = 3L, vs = NULL)'

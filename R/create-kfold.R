@@ -45,7 +45,7 @@
 #'   to a `depth` argument. The number of stratification bins is based on
 #'   `min(5, floor(n / depth))`, where `n = length(x)`.
 #'
-#' @return A `x_split` object. Element `data` contains the original data.
+#' @return A `k_split` object. Element `data` contains the original data.
 #'   Element `splits` is a tibble where each row of corresponds to an
 #'   individual split. The `split` column contains lists named either
 #'   "analysis" and "assessment" containing the indices of `data` to be
@@ -100,7 +100,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   structure(
     list(data = data, splits = splits),
-    class = c("x_split", "list"),
+    class = c("k_split", "list"),
     k = k,
     repeats = repeats,
     breaks = breaks,
@@ -344,27 +344,27 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 }
 
 
-#' Test for object class "x_split"
+#' Test for object class "k_split"
 #'
 #' @rdname create_kfold
 #'
 #' @param x An `R` object to test.
 #'
-#' @return [is.x_split()]: Logical. `TRUE` if `x` inherits from
-#'   class `x_split`.
+#' @return [is.k_split()]: Logical. `TRUE` if `x` inherits from
+#'   class `k_split`.
 #' @export
-is.x_split <- function(x) {
-  inherits(x, "x_split")
+is.k_split <- function(x) {
+  inherits(x, "k_split")
 }
 
 
-#' Retrieve the analysis data from a `x_split` object.
+#' Retrieve the analysis data from a `k_split` object.
 #'
 #' [analysis()]: `r lifecycle::badge("questioning")`
 #'
 #' @rdname create_kfold
 #'
-#' @param object A `x_split` object.
+#' @param object A `k_split` object.
 #' @param i `integer(1)` or `NULL`. If an integer, the split corresponding
 #'   to the analysis or assessment data to be retrieved, otherwise a list of
 #'   *all* data splits.
@@ -382,7 +382,7 @@ is.x_split <- function(x) {
 #' @export
 analysis <- function(object, i = NULL) {
   stopifnot(
-    "`object` must be a `x_split` object." = is.x_split(object),
+    "`object` must be a `k_split` object." = is.k_split(object),
     "`i` must be a positive integer." = is.null(i) || .check_int(i),
     "`i` cannot exceed the number of splits." = is.null(i) ||
       (is_int(i) && i <= length(object$splits$split))
@@ -396,7 +396,7 @@ analysis <- function(object, i = NULL) {
 }
 
 
-#' Retrieve the assessment data from a `x_split` object.
+#' Retrieve the assessment data from a `k_split` object.
 #'
 #' [assessment()]: `r lifecycle::badge("questioning")`
 #'
@@ -415,7 +415,7 @@ analysis <- function(object, i = NULL) {
 #' @export
 assessment <- function(object, i = NULL) {
   stopifnot(
-    "`object` must be a `x_split` object." = is.x_split(object),
+    "`object` must be a `k_split` object." = is.k_split(object),
     "`i` must be a positive integer." = is.null(i) || .check_int(i),
     "`i` cannot exceed the number of splits." = is.null(i) ||
       (is_int(i) && i <= length(object$splits$split))
@@ -429,13 +429,13 @@ assessment <- function(object, i = NULL) {
 }
 
 
-#' S3 method for `x_split` object
+#' S3 method for `k_split` object
 #'
 #' @noRd
 #' @importFrom helpr signal_rule value add_color
 #' @export
-print.x_split <- function(x, ...) {
-  signal_rule("A `x_split` object", lty = "double", line_col = "magenta")
+print.k_split <- function(x, ...) {
+  signal_rule("A `k_split` object", lty = "double", line_col = "magenta")
   call <- attr(x, "call")
   key <- c("k", "repeats", "stratified", "orig data") |> pad(12)
   value <- c(
