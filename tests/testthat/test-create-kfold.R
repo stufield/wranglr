@@ -375,53 +375,53 @@ test_that("`.get_indices()` data.frame S3 method returns expected results", {
 })
 
 
-# .vfold_splits ----
+# .calc_splits ----
 # called directly by `create_kfold()` n repeats times.
 # calls `.get_indices()` and manipulates the output.
-test_that("`.vfold_splits()` returns expected output for given inputs", {
+test_that("`.calc_splits()` returns expected output for given inputs", {
   # test with snapshots rather than static output
   # should be easier to create truths and simplify updates
-  expect_snapshot(variant = "vfold_splits", {
+  expect_snapshot(variant = "calc_splits", {
     # No stratification
-    out <- withr::with_seed(101L, .vfold_splits(mtcars2, k = 3L))
+    out <- withr::with_seed(101L, .calc_splits(mtcars2, k = 3L))
     out
     out$split
   })
 
-  expect_snapshot(variant = "vfold_splits", {
+  expect_snapshot(variant = "calc_splits", {
     # stratify on disp only with 3 bins
     out <- withr::with_seed(101L,
-      .vfold_splits(mtcars2, k = 3L, breaks = list(disp = 3L))
+      .calc_splits(mtcars2, k = 3L, breaks = list(disp = 3L))
     )
     out
     out$split
   })
 
-  expect_snapshot(variant = "vfold_splits", {
+  expect_snapshot(variant = "calc_splits", {
     # stratify on disp with vector of bins
     breaks_vec <- seq(min(mtcars2$disp), max(mtcars2$disp), length.out = 5L)
     out <- withr::with_seed(101L,
-      .vfold_splits(mtcars2, k = 3L, breaks = list(disp = breaks_vec))
+      .calc_splits(mtcars2, k = 3L, breaks = list(disp = breaks_vec))
     )
     out
     out$split
   })
 
-  expect_snapshot(variant = "vfold_splits", {
+  expect_snapshot(variant = "calc_splits", {
     # stratify on disp and mpg with combinations of breaks
     # must modify default depth to avoid error (too little data)
     out <- withr::with_seed(101L,
-      .vfold_splits(mtcars2, k = 3L, breaks = list(disp = 3L, mpg = 5L),
+      .calc_splits(mtcars2, k = 3L, breaks = list(disp = 3L, mpg = 5L),
                     depth = 5L)
     )
     out
     out$split
   })
 
-  expect_snapshot(variant = "vfold_splits", {
+  expect_snapshot(variant = "calc_splits", {
     # stratify on disp and mpg with vector of bins and binary vs NULL
     out <- withr::with_seed(101L,
-      .vfold_splits(mtcars2, k = 3L, breaks = list(disp = breaks_vec, vs = NULL))
+      .calc_splits(mtcars2, k = 3L, breaks = list(disp = breaks_vec, vs = NULL))
     )
     out
     out$split
@@ -472,7 +472,7 @@ test_that("`create_kfold()` returns expected errors", {
 test_that("`create_kfold()` returns expected results for `repeats = 1L`", {
   # local implementation
   .local_imp <- function(data, k, breaks, depth) {
-    split_obj <- .vfold_splits(data, k, breaks, depth)
+    split_obj <- .calc_splits(data, k, breaks, depth)
     split_obj$.repeat <- NA_integer_
     structure(
       list(data = data, splits = split_obj),
@@ -513,7 +513,7 @@ test_that("`create_kfold()` returns expected results for repeats != 1", {
   .local_imp <- function(data, k, repeats, breaks, depth) {
     split_objs <- lapply(set_Names(seq_len(repeats)),
                          function(.i) {
-                           tmp <- .vfold_splits(data, k, breaks, depth)
+                           tmp <- .calc_splits(data, k, breaks, depth)
                            tmp$.repeat <- .i
                            tmp
                          }) |>

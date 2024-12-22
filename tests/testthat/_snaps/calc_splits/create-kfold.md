@@ -1,7 +1,7 @@
-# `.vfold_splits()` returns expected output for given inputs
+# `.calc_splits()` returns expected output for given inputs
 
     Code
-      out <- withr::with_seed(101L, .vfold_splits(mtcars2, k = 3L))
+      out <- withr::with_seed(101L, .calc_splits(mtcars2, k = 3L))
       out
     Output
       # A tibble: 3 x 2
@@ -52,8 +52,7 @@
 ---
 
     Code
-      out <- withr::with_seed(101L, .vfold_splits(mtcars2, k = 3L, breaks = list(
-        disp = 3L)))
+      out <- withr::with_seed(101L, .calc_splits(mtcars2, k = 3L, breaks = list(disp = 3L)))
       out
     Output
       # A tibble: 3 x 2
@@ -105,8 +104,7 @@
 
     Code
       breaks_vec <- seq(min(mtcars2$disp), max(mtcars2$disp), length.out = 5L)
-      out <- withr::with_seed(101L, .vfold_splits(mtcars2, k = 3L, breaks = list(
-        disp = breaks_vec)))
+      out <- withr::with_seed(101L, .calc_splits(mtcars2, k = 3L, breaks = list(disp = breaks_vec)))
       out
     Output
       # A tibble: 3 x 2
@@ -157,8 +155,8 @@
 ---
 
     Code
-      out <- withr::with_seed(101L, .vfold_splits(mtcars2, k = 3L, breaks = list(
-        disp = 3L, mpg = 5L), depth = 5L))
+      out <- withr::with_seed(101L, .calc_splits(mtcars2, k = 3L, breaks = list(disp = 3L,
+        mpg = 5L), depth = 5L))
       out
     Output
       # A tibble: 3 x 2
@@ -209,8 +207,8 @@
 ---
 
     Code
-      out <- withr::with_seed(101L, .vfold_splits(mtcars2, k = 3L, breaks = list(
-        disp = breaks_vec, vs = NULL)))
+      out <- withr::with_seed(101L, .calc_splits(mtcars2, k = 3L, breaks = list(disp = breaks_vec,
+        vs = NULL)))
     Condition
       Warning in `mapply()`:
       longer argument not a multiple of length of shorter

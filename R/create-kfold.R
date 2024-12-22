@@ -86,7 +86,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
   repeats <- as.integer(round(repeats, 0L))
 
   splits <- replicate(repeats,
-    .vfold_splits(data = data, k = k, breaks = breaks, depth = depth),
+    .calc_splits(data = data, k = k, breaks = breaks, depth = depth),
     simplify = FALSE
   ) |>
     bind_rows(.id = ".repeat") |>
@@ -100,11 +100,11 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 
   structure(
     list(data = data, splits = splits),
-    class = c("k_split", "list"),
-    k = k,
-    repeats = repeats,
-    breaks = breaks,
-    call = match.call()
+      class   = c("k_split", "list"),
+      k = k,
+      repeats = repeats,
+      breaks  = breaks,
+      call    = match.call()
   )
 }
 
@@ -119,11 +119,11 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
 #'   where `n = length(x)`. Also, if `x` is numeric, there must be at least 40
 #'   rows in the data set (when `depth = 20L`) to conduct stratified sampling.
 #'
-#' @return A single repeat of `create_kfolds()`. A tibble of the indices.
+#' @return A single repeat of `create_kfolds()`. A tibble of the index splits.
 #'
 #' @importFrom tibble tibble
 #' @noRd
-.vfold_splits <- function(data, k = 10L, breaks = NULL, depth = 20L) {
+.calc_splits <- function(data, k = 10L, breaks = NULL, depth = 20L) {
 
   rows <- seq_len(nrow(data))
 
@@ -138,17 +138,19 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
     # `drop = TRUE` ensures proper .get_indices() dispatch below
     x <- tryCatch(data.frame(data)[, strat_vars, drop = TRUE],
                   error = function(e) {
-                  stop("Unable to retrieve stratification variable(s) ",
-                       "from `data`.\n", value(e$message), call. = FALSE)
+                    stop("Unable to retrieve stratification variable(s) ",
+                         "from `data`.\n", value(e$message), call. = FALSE)
                  })
+    # indices for the *assessment* group
     indices <- .get_indices(x, breaks = breaks, k = k, depth = depth)
   } else {
     # no strat
     folds   <- sample(rep_len(seq_len(k), nrow(data)))
+    # indices for the *assessment* group
     indices <- unname(split(rows, folds))
   }
 
-  # indices for the *assessment* group
+  # collect all indices
   indices <- lapply(indices, function(.ind) {
                list(analysis   = setdiff(rows, .ind),
                     assessment = sort(unique(.ind)))
