@@ -107,10 +107,6 @@ center_scale.tr_data <- center_scale.data.frame
 
 #' @noRd
 #' @export
-center_scale.soma_adat <- center_scale.data.frame
-
-#' @noRd
-#' @export
 center_scale.matrix <- function(data, par_tbl = NULL, feat = NULL,
                                 center = TRUE, scale = TRUE) {
   stop("The `matrix` method needs work. Please try again later.", call. = FALSE)

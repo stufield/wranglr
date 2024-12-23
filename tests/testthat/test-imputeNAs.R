@@ -40,7 +40,7 @@ test_that("the `imputeNAs()` numeric method is correct", {
   expect_true(all(y == x, na.rm = TRUE))
 })
 
-test_that("the `imputeNAs()` soma_adat method is correct", {
+test_that("the `imputeNAs()` for a `soma_adat` returns same attrs", {
   n    <- 150L
   vals <- sample_df[[n]]
   z    <- imputeNAs(sample_df)

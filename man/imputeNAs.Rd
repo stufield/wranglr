@@ -20,17 +20,17 @@ Must be a numeric data only. \code{factor} or
 \code{character} class are not allowed.
 }
 \examples{
-adat <- simdata
-imputeNAs(adat)
+df <- simdata
+imputeNAs(df)
 
 idx <- 25L  # random 25th column
-imputeNAs(adat[[idx]])
+imputeNAs(df[[idx]])
 
 # test the S3 method
-all.equal(imputeNAs(adat[[idx]]), imputeNAs(adat)[[idx]])
+all.equal(imputeNAs(df[[idx]]), imputeNAs(df)[[idx]])
 
-x <- adat[[idx]]
-x[seq(1, nrow(adat), 10L)] <- NA_real_
+x <- df[[idx]]
+x[seq(1, nrow(df), 10L)] <- NA_real_
 x
 
 median(x, na.rm = TRUE)

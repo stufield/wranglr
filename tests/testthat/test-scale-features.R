@@ -10,7 +10,7 @@ feats <- c("seq.1212.1", "seq.2929.5", "foo")
 
 
 # Testing ----
-test_that("`scale_features()` returns identical adat when scalars are 1.0", {
+test_that("`scale_features()` returns unchanged object when scalars are 1.0", {
   ref <- setNames(rep_len(1.0, length(feats)), feats)
   new <- scale_features(data, ref)
   expect_equal(data, new)
