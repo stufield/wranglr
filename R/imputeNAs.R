@@ -91,9 +91,9 @@ imputeNAs.numeric <- function(x) {
   x
 }
 
-.modify_if  <- function(x, p, f) {
+.modify_if <- function(x, p, f) {
   lgl <- vapply(x, p, NA)
-  for ( i in seq(which(lgl)) ) {
+  for ( i in which(lgl) ) {
     x[[i]] <- f(x[[i]])
   }
   x
