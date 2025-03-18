@@ -35,7 +35,7 @@ Please briefly describe the problem you have encountered ...
 
 If you have a question, please don't use this forum,
 please open a "Question" issue
-[here](https://github.com/stufield/helpr/issues/new/choose)
+[here](https://github.com/stufield/wranglr/issues/new/choose)
 
 
 ## Output

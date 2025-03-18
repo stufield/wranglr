@@ -1,6 +1,6 @@
 ---
 name: ✨ Feature request
-about: Make a case for a new feature in `helpr`
+about: Make a case for a new feature in `wranglr`
 labels: feature
 ---
 
@@ -11,7 +11,7 @@ labels: feature
   `is:pr`, `is:closed`, etc., as needed, e.g. you'd simply remove `is:open` to
   search _all_ issues in the repo, open or closed.
 
-- [ ] The proposed feature fits in the scope of `helpr`
+- [ ] The proposed feature fits in the scope of `wranglr`
   and keeps the intended low footprint.
 
 
