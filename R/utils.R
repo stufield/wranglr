@@ -1,12 +1,4 @@
 
-`%||%` <- function(x, y) {
-  if ( is.null(x) || length(x) <= 0L ) {
-    y
-  } else {
-    x
-  }
-}
-
 .code <- function(x) {
   paste0("\033[90m", encodeString(x, quote = "`"), "\033[39m")
 }
