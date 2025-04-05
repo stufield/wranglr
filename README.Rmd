@@ -45,7 +45,7 @@ of proteomic data into convenient forms for analysis.
 
 ## Installation
 
-```{r install-git, eval = FALSE}
+```{r install-github, eval = FALSE}
 # current dev version
 remotes::install_github("stufield/wranglr")
 
