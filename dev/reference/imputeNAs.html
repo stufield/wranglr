@@ -83,8 +83,8 @@ corresponding vector.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">adat</span> <span class="op">&lt;-</span> <span class="va">simdata</span></span></span>
-<span class="r-in"><span><span class="fu">imputeNAs</span><span class="op">(</span><span class="va">adat</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">simdata</span></span></span>
+<span class="r-in"><span><span class="fu">imputeNAs</span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             id class_response reg_response       time status SampleId</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 51966571_1 001        control  -366.358530 0.17938352      1      001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28704098_1 002        control   619.948320 0.16790617      1      002</span>
@@ -1198,7 +1198,7 @@ corresponding vector.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 43721936_1      2461.4      2394.2      3257.1      2297.2</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">idx</span> <span class="op">&lt;-</span> <span class="fl">25L</span>  <span class="co"># random 25th column</span></span></span>
-<span class="r-in"><span><span class="fu">imputeNAs</span><span class="op">(</span><span class="va">adat</span><span class="op">[[</span><span class="va">idx</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">imputeNAs</span><span class="op">(</span><span class="va">df</span><span class="op">[[</span><span class="va">idx</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 2256.7 2870.7 2515.3 2273.7 1964.7 4230.9 2210.4 2580.7 2561.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [10] 2278.5 2412.0 2501.6 2733.1 1778.8 2061.5 2062.3 2880.2 2427.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [19] 2801.5 2485.8 2086.7 3110.6 2316.0 2555.4 3303.1 2583.7 1871.9</span>
@@ -1213,11 +1213,11 @@ corresponding vector.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [100] 2654.9</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># test the S3 method</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">imputeNAs</span><span class="op">(</span><span class="va">adat</span><span class="op">[[</span><span class="va">idx</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, <span class="fu">imputeNAs</span><span class="op">(</span><span class="va">adat</span><span class="op">)</span><span class="op">[[</span><span class="va">idx</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">imputeNAs</span><span class="op">(</span><span class="va">df</span><span class="op">[[</span><span class="va">idx</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, <span class="fu">imputeNAs</span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">[[</span><span class="va">idx</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">adat</span><span class="op">[[</span><span class="va">idx</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">adat</span><span class="op">)</span>, <span class="fl">10L</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA_real_</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[[</span><span class="va">idx</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, <span class="fl">10L</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA_real_</span></span></span>
 <span class="r-in"><span><span class="va">x</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1]     NA 2870.7 2515.3 2273.7 1964.7 4230.9 2210.4 2580.7 2561.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [10] 2278.5     NA 2501.6 2733.1 1778.8 2061.5 2062.3 2880.2 2427.7</span>

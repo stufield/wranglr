@@ -92,7 +92,7 @@ corresponding values specify the stratification.</p></li>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_kfold</span><span class="op">(</span><span class="va">data</span>, k <span class="op">=</span> <span class="fl">10L</span>, repeats <span class="op">=</span> <span class="fl">1L</span>, breaks <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">is.x_split</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">is.k_split</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">analysis</span><span class="op">(</span><span class="va">object</span>, i <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
@@ -122,8 +122,9 @@ If <code>NULL</code>, no stratification is performed. See <code>Details</code>.<
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Parameters to be passed to stratification step. Currently limited
-to <code>depth</code>. The number of stratification bins are based on
+<dd><p>For eventual extensibility. Parameters to be
+passed to internal stratification machinery but currently limited
+to a <code>depth</code> argument. The number of stratification bins is based on
 <code>min(5, floor(n / depth))</code>, where <code>n = length(x)</code>.</p></dd>
 
 
@@ -132,7 +133,7 @@ to <code>depth</code>. The number of stratification bins are based on
 
 
 <dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>A <code>x_split</code> object.</p></dd>
+<dd><p>A <code>k_split</code> object.</p></dd>
 
 
 <dt id="arg-i">i<a class="anchor" aria-label="anchor" href="#arg-i"></a></dt>
@@ -143,15 +144,15 @@ to the analysis or assessment data to be retrieved, otherwise a list of
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>x_split</code> object. Element <code>data</code> contains the original data.
+    <p>A <code>k_split</code> object. Element <code>data</code> contains the original data.
 Element <code>splits</code> is a tibble where each row of corresponds to an
 individual split. The <code>split</code> column contains lists named either
 "analysis" and "assessment" containing the indices of <code>data</code> to be
 used for each fold and category.
-Columns <code>Fold</code> and <code>Repeat</code> provide fold and repeat indices for
+Columns <code>fold</code> and <code>.repeat</code> provide fold and repeat indices for
 each corresponding split.</p>
-<p><code>is.x_split()</code>: Logical. <code>TRUE</code> if <code>x</code> inherits from
-class <code>x_split</code>.</p>
+<p><code>is.k_split()</code>: Logical. <code>TRUE</code> if <code>x</code> inherits from
+class <code>k_split</code>.</p>
 <p><code>analysis()</code>: A list of data frames corresponding to
 the analysis indices.</p>
 <p><code>assessment()</code>: A list of data frames corresponding to

@@ -88,7 +88,7 @@ with significant implementation costs:</p>
 <ol style="list-style-type: decimal">
 <li>
 <code>recipes</code> is in its infancy, still in a zero-point
-release (currently v1.1.0). As such, development is expected to be
+release (currently v1.2.1). As such, development is expected to be
 ongoing, resulting in likely interface changes and other underlying
 changes that would impact end-users. This represents a significant
 challenge to create a stable, production environment.</li>
@@ -354,7 +354,7 @@ step:</p>
 <span></span>
 <span><span class="co"># S3 print</span></span>
 <span><span class="va">rcp_</span></span>
-<span><span class="co">#&gt; ══ Pre-processing recipe ═════════════════════════════════════════════════</span></span>
+<span><span class="co">#&gt; ══ Pre-processing recipe ══════════════════════════════════════════════</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ─── Training data:</span></span>
 <span><span class="co">#&gt; ✓ Data containing 27 samples used in recipe</span></span>
@@ -368,7 +368,7 @@ step:</p>
 <span><span class="co">#&gt; • disp                  sqrt</span></span>
 <span><span class="co">#&gt; • hp                    log</span></span>
 <span><span class="co">#&gt; • qsec                  function(x) round(x/10, 1L)</span></span>
-<span><span class="co">#&gt; ══════════════════════════════════════════════════════════════════════════</span></span>
+<span><span class="co">#&gt; ═══════════════════════════════════════════════════════════════════════</span></span>
 <span></span>
 <span><span class="co"># the recipe contains a processing parameter table</span></span>
 <span><span class="va">rcp_</span><span class="op">$</span><span class="va">par_tbl</span></span>
@@ -396,18 +396,18 @@ much smaller and accomplishes the same task:</p>
 <span><span class="co">#&gt; [1] TRUE</span></span>
 <span></span>
 <span><span class="va">baked_test</span></span>
-<span><span class="co">#&gt;                        mpg cyl       disp       hp       drat          wt</span></span>
-<span><span class="co">#&gt; Lotus Europa    1.51262140   4 -1.2504330 4.727388 0.46466494 -2.34080684</span></span>
-<span><span class="co">#&gt; Ford Pantera L -0.62969458   8  0.9282225 5.575949 1.19235920  0.01614505</span></span>
-<span><span class="co">#&gt; Ferrari Dino    0.09247831   6 -0.5467058 5.164786 0.20264770 -0.41368156</span></span>
-<span><span class="co">#&gt; Maserati Bora  -0.79978722   8  0.6718339 5.814131 0.05843004  0.39482538</span></span>
-<span><span class="co">#&gt; Volvo 142E      0.36343727   4 -0.8485863 4.691348 1.02190947 -0.40219819</span></span>
-<span><span class="co">#&gt;                qsec vs am gear carb</span></span>
-<span><span class="co">#&gt; Lotus Europa    1.7  1  1    5    2</span></span>
-<span><span class="co">#&gt; Ford Pantera L  1.4  0  1    5    4</span></span>
-<span><span class="co">#&gt; Ferrari Dino    1.6  0  1    5    6</span></span>
-<span><span class="co">#&gt; Maserati Bora   1.5  0  1    5    8</span></span>
-<span><span class="co">#&gt; Volvo 142E      1.9  1  1    4    2</span></span></code></pre></div>
+<span><span class="co">#&gt;                        mpg cyl       disp       hp       drat</span></span>
+<span><span class="co">#&gt; Lotus Europa    1.51262140   4 -1.2504330 4.727388 0.46466494</span></span>
+<span><span class="co">#&gt; Ford Pantera L -0.62969458   8  0.9282225 5.575949 1.19235920</span></span>
+<span><span class="co">#&gt; Ferrari Dino    0.09247831   6 -0.5467058 5.164786 0.20264770</span></span>
+<span><span class="co">#&gt; Maserati Bora  -0.79978722   8  0.6718339 5.814131 0.05843004</span></span>
+<span><span class="co">#&gt; Volvo 142E      0.36343727   4 -0.8485863 4.691348 1.02190947</span></span>
+<span><span class="co">#&gt;                         wt qsec vs am gear carb</span></span>
+<span><span class="co">#&gt; Lotus Europa   -2.34080684  1.7  1  1    5    2</span></span>
+<span><span class="co">#&gt; Ford Pantera L  0.01614505  1.4  0  1    5    4</span></span>
+<span><span class="co">#&gt; Ferrari Dino   -0.41368156  1.6  0  1    5    6</span></span>
+<span><span class="co">#&gt; Maserati Bora   0.39482538  1.5  0  1    5    8</span></span>
+<span><span class="co">#&gt; Volvo 142E     -0.40219819  1.9  1  1    4    2</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="what-about-non-feature-variables">What about non-Feature variables?<a class="anchor" aria-label="anchor" href="#what-about-non-feature-variables"></a>
 </h3>

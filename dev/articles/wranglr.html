@@ -96,7 +96,7 @@ proteomic data into convenient forms for analysis.</p>
 <span><span class="co"># `create_recipe()`</span></span>
 <span><span class="va">rcp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_recipe.html">create_recipe</a></span><span class="op">(</span><span class="va">mtcars</span>, feat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mpg"</span>, <span class="st">"disp"</span>, <span class="st">"drat"</span>, <span class="st">"wt"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">rcp</span></span>
-<span><span class="co">#&gt; ══ Pre-processing recipe ═════════════════════════════════════════════════</span></span>
+<span><span class="co">#&gt; ══ Pre-processing recipe ══════════════════════════════════════════════</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ─── Training data:</span></span>
 <span><span class="co">#&gt; ✓ Data containing 32 samples used in recipe</span></span>
@@ -106,8 +106,7 @@ proteomic data into convenient forms for analysis.</p>
 <span><span class="co">#&gt; • log10-transformed      ✓</span></span>
 <span><span class="co">#&gt; • Centered (mean = 0)    ✓</span></span>
 <span><span class="co">#&gt; • Scaled (sd = 1)        ✓</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ══════════════════════════════════════════════════════════════════════════</span></span></code></pre></div>
+<span><span class="co">#&gt; ═══════════════════════════════════════════════════════════════════════</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -244,30 +243,31 @@ proteomic data into convenient forms for analysis.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seqs</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_seed.html" class="external-link">with_seed</a></span><span class="op">(</span><span class="fl">101</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sample_df</span><span class="op">)</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">seqs</span></span>
-<span><span class="co">#&gt;  [1] "seq.4500.50" "seq.2654.19" "seq.4993.16" "seq.3074.6"  "seq.4721.54"</span></span>
-<span><span class="co">#&gt;  [6] "seq.3516.60" "seq.3194.36" "seq.3197.70" "seq.3448.13" "seq.4719.58"</span></span>
+<span><span class="co">#&gt;  [1] "seq.4500.50" "seq.2654.19" "seq.4993.16" "seq.3074.6" </span></span>
+<span><span class="co">#&gt;  [5] "seq.4721.54" "seq.3516.60" "seq.3194.36" "seq.3197.70"</span></span>
+<span><span class="co">#&gt;  [9] "seq.3448.13" "seq.4719.58"</span></span>
 <span></span>
 <span><span class="co"># NAs for those analytes dropped from menu</span></span>
 <span><span class="fu"><a href="../reference/anno.html">seq_lookup</a></span><span class="op">(</span><span class="va">seqs</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 9</span></span></span>
-<span><span class="co">#&gt;    seq       SeqId EntrezGeneSymbol Target TargetFullName Dilution UniProt</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> seq.4500… 4500… CLEC11A          SCGF-… Stem cell gro… 0.5%     Q9Y240 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> seq.2654… 2654… TNFRSF1A         TNF s… Tumor necrosi… 20%      P19438 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> seq.4993… 4993… GSTA3            GSTA3  Glutathione S… 20%      Q16772 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> seq.3074… 3074… LBP              LBP    Lipopolysacch… 0.005%   P18428 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> seq.4721… 4721… TFF3             TFF3   Trefoil facto… 0.5%     Q07654 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> seq.3516… 3516… CXCL12           SDF-1  Stromal cell-… 20%      P48061 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> seq.3194… 3194… GP6              GPVI   Platelet glyc… 0.5%     Q9HCN6 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> seq.3197… 3197… IDE              IDE    Insulin-degra… 20%      P14735 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> seq.3448… 3448… INSR             IR     Insulin recep… 20%      P06213 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> seq.4719… 4719… PDIA3            Prote… Protein disul… 0.5%     P30101 </span></span>
+<span><span class="co">#&gt;    seq    SeqId EntrezGeneSymbol Target TargetFullName Dilution UniProt</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> seq.4… 4500… CLEC11A          SCGF-… Stem cell gro… 0.5%     Q9Y240 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> seq.2… 2654… TNFRSF1A         TNF s… Tumor necrosi… 20%      P19438 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> seq.4… 4993… GSTA3            GSTA3  Glutathione S… 20%      Q16772 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> seq.3… 3074… LBP              LBP    Lipopolysacch… 0.005%   P18428 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> seq.4… 4721… TFF3             TFF3   Trefoil facto… 0.5%     Q07654 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> seq.3… 3516… CXCL12           SDF-1  Stromal cell-… 20%      P48061 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> seq.3… 3194… GP6              GPVI   Platelet glyc… 0.5%     Q9HCN6 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> seq.3… 3197… IDE              IDE    Insulin-degra… 20%      P14735 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> seq.3… 3448… INSR             IR     Insulin recep… 20%      P06213 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> seq.4… 4719… PDIA3            Prote… Protein disul… 0.5%     P30101 </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: List &lt;chr&gt;, Reason &lt;chr&gt;</span></span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/anno.html">seqify</a></span><span class="op">(</span><span class="va">seqs</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ══ SeqId Lookup ══════════════════════════════════════════════════════════</span></span>
-<span><span class="co">#&gt;   SeqId-Feature     GeneID       Target                                                   List     Reason   </span></span>
-<span><span class="co">#&gt; ──────────────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; ══ SeqId Lookup ═══════════════════════════════════════════════════════</span></span>
+<span><span class="co">#&gt;   SeqId-Feature     GeneID       Target                                                   List     Reason</span></span>
+<span><span class="co">#&gt; ───────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; ▶ seq.4500.50    ❯  CLEC11A   ❯  Stem cell growth factor-alpha                         ❯        ❯        </span></span>
 <span><span class="co">#&gt; ▶ seq.2654.19    ❯  TNFRSF1A  ❯  Tumor necrosis factor receptor superfamily member 1A  ❯        ❯        </span></span>
 <span><span class="co">#&gt; ▶ seq.4993.16    ❯  GSTA3     ❯  Glutathione S-transferase A3                          ❯        ❯        </span></span>
@@ -284,18 +284,18 @@ proteomic data into convenient forms for analysis.</p>
 <span><span class="va">anno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">sample_df</span>, <span class="st">"anno"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/anno.html">seq_lookup</a></span><span class="op">(</span><span class="va">seqs</span>, tbl <span class="op">=</span> <span class="va">anno</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 5</span></span></span>
-<span><span class="co">#&gt;    seq         SeqId   EntrezGeneSymbol Target              TargetFullName</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> seq.4500.50 4500-50 CLEC11A          SCGF-alpha          Stem Cell Gro…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> seq.2654.19 2654-19 TNFRSF1A         TNF sR-I            Tumor necrosi…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> seq.4993.16 4993-16 GSTA3            GSTA3               Glutathione S…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> seq.3074.6  3074-6  LBP              LBP                 Lipopolysacch…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> seq.4721.54 4721-54 TFF3             TFF3                Trefoil facto…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> seq.3516.60 3516-60 CXCL12           SDF-1               Stromal cell-…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> seq.3194.36 3194-36 GP6              GPVI                Platelet glyc…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> seq.3197.70 3197-70 IDE              IDE                 Insulin-degra…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> seq.3448.13 3448-13 INSR             IR                  Insulin recep…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> seq.4719.58 4719-58 PDIA3            Protein disulfide … Protein disul…</span></span></code></pre></div>
+<span><span class="co">#&gt;    seq         SeqId   EntrezGeneSymbol Target           TargetFullName</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> seq.4500.50 4500-50 CLEC11A          SCGF-alpha       Stem Cell Gro…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> seq.2654.19 2654-19 TNFRSF1A         TNF sR-I         Tumor necrosi…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> seq.4993.16 4993-16 GSTA3            GSTA3            Glutathione S…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> seq.3074.6  3074-6  LBP              LBP              Lipopolysacch…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> seq.4721.54 4721-54 TFF3             TFF3             Trefoil facto…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> seq.3516.60 3516-60 CXCL12           SDF-1            Stromal cell-…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> seq.3194.36 3194-36 GP6              GPVI             Platelet glyc…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> seq.3197.70 3197-70 IDE              IDE              Insulin-degra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> seq.3448.13 3448-13 INSR             IR               Insulin recep…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> seq.4719.58 4719-58 PDIA3            Protein disulfi… Protein disul…</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
