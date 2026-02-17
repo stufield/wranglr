@@ -2,8 +2,9 @@
 
     Code
       rcp
-    Output
+    Message
       == Pre-processing recipe =======================================================
+    Output
       
       --- Training data:
     Message
@@ -18,5 +19,6 @@
       * Scaled (sd = 1)        v
     Output
       
+    Message
       ================================================================================
 

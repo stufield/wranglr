@@ -2,13 +2,16 @@
 
     Code
       create_kfold(mtcars2, k = 4L, repeats = 1L)
-    Output
+    Message
       == A `k_split` object ==========================================================
+    Output
       • k            4
       • repeats      1
       • stratified   'NULL'
       • orig data    mtcars2
+    Message
       -- split info ------------------------------------------------------------------
+    Output
       # A tibble: 4 x 3
         split             fold .repeat
         <list>           <int>   <int>
@@ -16,19 +19,23 @@
       2 <named list [2]>     2      NA
       3 <named list [2]>     3      NA
       4 <named list [2]>     4      NA
+    Message
       ================================================================================
 
 ---
 
     Code
       create_kfold(mtcars2, k = 4L, repeats = 3L)
-    Output
+    Message
       == A `k_split` object ==========================================================
+    Output
       • k            4
       • repeats      3
       • stratified   'NULL'
       • orig data    mtcars2
+    Message
       -- split info ------------------------------------------------------------------
+    Output
       # A tibble: 12 x 3
          split             fold .repeat
          <list>           <int>   <int>
@@ -44,6 +51,7 @@
       10 <named list [2]>     2       3
       11 <named list [2]>     3       3
       12 <named list [2]>     4       3
+    Message
       ================================================================================
 
 ---
@@ -51,13 +59,16 @@
     Code
       df <- data.frame(mtcars2[, c("disp", "vs")])
       create_kfold(df, k = 5L)
-    Output
+    Message
       == A `k_split` object ==========================================================
+    Output
       • k            5
       • repeats      1
       • stratified   'NULL'
       • orig data    df
+    Message
       -- split info ------------------------------------------------------------------
+    Output
       # A tibble: 5 x 3
         split             fold .repeat
         <list>           <int>   <int>
@@ -66,19 +77,23 @@
       3 <named list [2]>     3      NA
       4 <named list [2]>     4      NA
       5 <named list [2]>     5      NA
+    Message
       ================================================================================
 
 ---
 
     Code
       create_kfold(mtcars2, k = 5L, breaks = list(vs = NULL))
-    Output
+    Message
       == A `k_split` object ==========================================================
+    Output
       • k            5
       • repeats      1
       • stratified   'list(vs = NULL)'
       • orig data    mtcars2
+    Message
       -- split info ------------------------------------------------------------------
+    Output
       # A tibble: 5 x 3
         split             fold .repeat
         <list>           <int>   <int>
@@ -87,19 +102,23 @@
       3 <named list [2]>     3      NA
       4 <named list [2]>     4      NA
       5 <named list [2]>     5      NA
+    Message
       ================================================================================
 
 ---
 
     Code
       create_kfold(mtcars2, k = 5L, repeats = 3L, breaks = list(disp = 3L, vs = NULL))
-    Output
+    Message
       == A `k_split` object ==========================================================
+    Output
       • k            5
       • repeats      3
       • stratified   'list(disp = 3L, vs = NULL)'
       • orig data    mtcars2
+    Message
       -- split info ------------------------------------------------------------------
+    Output
       # A tibble: 15 x 3
          split             fold .repeat
          <list>           <int>   <int>
@@ -118,5 +137,6 @@
       13 <named list [2]>     3       3
       14 <named list [2]>     4       3
       15 <named list [2]>     5       3
+    Message
       ================================================================================
 
