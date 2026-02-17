@@ -55,7 +55,7 @@ ggplot(data.frame(x = vec), aes(x = x)) +
   ggtitle("Outlier Cutoffs (3*sigma) in Red")
 }
 \seealso{
-\code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, \code{\link[=get_outliers]{get_outliers()}}
+\code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, \code{\link[helpr:get_outliers]{helpr::get_outliers()}}
 
 Other impute: 
 \code{\link{imputeNAs}()},

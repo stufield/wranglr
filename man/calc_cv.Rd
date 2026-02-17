@@ -49,7 +49,7 @@ coeffVar <- lapply(site_split, calc_cv)
 coeffVar <- do.call(rbind, coeffVar) |> data.frame()
 }
 \seealso{
-\code{\link[=calc_ss]{calc_ss()}}
+\code{\link[helpr:calc_ss]{helpr::calc_ss()}}
 }
 \author{
 Stu Field

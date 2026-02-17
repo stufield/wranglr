@@ -27,7 +27,7 @@ df <- dplyr::group_by(mtcars, cyl, vs)
 group_labels(df)
 }
 \seealso{
-\code{\link[=group_vars]{group_vars()}}, \code{\link[=group_data]{group_data()}}
+\code{\link[dplyr:group_data]{dplyr::group_vars()}}, \code{\link[dplyr:group_data]{dplyr::group_data()}}
 }
 \author{
 Stu Field

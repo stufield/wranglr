@@ -71,9 +71,9 @@ bind_union(spl[[1L]], spl[[2L]])
 bind_union(spl[[1L]], spl[[2L]], spl[[3L]])
 }
 \seealso{
-\code{\link[=Reduce]{Reduce()}}, \code{\link[=rbind]{rbind()}}, \code{\link[=intersect]{intersect()}}
+\code{\link[=Reduce]{Reduce()}}, \code{\link[=rbind]{rbind()}}, \code{\link[generics:setops]{generics::intersect()}}
 
-\code{\link[=union]{union()}}
+\code{\link[generics:setops]{generics::union()}}
 }
 \author{
 Stu Field

@@ -18,7 +18,7 @@ indicating the pairing.}
 "parametric" or "nonparametric" to determine
 the type of outliers detection implementation.}
 
-\item{...}{Additional arguments passed to \code{\link[=get_outliers]{get_outliers()}}.}
+\item{...}{Additional arguments passed to \code{\link[helpr:get_outliers]{helpr::get_outliers()}}.}
 }
 \value{
 A \code{tibble} with columns \code{x} and \code{y} representing each
@@ -62,7 +62,7 @@ x2 <- remove_outliers(x, y)       # final row removed
 x2
 }
 \seealso{
-\code{\link[=get_outliers]{get_outliers()}}
+\code{\link[helpr:get_outliers]{helpr::get_outliers()}}
 }
 \author{
 Stu Field
