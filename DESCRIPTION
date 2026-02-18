@@ -16,11 +16,10 @@ License: GPL-3 | file LICENSE
 URL: https://stufield.github.io/wranglr
 Depends:
     R (>= 4.4.0),
-    dplyr (>= 1.0.3)
+    dplyr (>= 1.1.0)
 Imports:
     helpr,
-    tibble,
-    tidyr
+    tibble
 Suggests:
     ggplot2,
     httr,
