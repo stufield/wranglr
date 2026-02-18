@@ -8,8 +8,8 @@
 <title>Pre-processing data via `create_recipe` • wranglr</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.9/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Pre-processing data via `create_recipe`">
@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">wranglr</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.0.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,7 +88,7 @@ with significant implementation costs:</p>
 <ol style="list-style-type: decimal">
 <li>
 <code>recipes</code> is in its infancy, still in a zero-point
-release (currently v1.2.1). As such, development is expected to be
+release (currently v1.3.1). As such, development is expected to be
 ongoing, resulting in likely interface changes and other underlying
 changes that would impact end-users. This represents a significant
 challenge to create a stable, production environment.</li>
@@ -202,36 +202,36 @@ consequences and type conversions:</p>
 <span><span class="co">#&gt;      old$disp            | new$disp                </span></span>
 <span><span class="co">#&gt;  [1] <span style="color: #00BB00;">-0.3564005693460643</span> - <span style="color: #00BB00;">-0.3564005693460608</span> [1] </span></span>
 <span><span class="co">#&gt;  [2] <span style="color: #00BB00;">-0.3564005693460643</span> - <span style="color: #00BB00;">-0.3564005693460608</span> [2] </span></span>
-<span><span class="co">#&gt;  [3] <span style="color: #00BB00;">-1.0245268374438461</span> - <span style="color: #00BB00;">-1.0245268374438425</span> [3] </span></span>
-<span><span class="co">#&gt;  [4] <span style="color: #00BB00;">0.4557791610670426</span>  - <span style="color: #00BB00;">0.4557791610670460</span>  [4] </span></span>
-<span><span class="co">#&gt;  [5] <span style="color: #00BB00;">1.0220856187645546</span>  - <span style="color: #00BB00;">1.0220856187645582</span>  [5] </span></span>
-<span><span class="co">#&gt;  [6] <span style="color: #00BB00;">0.2231346137075751</span>  - <span style="color: #00BB00;">0.2231346137075786</span>  [6] </span></span>
-<span><span class="co">#&gt;  [7] <span style="color: #00BB00;">1.0220856187645546</span>  - <span style="color: #00BB00;">1.0220856187645582</span>  [7] </span></span>
-<span><span class="co">#&gt;  [8] <span style="color: #00BB00;">-0.5039234045752106</span> - <span style="color: #00BB00;">-0.5039234045752070</span> [8] </span></span>
-<span><span class="co">#&gt;  [9] <span style="color: #00BB00;">-0.5737022970189927</span> - <span style="color: #00BB00;">-0.5737022970189891</span> [9] </span></span>
+<span><span class="co">#&gt;  [3] <span style="color: #00BB00;">-1.0245268374438461</span> - <span style="color: #00BB00;">-1.0245268374438423</span> [3] </span></span>
+<span><span class="co">#&gt;  [4] <span style="color: #00BB00;">0.4557791610670426</span>  - <span style="color: #00BB00;">0.4557791610670459</span>  [4] </span></span>
+<span><span class="co">#&gt;  [5] <span style="color: #00BB00;">1.0220856187645546</span>  - <span style="color: #00BB00;">1.0220856187645579</span>  [5] </span></span>
+<span><span class="co">#&gt;  [6] <span style="color: #00BB00;">0.2231346137075751</span>  - <span style="color: #00BB00;">0.2231346137075785</span>  [6] </span></span>
+<span><span class="co">#&gt;  [7] <span style="color: #00BB00;">1.0220856187645546</span>  - <span style="color: #00BB00;">1.0220856187645579</span>  [7] </span></span>
+<span><span class="co">#&gt;  [8] <span style="color: #00BB00;">-0.5039234045752106</span> - <span style="color: #00BB00;">-0.5039234045752069</span> [8] </span></span>
+<span><span class="co">#&gt;  [9] <span style="color: #00BB00;">-0.5737022970189927</span> - <span style="color: #00BB00;">-0.5737022970189890</span> [9] </span></span>
 <span><span class="co">#&gt; [10] <span style="color: #00BB00;">-0.2775151823110336</span> - <span style="color: #00BB00;">-0.2775151823110301</span> [10]</span></span>
 <span><span class="co">#&gt; [11] <span style="color: #00BB00;">-0.2775151823110336</span> - <span style="color: #00BB00;">-0.2775151823110301</span> [11]</span></span>
-<span><span class="co">#&gt; [12] <span style="color: #00BB00;">0.5691891772618392</span>  - <span style="color: #00BB00;">0.5691891772618426</span>  [12]</span></span>
-<span><span class="co">#&gt; [13] <span style="color: #00BB00;">0.5691891772618392</span>  - <span style="color: #00BB00;">0.5691891772618426</span>  [13]</span></span>
-<span><span class="co">#&gt; [14] <span style="color: #00BB00;">0.5691891772618392</span>  - <span style="color: #00BB00;">0.5691891772618426</span>  [14]</span></span>
-<span><span class="co">#&gt; [15] <span style="color: #00BB00;">1.4825412480084112</span>  - <span style="color: #00BB00;">1.4825412480084146</span>  [15]</span></span>
-<span><span class="co">#&gt; [16] <span style="color: #00BB00;">1.4387650272231167</span>  - <span style="color: #00BB00;">1.4387650272231203</span>  [16]</span></span>
-<span><span class="co">#&gt; [17] <span style="color: #00BB00;">1.3632022481877379</span>  - <span style="color: #00BB00;">1.3632022481877415</span>  [17]</span></span>
-<span><span class="co">#&gt; [18] <span style="color: #00BB00;">-1.5625194129048876</span> - <span style="color: #00BB00;">-1.5625194129048843</span> [18]</span></span>
-<span><span class="co">#&gt; [19] <span style="color: #00BB00;">-1.6285853427586641</span> - <span style="color: #00BB00;">-1.6285853427586607</span> [19]</span></span>
-<span><span class="co">#&gt; [20] <span style="color: #00BB00;">-1.7351523848701897</span> - <span style="color: #00BB00;">-1.7351523848701862</span> [20]</span></span>
-<span><span class="co">#&gt; [21] <span style="color: #00BB00;">-0.8440103481158979</span> - <span style="color: #00BB00;">-0.8440103481158945</span> [21]</span></span>
-<span><span class="co">#&gt; [22] <span style="color: #00BB00;">0.8112106761733330</span>  - <span style="color: #00BB00;">0.8112106761733365</span>  [22]</span></span>
-<span><span class="co">#&gt; [23] <span style="color: #00BB00;">0.7346757022991656</span>  - <span style="color: #00BB00;">0.7346757022991690</span>  [23]</span></span>
-<span><span class="co">#&gt; [24] <span style="color: #00BB00;">0.9741984343570680</span>  - <span style="color: #00BB00;">0.9741984343570714</span>  [24]</span></span>
-<span><span class="co">#&gt; [25] <span style="color: #00BB00;">1.2011861291440837</span>  - <span style="color: #00BB00;">1.2011861291440873</span>  [25]</span></span>
-<span><span class="co">#&gt; [26] <span style="color: #00BB00;">-1.5560518744906613</span> - <span style="color: #00BB00;">-1.5560518744906580</span> [26]</span></span>
-<span><span class="co">#&gt; [27] <span style="color: #00BB00;">-0.8411819237873273</span> - <span style="color: #00BB00;">-0.8411819237873238</span> [27]</span></span>
-<span><span class="co">#&gt; [28] <span style="color: #00BB00;">-1.2407557454981515</span> - <span style="color: #00BB00;">-1.2407557454981479</span> [28]</span></span>
-<span><span class="co">#&gt; [29] <span style="color: #00BB00;">0.9790483167604191</span>  - <span style="color: #00BB00;">0.9790483167604226</span>  [29]</span></span>
-<span><span class="co">#&gt; [30] <span style="color: #00BB00;">-0.5237371391471235</span> - <span style="color: #00BB00;">-0.5237371391471201</span> [30]</span></span>
-<span><span class="co">#&gt; [31] <span style="color: #00BB00;">0.7178172239982828</span>  - <span style="color: #00BB00;">0.7178172239982863</span>  [31]</span></span>
-<span><span class="co">#&gt; [32] <span style="color: #00BB00;">-0.8313193363157336</span> - <span style="color: #00BB00;">-0.8313193363157301</span> [32]</span></span>
+<span><span class="co">#&gt; [12] <span style="color: #00BB00;">0.5691891772618392</span>  - <span style="color: #00BB00;">0.5691891772618425</span>  [12]</span></span>
+<span><span class="co">#&gt; [13] <span style="color: #00BB00;">0.5691891772618392</span>  - <span style="color: #00BB00;">0.5691891772618425</span>  [13]</span></span>
+<span><span class="co">#&gt; [14] <span style="color: #00BB00;">0.5691891772618392</span>  - <span style="color: #00BB00;">0.5691891772618425</span>  [14]</span></span>
+<span><span class="co">#&gt; [15] <span style="color: #00BB00;">1.4825412480084112</span>  - <span style="color: #00BB00;">1.4825412480084144</span>  [15]</span></span>
+<span><span class="co">#&gt; [16] <span style="color: #00BB00;">1.4387650272231167</span>  - <span style="color: #00BB00;">1.4387650272231201</span>  [16]</span></span>
+<span><span class="co">#&gt; [17] <span style="color: #00BB00;">1.3632022481877379</span>  - <span style="color: #00BB00;">1.3632022481877413</span>  [17]</span></span>
+<span><span class="co">#&gt; [18] <span style="color: #00BB00;">-1.5625194129048876</span> - <span style="color: #00BB00;">-1.5625194129048838</span> [18]</span></span>
+<span><span class="co">#&gt; [19] <span style="color: #00BB00;">-1.6285853427586641</span> - <span style="color: #00BB00;">-1.6285853427586603</span> [19]</span></span>
+<span><span class="co">#&gt; [20] <span style="color: #00BB00;">-1.7351523848701897</span> - <span style="color: #00BB00;">-1.7351523848701857</span> [20]</span></span>
+<span><span class="co">#&gt; [21] <span style="color: #00BB00;">-0.8440103481158979</span> - <span style="color: #00BB00;">-0.8440103481158943</span> [21]</span></span>
+<span><span class="co">#&gt; [22] <span style="color: #00BB00;">0.8112106761733330</span>  - <span style="color: #00BB00;">0.8112106761733363</span>  [22]</span></span>
+<span><span class="co">#&gt; [23] <span style="color: #00BB00;">0.7346757022991656</span>  - <span style="color: #00BB00;">0.7346757022991689</span>  [23]</span></span>
+<span><span class="co">#&gt; [24] <span style="color: #00BB00;">0.9741984343570680</span>  - <span style="color: #00BB00;">0.9741984343570713</span>  [24]</span></span>
+<span><span class="co">#&gt; [25] <span style="color: #00BB00;">1.2011861291440837</span>  - <span style="color: #00BB00;">1.2011861291440871</span>  [25]</span></span>
+<span><span class="co">#&gt; [26] <span style="color: #00BB00;">-1.5560518744906613</span> - <span style="color: #00BB00;">-1.5560518744906575</span> [26]</span></span>
+<span><span class="co">#&gt; [27] <span style="color: #00BB00;">-0.8411819237873273</span> - <span style="color: #00BB00;">-0.8411819237873236</span> [27]</span></span>
+<span><span class="co">#&gt; [28] <span style="color: #00BB00;">-1.2407557454981515</span> - <span style="color: #00BB00;">-1.2407557454981477</span> [28]</span></span>
+<span><span class="co">#&gt; [29] <span style="color: #00BB00;">0.9790483167604191</span>  - <span style="color: #00BB00;">0.9790483167604224</span>  [29]</span></span>
+<span><span class="co">#&gt; [30] <span style="color: #00BB00;">-0.5237371391471235</span> - <span style="color: #00BB00;">-0.5237371391471199</span> [30]</span></span>
+<span><span class="co">#&gt; [31] <span style="color: #00BB00;">0.7178172239982828</span>  - <span style="color: #00BB00;">0.7178172239982862</span>  [31]</span></span>
+<span><span class="co">#&gt; [32] <span style="color: #00BB00;">-0.8313193363157336</span> - <span style="color: #00BB00;">-0.8313193363157300</span> [32]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;      old$drat            | new$drat                </span></span>
 <span><span class="co">#&gt;  [1] <span style="color: #00BB00;">0.6174466768968913</span>  - <span style="color: #00BB00;">0.6174466768968895</span>  [1] </span></span>
@@ -383,7 +383,7 @@ step:</p>
 much smaller and accomplishes the same task:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">lobstr</span><span class="fu">::</span><span class="fu"><a href="https://lobstr.r-lib.org/reference/obj_size.html" class="external-link">obj_size</a></span><span class="op">(</span><span class="va">rcp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 25.22 kB</span></span>
+<span><span class="co">#&gt; 25.26 kB</span></span>
 <span></span>
 <span><span class="fu">lobstr</span><span class="fu">::</span><span class="fu"><a href="https://lobstr.r-lib.org/reference/obj_size.html" class="external-link">obj_size</a></span><span class="op">(</span><span class="va">rcp_</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 5.44 kB</span></span></code></pre></div>
@@ -490,7 +490,8 @@ data is <code><a href="../reference/center_scale.html">center_scale()</a></code>
 <span><span class="co"># Safe-guards are in place so that you cannot double-undo:</span></span>
 <span><span class="co">#   `par_tbl` entry is removed from attributes</span></span>
 <span><span class="fu"><a href="../reference/center_scale.html">undo_center_scale</a></span><span class="op">(</span><span class="va">old</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in undo_center_scale(old): Must perform `undo` on previously center/scaled data.</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `undo_center_scale()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Must perform `undo` on previously center/scaled data.</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -506,7 +507,7 @@ data is <code><a href="../reference/center_scale.html">center_scale()</a></code>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
   </div></footer>
