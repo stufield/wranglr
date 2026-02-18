@@ -75,7 +75,7 @@ reference:
       Functions to create summaries and add summary data to objects.
     contents:
     - calc_cv
-    - create_summ_tbl
+    - create_sumry_tbl
 
   - title: Transforming data
     desc: >
