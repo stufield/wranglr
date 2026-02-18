@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   simplified-recipes: simplified-recipes.html
@@ -7,7 +7,7 @@ articles:
   tips-safely-rename-df: tips-safely-rename-df.html
   tips-train-test-setup: tips-train-test-setup.html
   wranglr: wranglr.html
-last_built: 2024-12-10T17:41Z
+last_built: 2026-02-18T00:54Z
 urls:
   reference: https://stufield.github.io/wranglr/reference
   article: https://stufield.github.io/wranglr/articles

@@ -8,8 +8,8 @@
 <title>Safely Map Values via dplyr::left_join() • wranglr</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.9/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Safely Map Values via dplyr::left_join()">
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">wranglr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,14 +85,14 @@ the <code>tidyverse</code> that are useful, but in my opinion come with
 some drawbacks:</p>
 <ul>
 <li>
-<code><a href="https://rdrr.io/pkg/dplyr/man/recode.html" class="external-link">dplyr::recode()</a></code>
+<code><a href="https://dplyr.tidyverse.org/reference/recode.html" class="external-link">dplyr::recode()</a></code>
 <ul>
 <li>can be clunky to implement -&gt; LHS/RHS syntax difficult (for me)
 to remember</li>
 </ul>
 </li>
 <li>
-<code><a href="https://rdrr.io/pkg/dplyr/man/case_when.html" class="external-link">dplyr::case_when()</a></code>
+<code><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">dplyr::case_when()</a></code>
 <ul>
 <li>complex syntax -&gt; difficult to remember; overkill for mapping
 purposes</li>
@@ -140,7 +140,7 @@ an existing column to a new column.</p>
 <span></span>
 <span><span class="co"># use `dplyr::left_join()`</span></span>
 <span><span class="co"># note: 'turtle' is absent because `d` is not in `df$x` (thus ignored)</span></span>
-<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">map</span><span class="op">)</span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">map</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(x)`</span></span>
 <span><span class="co">#&gt;    id      value x new_x</span></span>
 <span><span class="co">#&gt; 1   1 -0.3260365 b   dog</span></span>
@@ -174,7 +174,7 @@ row 2 above). Using a slightly different syntax via
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> d     turtle</span></span>
 <span></span>
 <span><span class="co"># note: un-mapped values generate NAs: `b -&gt; NA`</span></span>
-<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">map2</span>, by <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">map2</span>, by <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    id      value x new_x</span></span>
 <span><span class="co">#&gt; 1   1 -0.3260365 b  &lt;NA&gt;</span></span>
 <span><span class="co">#&gt; 2   2  0.5524619 c  bird</span></span>
@@ -201,7 +201,7 @@ row 2 above). Using a slightly different syntax via
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
   </div></footer>
