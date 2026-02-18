@@ -1,7 +1,7 @@
 Type: Package
 Package: wranglr
 Title: Manipulate and Wrangle Data
-Version: 0.0.1.9000
+Version: 0.0.2
 Authors@R: c(
     person(given = "Stu",
            family = "Field",
