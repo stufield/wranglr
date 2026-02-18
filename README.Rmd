@@ -50,7 +50,7 @@ of proteomic data into convenient forms for analysis.
 remotes::install_github("stufield/wranglr")
 
 # or a specific version
-remotes::install_github("stufield/wranglr@v0.0.1")
+remotes::install_github("stufield/wranglr@v0.0.2")
 ```
 
 

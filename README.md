@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 ![GitHub
-version](https://img.shields.io/badge/Version-0.0.1-success.svg?style=flat&logo=github)
+version](https://img.shields.io/badge/Version-0.0.1.9000-success.svg?style=flat&logo=github)
 [![CRAN
 status](http://www.r-pkg.org/badges/version/wranglr)](https://cran.r-project.org/package=wranglr)
 [![R-CMD-check](https://github.com/stufield/wranglr/workflows/R-CMD-check/badge.svg)](https://github.com/stufield/wranglr/actions)
@@ -34,7 +34,7 @@ convenient forms for analysis.
 remotes::install_github("stufield/wranglr")
 
 # or a specific version
-remotes::install_github("stufield/wranglr@v0.0.1")
+remotes::install_github("stufield/wranglr@v0.0.2")
 ```
 
 ------------------------------------------------------------------------
@@ -83,7 +83,6 @@ rcp
 #> • log10-transformed      ✓
 #> • Centered (mean = 0)    ✓
 #> • Scaled (sd = 1)        ✓
-#> 
 #> ════════════════════════════════════════════════════════════════════════════════════════════════════
 ```
 
@@ -239,7 +238,7 @@ seq_lookup(seqs)
 
 seqify(seqs)
 #> ══ SeqId Lookup ════════════════════════════════════════════════════════════════════════════════════
-#>   SeqId-Feature     GeneID       Target                                                   List     Reason   
+#>   SeqId-Feature     GeneID       Target                                                   List     Reason
 #> ────────────────────────────────────────────────────────────────────────────────────────────────────
 #> ▶ seq.4500.50    ❯  CLEC11A   ❯  Stem cell growth factor-alpha                         ❯        ❯        
 #> ▶ seq.2654.19    ❯  TNFRSF1A  ❯  Tumor necrosis factor receptor superfamily member 1A  ❯        ❯        
