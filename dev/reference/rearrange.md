@@ -60,36 +60,36 @@ df
 #> # A tibble: 4 × 3
 #>   name      x      y
 #>   <chr> <int>  <dbl>
-#> 1 a         1  0.559
-#> 2 b         2  0.415
-#> 3 c         3 -1.45 
-#> 4 d         4  0.941
+#> 1 a         1 -0.579
+#> 2 b         2  1.76 
+#> 3 c         3  0.133
+#> 4 d         4  0.376
 
 rearrange(df, "name", c("c", "b", "d"))
 #> # A tibble: 3 × 3
-#>   name      x      y
-#>   <chr> <int>  <dbl>
-#> 1 c         3 -1.45 
-#> 2 b         2  0.415
-#> 3 d         4  0.941
+#>   name      x     y
+#>   <chr> <int> <dbl>
+#> 1 c         3 0.133
+#> 2 b         2 1.76 
+#> 3 d         4 0.376
 
 rearrange(df, "name", "d")
 #> # A tibble: 1 × 3
 #>   name      x     y
 #>   <chr> <int> <dbl>
-#> 1 d         4 0.941
+#> 1 d         4 0.376
 
 rearrange(df, "name", c("a", "c", "z"))  # "z" is ignored
 #> # A tibble: 2 × 3
 #>   name      x      y
 #>   <chr> <int>  <dbl>
-#> 1 a         1  0.559
-#> 2 c         3 -1.45 
+#> 1 a         1 -0.579
+#> 2 c         3  0.133
 
 rearrange(df, "name", c("a", "c", "c"))  # duplicate "c" is dropped
 #> # A tibble: 2 × 3
 #>   name      x      y
 #>   <chr> <int>  <dbl>
-#> 1 a         1  0.559
-#> 2 c         3 -1.45 
+#> 1 a         1 -0.579
+#> 2 c         3  0.133
 ```
