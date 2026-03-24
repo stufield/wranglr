@@ -33,6 +33,8 @@ Suggests:
     testthat,
     waldo,
     withr
+Remotes:
+    stufield/helpr
 VignetteBuilder:
     knitr
 Encoding: UTF-8
