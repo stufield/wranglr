@@ -43,11 +43,11 @@ create_sumry_tbl <- function(data, var, ...) {
     shim <- toString(substitute(...))[1L]
   }
   total <- ungroup(data) |>
-    summarise(n = n(), .calc_stats(!!ensym(var)))
+    summarise(.calc_stats(!!ensym(var)))
   total[[shim]] <- "Total"
   data |>
     group_by(...) |>
-    summarise(n = n(), .calc_stats(!!ensym(var)), .groups = "drop") |>
+    summarise(.calc_stats(!!ensym(var)), .groups = "drop") |>
     bind_rows(total)
 }
 
@@ -57,6 +57,7 @@ create_sumry_tbl <- function(data, var, ...) {
   nas <- sum(is.na(x))
   x <- x[!is.na(x)]
   tibble(
+    n     = length(x),
     NAs   = nas,
     min   = min(x),
     max   = max(x),
