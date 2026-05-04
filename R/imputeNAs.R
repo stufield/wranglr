@@ -16,17 +16,16 @@
 #' @seealso [median()]
 #'
 #' @examples
-#' df <- simdata
+#' # data frame method
+#' df <- select(simdata, id, class_response, seq.2802.68) |> head()
+#' df[3, 3] <- NA_real_
+#' df
+#'
 #' imputeNAs(df)
 #'
-#' idx <- 25L  # random 25th column
-#' imputeNAs(df[[idx]])
-#'
-#' # test the S3 method
-#' all.equal(imputeNAs(df[[idx]]), imputeNAs(df)[[idx]])
-#'
-#' x <- df[[idx]]
-#' x[seq(1, nrow(df), 10L)] <- NA_real_
+#' # vector method
+#' x <- seq(10)
+#' x[c(1, 3, 5)] <- NA_real_
 #' x
 #'
 #' median(x, na.rm = TRUE)

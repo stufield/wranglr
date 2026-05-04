@@ -24,3 +24,4 @@ filter_smudge
 # ignore all packrat related files
 .project
 packrat/lib*/
+.positai
