@@ -56,8 +56,12 @@ create_sumry_tbl <- function(data, var, ...) {
 .calc_stats <- function(x) {
   nas <- sum(is.na(x))
   x <- x[!is.na(x)]
+  L <- length(x)
+  if (L == 0L) {
+    x <- NA_real_  # catch if ALL NAs
+  }
   tibble(
-    n     = length(x),
+    n     = L,
     NAs   = nas,
     min   = min(x),
     max   = max(x),
@@ -66,12 +70,17 @@ create_sumry_tbl <- function(data, var, ...) {
     median = stats::median(x),
     mad   = stats::mad(x, constant = 1),
     mode  = .calc_mode(x),
-    IQR   = stats::IQR(x),
+    IQR = IQR(x, na.rm = TRUE),
+    #Q25   = stats::quantile(x, 0.25, na.rm = TRUE, names = FALSE),
+    #Q75   = stats::quantile(x, 0.75, na.rm = TRUE, names = FALSE),
     CV    = sd / mean
   )
 }
 
+
+#' @importFrom helpr %||-%
+#' @noRd
 .calc_mode <- function(x) {
   x <- x[!is.na(x)]
-  as.numeric(names(which.max(table(x))))
+  as.numeric(names(which.max(table(x)))) %||-% NA_real_
 }
