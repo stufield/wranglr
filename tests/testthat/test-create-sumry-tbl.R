@@ -24,11 +24,12 @@ test_that("output is a tibble object", {
 })
 
 test_that("tibble dimensions are correct", {
-  expect_equal(dim(tbl1), c(4L, 12L))
-  expect_equal(dim(tbl2), c(7L, 13L))
+  expect_equal(dim(tbl1), c(4L, 13L))
+  expect_equal(dim(tbl2), c(7L, 14L))
 })
 
 test_that("the content is correct via snapshots", {
+  withr::local_options(list(width = 100L))
   expect_snapshot( tbl1 )
   expect_snapshot( tbl2 )
 })

@@ -70,9 +70,8 @@ create_sumry_tbl <- function(data, var, ...) {
     median = stats::median(x),
     mad   = stats::mad(x, constant = 1),
     mode  = .calc_mode(x),
-    IQR = IQR(x, na.rm = TRUE),
-    #Q25   = stats::quantile(x, 0.25, na.rm = TRUE, names = FALSE),
-    #Q75   = stats::quantile(x, 0.75, na.rm = TRUE, names = FALSE),
+    Q25   = stats::quantile(x, 0.25, na.rm = TRUE, names = FALSE),
+    Q75   = stats::quantile(x, 0.75, na.rm = TRUE, names = FALSE),
     CV    = sd / mean
   )
 }
