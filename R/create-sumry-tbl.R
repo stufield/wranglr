@@ -54,15 +54,17 @@ create_sumry_tbl <- function(data, var, ...) {
 
 # internal
 .calc_stats <- function(x) {
-  nas <- sum(is.na(x))
-  x <- x[!is.na(x)]
   L <- length(x)
-  if (L == 0L) {
+  nas <- sum(is.na(x))
+  n <- L - nas
+  x <- x[!is.na(x)]
+  if ( n == 0L ) {
     x <- NA_real_  # catch if ALL NAs
   }
   tibble(
-    n     = L,
+    total_n = L,
     NAs   = nas,
+    n     = n,
     min   = min(x),
     max   = max(x),
     mean  = mean(x),
