@@ -1,6 +1,6 @@
-#' Impute Predictor Variables
+#' Impute Predictor Variables `r lifecycle::badge("deprecated")`
 #'
-#' Threshold numeric values in model predictors according to
+#'  Threshold numeric values in model predictors according to
 #'   set of training ranges. Typically this involves
 #'   capping values above or below a threshold.
 #'
@@ -28,9 +28,12 @@
 #'     "b",         5,         5,            0,          1,
 #'     "c",         9,         7,            7.1,        7.1
 #' )
+#' \dontrun{
 #' impute_predictors(x, tbl)
+#' }
 #' @export
 impute_predictors <- function(data, extrm_vals) {
+  lifecycle::deprecate_stop("0.0.3", "impute_predictors()")
 
   if ( "feature" %in% names(extrm_vals) ) {
     extrm_vals <- dplyr::rename(extrm_vals, "Feature" = feature)

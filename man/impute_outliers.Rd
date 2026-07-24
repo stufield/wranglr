@@ -58,7 +58,7 @@ ggplot(data.frame(x = vec), aes(x = x)) +
 \code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, \code{\link[helpr:get_outliers]{helpr::get_outliers()}}
 
 Other impute: 
-\code{\link{imputeNAs}()},
+\code{\link{impute}},
 \code{\link{impute_predictors}()}
 }
 \author{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/impute-predictors.R
 \name{impute_predictors}
 \alias{impute_predictors}
-\title{Impute Predictor Variables}
+\title{Impute Predictor Variables \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 \usage{
 impute_predictors(data, extrm_vals)
 }
@@ -33,11 +33,13 @@ tbl <- tibble::tribble(
     "b",         5,         5,            0,          1,
     "c",         9,         7,            7.1,        7.1
 )
+\dontrun{
 impute_predictors(x, tbl)
+}
 }
 \seealso{
 Other impute: 
-\code{\link{imputeNAs}()},
+\code{\link{impute}},
 \code{\link{impute_outliers}()}
 }
 \author{

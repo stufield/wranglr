@@ -12,6 +12,7 @@ if ( getRversion() >= "2.15.1" ) {
       "feature",
       "Feature",
       ".repeat",
+      "rate",
       "name",
       "List",
       "rangeLower",

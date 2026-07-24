@@ -331,7 +331,7 @@ create_kfold <- function(data, k = 10L, repeats = 1L, breaks = NULL, ...) {
                        na.rm = TRUE)
   }
 
-  out <- cut(imputeNAs(x), breaks = unique(breaks), include.lowest = TRUE)
+  out <- cut(impute_median(x), breaks = unique(breaks), include.lowest = TRUE)
 
   if ( any(is.na(out)) ) {
     # cut returns NA for values outside the range of `breaks`.
@@ -518,5 +518,5 @@ strat_and_impute <- function(x) {
       ifelse(sum(x_is_na) == 1, "value.", "values.")
     )
   }
-  imputeNAs(x)
+  impute_median(x)
 }
