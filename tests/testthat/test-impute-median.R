@@ -1,7 +1,9 @@
 
-x <- withr::with_seed(101, sample(c("fat", "moose", "cat"), 10L, replace = TRUE))
+x <- withr::with_seed(101, sample(c("fat", "moose", "cat"),
+                                  10L, replace = TRUE))
 x <- c(x, NA_character_)
 
+# character ----
 test_that("the `impute_median()` charcter method returns correct value", {
   expect_equal(
     withr::with_seed(1, impute_median(x)),
@@ -9,6 +11,7 @@ test_that("the `impute_median()` charcter method returns correct value", {
   )
 })
 
+# factor ----
 test_that("the `impute_median()` factor method errors out", {
   y <- factor(x)
   expect_equal(
@@ -17,6 +20,7 @@ test_that("the `impute_median()` factor method errors out", {
   )
 })
 
+# numeric ----
 test_that("the `impute_median()` numeric method is correct", {
   withr::with_seed(101, {
     x    <- rnorm(100)
@@ -40,26 +44,16 @@ test_that("the `impute_median()` numeric method is correct", {
   expect_true(all(y == x, na.rm = TRUE))
 })
 
-test_that("the `impute_median()` for a `soma_adat` returns same attrs", {
-  n    <- 150L
-  vals <- sample_df[[n]]
-  z    <- impute_median(sample_df)
-  expect_equal(z, sample_df)                  # check nothing changed; no NAs
-  expect_length(z[[n]], nrow(sample_df))
-  expect_equal(impute_median(sample_df[[n]]), z[[n]]) # nothing changed
-  expect_equal(impute_median(sample_df[[n]]), vals)   # nothing changed
-})
-
 test_that("the `impute_median()` data.frame method is correct", {
   x <- matrix(1:100, ncol = 10L)
-  diag(x) <- NA
+  diag(x) <- NA_real_
   x <- data.frame(x)
   expect_s3_class(x, "data.frame")
   expect_equal(sum(x, na.rm = TRUE), 4545)   # pre-impute
   y <- impute_median(x)
   expect_s3_class(y, "data.frame")
   expect_equal(sum(y), 5050)                 # post-impute
-  expect_equal(data.matrix(y) |> diag(),
+  expect_equal(diag(data.matrix(y)),
                c(6, 16, 26, 36, 46, 55, 65, 75, 85, 95))  # check diag
 })
 

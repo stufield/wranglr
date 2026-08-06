@@ -36,7 +36,7 @@ Imputing missing values from an estimated distribution is
 performed by fitting via Maximum Likelihood and estimating
 and parameters, followed by random draws from the appropriate
 random generator.
-Currently only supports Gamma and Gaussian distributions.
+Currently only supports Gamma, Gaussian, and Beta distributions.
 }
 \examples{
 # data frame method
@@ -46,12 +46,15 @@ df
 
 impute_median(df)
 x <- rnorm(10, mean = 10, sd = 5)
-x <- rbeta(10, shape1 = 2, shape2 = 3)
 x[c(2, 7)] <- NA_real_
+y <- rbeta(10, shape1 = 2, shape2 = 3)
+y[c(2, 7)] <- NA_real_
 
 data.frame(
-  orig    = x,
-  imputed = impute_missing(x)   # gaussian
+  orig_x    = x,
+  imputed_x = impute_missing(x), # gaussian
+  orig_y    = y,
+  imputed_y = impute_missing(y, "beta") # beta
 )
 }
 \seealso{

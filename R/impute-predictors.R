@@ -33,6 +33,7 @@
 #' }
 #' @export
 impute_predictors <- function(data, extrm_vals) {
+
   lifecycle::deprecate_stop("0.0.3", "impute_predictors()")
 
   if ( "feature" %in% names(extrm_vals) ) {
@@ -72,18 +73,24 @@ impute_predictors <- function(data, extrm_vals) {
   data
 }
 
-#' Check the extreme values table properties pre-imputation.
-#' @param x the imputation table.
+
+#' Check the extreme values
+#'   table properties pre-imputation.
+#'
+#' @param x an imputation table.
+#'
 #' @importFrom helpr value
 #' @noRd
 .check_extrm_vals <- function(x) {
   if ( !inherits(x, "tbl_df") ) {
     stop("The `extrm_vals` object must be a `tibble`.", call. = FALSE)
   }
-  tbl_nms <- c("Feature", "xtrm_min", "xtrm_max", "impute_min", "impute_max")
+  tbl_nms <- c("Feature", "xtrm_min", "xtrm_max",
+               "impute_min", "impute_max")
   if ( ncol(x) != 5L ) {
     stop(
-      "The `extrm_vals` tibble must contain these 5 columns: ", value(tbl_nms),
+      "The `extrm_vals` tibble must contain these 5 columns: ",
+      value(tbl_nms),
       call. = FALSE
     )
   }

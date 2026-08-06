@@ -5,17 +5,18 @@
 #'   robustly calculated Gaussian. Gaussian parameters (\eqn{\mu + \sigma})
 #'   are robustly calculated.
 #'
-#'   The maximum value, i.e. the \eqn{100^{th}} percentile, is pushed back
-#'   to the \eqn{3 \times \sigma} value of the Gaussian.
+#'   The maximum value, i.e. the \eqn{100^{th}} percentile, is
+#'   pushed back to the \eqn{3 \times \sigma} value of the Gaussian.
 #'
 #' @family impute
+#'
 #' @inheritParams helpr::get_outliers
 #'
-#' @param x A vector of values, approximating a Gaussian distribution and
-#'   containing (possibly) outlier samples.
+#' @param x A vector of values, approximating a Gaussian distribution
+#'   and (possibly) containing outliers.
 #'
-#' @return A vector of values approximating a Gaussian
-#'   distribution with the outlier samples imputed back
+#' @return A vector approximating a Gaussian
+#'   distribution with outliers imputed back
 #'   to the robust Gaussian fit.
 #'
 #' @author Stu Field
@@ -30,7 +31,7 @@
 #' impute_outliers(vec)
 #'
 #' # Plot what is happening:
-#' # original `vec` and critical 3*sd cutoffs in `red`
+#' #   original `vec` and critical 3*sd cutoffs in `red`
 #' library(ggplot2)
 #' range <- seq(min(vec), max(vec), length.out = 100)
 #' fit_data <- data.frame(
@@ -45,12 +46,13 @@
 #'             colour = "black", linetype = "longdash") +
 #'   geom_vline(xintercept = pars$crit, colour = "red", linetype = "dashed") +
 #'   ggtitle("Outlier Cutoffs (3*sigma) in Red")
+#'
 #' @importFrom stats pnorm qnorm
 #' @importFrom helpr get_outliers
 #' @export
 impute_outliers <- function(x, n_sigma = 3) {
 
-  if ( length(table(x)) < 5L ) {   # catch for non-continuous data
+  if ( length(table(x)) < 5L ) { # catch for discrete data
     return(x)
   }
 
@@ -73,6 +75,6 @@ impute_outliers <- function(x, n_sigma = 3) {
                                                    mean = mu,
                                                    sd   = sigma)
   # replace with Gaussian estimates
-  x[idx] <- stats::qnorm(pctiles[ idx ], mean = mu, sd = sigma)
+  x[idx] <- stats::qnorm(pctiles[idx], mean = mu, sd = sigma)
   x
 }

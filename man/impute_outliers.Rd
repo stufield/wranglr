@@ -7,16 +7,16 @@
 impute_outliers(x, n_sigma = 3)
 }
 \arguments{
-\item{x}{A vector of values, approximating a Gaussian distribution and
-containing (possibly) outlier samples.}
+\item{x}{A vector of values, approximating a Gaussian distribution
+and (possibly) containing outliers.}
 
 \item{n_sigma}{\code{numeric(1)}. The the number of standard
 deviations from the mean a \code{n_sigma} threshold for outliers.
 Ignored if \code{type = "nonparametric"}.}
 }
 \value{
-A vector of values approximating a Gaussian
-distribution with the outlier samples imputed back
+A vector approximating a Gaussian
+distribution with outliers imputed back
 to the robust Gaussian fit.
 }
 \description{
@@ -26,8 +26,8 @@ robustly calculated Gaussian. Gaussian parameters (\eqn{\mu + \sigma})
 are robustly calculated.
 }
 \details{
-The maximum value, i.e. the \eqn{100^{th}} percentile, is pushed back
-to the \eqn{3 \times \sigma} value of the Gaussian.
+The maximum value, i.e. the \eqn{100^{th}} percentile, is
+pushed back to the \eqn{3 \times \sigma} value of the Gaussian.
 }
 \examples{
 # Gaussian with 4 outliers (2hi, 2lo)
@@ -38,7 +38,7 @@ pars
 impute_outliers(vec)
 
 # Plot what is happening:
-# original `vec` and critical 3*sd cutoffs in `red`
+#   original `vec` and critical 3*sd cutoffs in `red`
 library(ggplot2)
 range <- seq(min(vec), max(vec), length.out = 100)
 fit_data <- data.frame(
@@ -53,6 +53,7 @@ ggplot(data.frame(x = vec), aes(x = x)) +
             colour = "black", linetype = "longdash") +
   geom_vline(xintercept = pars$crit, colour = "red", linetype = "dashed") +
   ggtitle("Outlier Cutoffs (3*sigma) in Red")
+
 }
 \seealso{
 \code{\link[=pnorm]{pnorm()}}, \code{\link[=qnorm]{qnorm()}}, \code{\link[helpr:get_outliers]{helpr::get_outliers()}}
