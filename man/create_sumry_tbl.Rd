@@ -7,13 +7,16 @@
 create_sumry_tbl(data, var, ...)
 }
 \arguments{
-\item{data}{A \code{data.frame} or \code{tibble} object containing data for summary.}
+\item{data}{A \code{data.frame} or \code{tibble} object containing data
+for summary.}
 
 \item{var}{\code{character(1)}. An unquoted string containing the
 column name to summarize.}
 
-\item{...}{One or more unquoted column names containng grouping
-information. Passed to \code{dplyr::group_by()}.}
+\item{...}{One or more unquoted column names containing grouping
+information. Passed to \code{dplyr::group_by()}. The first grouping
+column is coerced to \code{character} in the output to accommodate
+the summary "Total" row.}
 }
 \value{
 A \code{tibble} object with rows (groups) and columns as the
@@ -25,21 +28,20 @@ structures and a pre-defined set of summary statistics:
 \itemize{
 \item \code{min}
 \item \code{max}
-\item \code{mean}
-\item \code{sd}  (standard deviation)
-\item \code{median}
-\item \code{mad} (median absolute deviation)
-\item \code{mode}
-\item \code{IQR}
-\item \code{CV}
+\item \code{mean}   (arithmetic mean)
+\item \code{sd}     (standard deviation)
+\item \code{median} (50th percentile)
+\item \code{mad}    (median absolute deviation)
+\item \code{mode}   (most common value)
+\item \code{Q25}    (lower quartile)
+\item \code{Q75}    (upper quartile)
+\item \code{CV}     (coefficient of variance)
 }
 }
 \examples{
-mt <- mutate(mtcars, cyl = as.factor(cyl), am = as.factor(am))
+create_sumry_tbl(mtcars, mpg, cyl)
 
-create_sumry_tbl(mt, mpg, cyl)
-
-create_sumry_tbl(mt, mpg, cyl, am)
+create_sumry_tbl(mtcars, mpg, cyl, am)
 }
 \seealso{
 \code{\link[=mad]{mad()}}, \code{\link[=median]{median()}}, \code{\link[=sd]{sd()}}, \code{\link[=min]{min()}}, \code{\link[=max]{max()}}, \code{\link[=IQR]{IQR()}}
