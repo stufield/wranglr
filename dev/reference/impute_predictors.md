@@ -1,4 +1,4 @@
-# Impute Predictor Variables
+# Impute Predictor Variables **\[deprecated\]**
 
 Threshold numeric values in model predictors according to set of
 training ranges. Typically this involves capping values above or below a
@@ -48,7 +48,7 @@ impute_predictors(data, extrm_vals)
 ## See also
 
 Other impute:
-[`imputeNAs()`](https://stufield.github.io/wranglr/dev/reference/imputeNAs.md),
+[`impute`](https://stufield.github.io/wranglr/dev/reference/impute.md),
 [`impute_outliers()`](https://stufield.github.io/wranglr/dev/reference/impute_outliers.md)
 
 ## Author
@@ -65,9 +65,7 @@ tbl <- tibble::tribble(
     "b",         5,         5,            0,          1,
     "c",         9,         7,            7.1,        7.1
 )
+if (FALSE) { # \dontrun{
 impute_predictors(x, tbl)
-#>   a b   c    d
-#> 1 1 4 7.1 1.23
-#> 2 2 5 8.0 4.56
-#> 3 3 5 9.0 7.89
+} # }
 ```

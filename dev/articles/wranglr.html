@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Introduction to wranglr • wranglr</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -115,8 +115,8 @@ proteomic data into convenient forms for analysis.</p>
 <ul>
 <li><code><a href="../reference/remove_outliers.html">remove_outliers()</a></code></li>
 <li><code><a href="../reference/impute_outliers.html">impute_outliers()</a></code></li>
-<li><code><a href="../reference/imputeNAs.html">imputeNAs()</a></code></li>
-<li><code><a href="../reference/impute_predictors.html">impute_predictors()</a></code></li>
+<li><code><a href="../reference/impute.html">impute_median()</a></code></li>
+<li><code><a href="../reference/impute.html">impute_missing()</a></code></li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Identify outliers (`helpr::get_outliers()`)</span></span>
@@ -147,29 +147,15 @@ proteomic data into convenient forms for analysis.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] -0.2214052</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/imputeNAs.html">imputeNAs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/impute.html">impute_median</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] -0.6264538  0.1836433 -0.2214052  1.5952808 -0.2214052 -0.8204684</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="../reference/imputeNAs.html">imputeNAs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="../reference/impute.html">impute_median</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -0.820468384118015 -0.626453810742332 -0.221405243260125 </span></span>
 <span><span class="co">#&gt;                  1                  1                  2 </span></span>
 <span><span class="co">#&gt;  0.183643324222082   1.59528080213779 </span></span>
-<span><span class="co">#&gt;                  1                  1</span></span>
-<span></span>
-<span><span class="co"># Predictors</span></span>
-<span><span class="va">x</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, b <span class="op">=</span> <span class="fl">4</span><span class="op">:</span><span class="fl">6</span>, c <span class="op">=</span> <span class="fl">7</span><span class="op">:</span><span class="fl">9</span>, d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.23</span>, <span class="fl">4.56</span>, <span class="fl">7.89</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">tbl</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
-<span>  <span class="op">~</span> <span class="va">Feature</span>,  <span class="op">~</span> <span class="va">xtrm_max</span>, <span class="op">~</span> <span class="va">impute_max</span>, <span class="op">~</span> <span class="va">xtrm_min</span>, <span class="op">~</span> <span class="va">impute_min</span>,</span>
-<span>    <span class="st">"a"</span>,         <span class="cn">NA</span>,        <span class="cn">NA</span>,           <span class="cn">NA</span>,         <span class="cn">NA</span>,</span>
-<span>    <span class="st">"b"</span>,         <span class="fl">5</span>,         <span class="fl">5</span>,            <span class="fl">0</span>,          <span class="fl">1</span>,</span>
-<span>    <span class="st">"c"</span>,         <span class="fl">9</span>,         <span class="fl">7</span>,            <span class="fl">7.1</span>,        <span class="fl">7.1</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/impute_predictors.html">impute_predictors</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">tbl</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   a b   c    d</span></span>
-<span><span class="co">#&gt; 1 1 4 7.1 1.23</span></span>
-<span><span class="co">#&gt; 2 2 5 8.0 4.56</span></span>
-<span><span class="co">#&gt; 3 3 5 9.0 7.89</span></span></code></pre></div>
+<span><span class="co">#&gt;                  1                  1</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -311,7 +297,7 @@ proteomic data into convenient forms for analysis.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
   </div></footer>

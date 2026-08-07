@@ -16,7 +16,7 @@ packages, e.g. the [recipes](https://recipes.tidymodels.org) package,
 however comes with significant implementation costs:
 
 1.  `recipes` is in its infancy, still in a zero-point release
-    (currently v1.3.1). As such, development is expected to be ongoing,
+    (currently v1.3.3). As such, development is expected to be ongoing,
     resulting in likely interface changes and other underlying changes
     that would impact end-users. This represents a significant challenge
     to create a stable, production environment.
@@ -48,6 +48,7 @@ and `wranglr` S3 dplyr-methods tools. Combined with the function
 simple as the following:
 
 ``` r
+
 features <- c("mpg", "disp", "drat", "wt")
 cs <- function(.x) {     # .x = numeric vector
   out <- log10(.x)       # log10
@@ -77,6 +78,7 @@ Of course the same result can be achieved via the `recipes` package,
 however not without some unintended consequences and type conversions:
 
 ``` r
+
 rcp <- recipe(mtcars) |>
   step_log(all_of(features), base = 10) |>
   step_center(all_of(features)) |>
@@ -237,8 +239,8 @@ occurred and perhaps most significantly, it is done so invisibly:
 The vast majority of proteomics pre-processing involves 3 main steps:
 
 1.  log10-transformation
-2.  center to $\mu = 0$
-3.  scale to $\sigma = 1$
+2.  center to $`\mu = 0`$
+3.  scale to $`\sigma = 1`$
 
 where this pre-processing is first applied to a training set and
 therefore must also be applied to the test set. The new recipe ecosystem
@@ -254,6 +256,7 @@ ecosystem. We will introduce 2 new user-facing functions:
 First, create train/test sets:
 
 ``` r
+
 n      <- 5L
 train  <- head(mtcars, -n)
 test   <- tail(mtcars, n)
@@ -267,6 +270,7 @@ and
 into one step:
 
 ``` r
+
 # use the defaults: log10 -> center -> scale
 # add some modifications on-the-fly: sqrt(), log10(), function(x)
 rcp_ <- create_recipe(train,
@@ -312,6 +316,7 @@ Compared to a `recipe` class object, a `rcp` is much smaller and
 accomplishes the same task:
 
 ``` r
+
 lobstr::obj_size(rcp)
 #> 25.26 kB
 
@@ -322,6 +327,7 @@ lobstr::obj_size(rcp_)
 Now apply the recipe in the familiar “bake” style:
 
 ``` r
+
 baked_test <- bake_recipe(rcp_, test)
 
 # convenient to know if data has been "baked"
@@ -358,6 +364,7 @@ the case where features *and* “dot”-mechanism variables are processed.
 - `qseq`: anonymous function divide by 10 and round to 1 decimal place
 
 ``` r
+
 # the 'additional' modified variables
 rcp_$dot_vars
 #> [1] "disp" "hp"   "qsec"
@@ -395,6 +402,7 @@ is
 ### `center_scale()`
 
 ``` r
+
 cs_data <- log10(train) |> center_scale()
 
 # check new class
@@ -414,6 +422,7 @@ You can simply undo any center/scaling that has occurred via
 [`undo_center_scale()`](https://stufield.github.io/wranglr/dev/reference/center_scale.md).
 
 ``` r
+
 old <- undo_center_scale(test_mod)
 
 # Safe-guards are in place so that you cannot double-undo:

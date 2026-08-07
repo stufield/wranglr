@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Manipulate and Wrangle Data • wranglr</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Roboto-0.4.10/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Roboto-0.4.10/font.css" rel="stylesheet">
 <link href="deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -135,7 +135,7 @@
 <ul>
 <li>
 <code><a href="reference/impute_outliers.html">impute_outliers()</a></code>, <code>get_outliers()</code> (<code>helpr</code>)</li>
-<li><code><a href="reference/imputeNAs.html">imputeNAs()</a></code></li>
+<li><code>imputeNAs()</code></li>
 <li><code><a href="reference/impute_predictors.html">impute_predictors()</a></code></li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -167,10 +167,10 @@
 <span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] -0.2214052</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/imputeNAs.html">imputeNAs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">imputeNAs</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] -0.6264538  0.1836433 -0.2214052  1.5952808 -0.2214052 -0.8204684</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="reference/imputeNAs.html">imputeNAs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu">imputeNAs</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; -0.820468384118015 -0.626453810742332 -0.221405243260125  0.183643324222082   1.59528080213779 </span></span>
 <span><span class="co">#&gt;                  1                  1                  2                  1                  1</span></span>
@@ -375,7 +375,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
   </div></footer>

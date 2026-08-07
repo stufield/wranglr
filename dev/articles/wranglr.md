@@ -14,6 +14,7 @@ convenient forms for analysis.
 - [`create_recipe()`](https://stufield.github.io/wranglr/dev/reference/create_recipe.md)
 
 ``` r
+
 scaled <- center_scale(mtcars)               # all numeric features
 apply(feature_matrix(scaled), 2, mean) |> sum()  # mean = 0
 #> [1] -1.64365e-15
@@ -43,10 +44,11 @@ rcp
 
 - [`remove_outliers()`](https://stufield.github.io/wranglr/dev/reference/remove_outliers.md)
 - [`impute_outliers()`](https://stufield.github.io/wranglr/dev/reference/impute_outliers.md)
-- [`imputeNAs()`](https://stufield.github.io/wranglr/dev/reference/imputeNAs.md)
-- [`impute_predictors()`](https://stufield.github.io/wranglr/dev/reference/impute_predictors.md)
+- [`impute_median()`](https://stufield.github.io/wranglr/dev/reference/impute.md)
+- [`impute_missing()`](https://stufield.github.io/wranglr/dev/reference/impute.md)
 
 ``` r
+
 # Identify outliers (`helpr::get_outliers()`)
 x <- withr::with_seed(1, rnorm(10))   # normal
 x <- c(x, 100)                        # add outlier
@@ -75,29 +77,15 @@ x[ c(3, 5) ] <- NA
 median(x, na.rm = TRUE)
 #> [1] -0.2214052
 
-imputeNAs(x)
+impute_median(x)
 #> [1] -0.6264538  0.1836433 -0.2214052  1.5952808 -0.2214052 -0.8204684
 
-table(imputeNAs(x))
+table(impute_median(x))
 #> 
 #> -0.820468384118015 -0.626453810742332 -0.221405243260125 
 #>                  1                  1                  2 
 #>  0.183643324222082   1.59528080213779 
 #>                  1                  1
-
-# Predictors
-x   <- data.frame(a = 1:3, b = 4:6, c = 7:9, d = c(1.23, 4.56, 7.89))
-tbl <- tibble::tribble(
-  ~ Feature,  ~ xtrm_max, ~ impute_max, ~ xtrm_min, ~ impute_min,
-    "a",         NA,        NA,           NA,         NA,
-    "b",         5,         5,            0,          1,
-    "c",         9,         7,            7.1,        7.1
-)
-impute_predictors(x, tbl)
-#>   a b   c    d
-#> 1 1 4 7.1 1.23
-#> 2 2 5 8.0 4.56
-#> 3 3 5 9.0 7.89
 ```
 
 ------------------------------------------------------------------------
@@ -108,6 +96,7 @@ impute_predictors(x, tbl)
 - [`bind_union()`](https://stufield.github.io/wranglr/dev/reference/bind.md)
 
 ``` r
+
 df1 <- data.frame(a = 1, b = 2, c = 3, row.names = "A")
 df2 <- data.frame(a = 4, b = 5, d = 6, row.names = "B")
 df3 <- data.frame(a = 7, b = 8, e = 9, row.names = "C")
@@ -146,6 +135,7 @@ bind_union(list_df)
 - [`feature_matrix()`](https://stufield.github.io/wranglr/dev/reference/feature_matrix.md)
 
 ``` r
+
 df  <- data.frame(a = factor(c("a", "b")), b = 1:2L)
 foo <- df[df$a == "a", ]
 foo
@@ -169,6 +159,7 @@ levels(bar$a)   # 1 level now
 - [`seqify()`](https://stufield.github.io/wranglr/dev/reference/anno.md)
 
 ``` r
+
 seqs <- withr::with_seed(101, sample(names(sample_df), 10))
 seqs
 #>  [1] "seq.4500.50" "seq.2654.19" "seq.4993.16" "seq.3074.6" 

@@ -40,29 +40,41 @@ Functions to create summaries and add summary data to objects.
 
 Functions to transform data `R` objects.
 
-- [`imputeNAs()`](https://stufield.github.io/wranglr/dev/reference/imputeNAs.md)
-  : Impute NAs
+- [`impute_median()`](https://stufield.github.io/wranglr/dev/reference/impute.md)
+  [`impute_missing()`](https://stufield.github.io/wranglr/dev/reference/impute.md)
+  : Impute Missing Values
+
 - [`impute_outliers()`](https://stufield.github.io/wranglr/dev/reference/impute_outliers.md)
   : Impute Outlier Values
+
 - [`impute_predictors()`](https://stufield.github.io/wranglr/dev/reference/impute_predictors.md)
-  : Impute Predictor Variables
+  :
+
+  Impute Predictor Variables **\[deprecated\]**
+
 - [`center_scale()`](https://stufield.github.io/wranglr/dev/reference/center_scale.md)
   [`is_center_scaled()`](https://stufield.github.io/wranglr/dev/reference/center_scale.md)
   [`undo_center_scale()`](https://stufield.github.io/wranglr/dev/reference/center_scale.md)
   : Center and/or Scale Data
+
 - [`cast_numeric()`](https://stufield.github.io/wranglr/dev/reference/cast_numeric.md)
   : Convert Table Entries to Numeric
+
 - [`create_recipe()`](https://stufield.github.io/wranglr/dev/reference/create_recipe.md)
   [`bake_recipe()`](https://stufield.github.io/wranglr/dev/reference/create_recipe.md)
   [`is.baked()`](https://stufield.github.io/wranglr/dev/reference/create_recipe.md)
   [`convert_recipe()`](https://stufield.github.io/wranglr/dev/reference/create_recipe.md)
   : Pre-processing Analysis Data
+
 - [`get_recipe_params()`](https://stufield.github.io/wranglr/dev/reference/get_recipe_params.md)
   : Get Parameters From A Recipe
+
 - [`scale_features()`](https://stufield.github.io/wranglr/dev/reference/scale_features.md)
   : Scale/transform Features (variables)
+
 - [`rebalance()`](https://stufield.github.io/wranglr/dev/reference/rebalance.md)
   : Sampling for Class Imbalances
+
 - [`remove_outliers()`](https://stufield.github.io/wranglr/dev/reference/remove_outliers.md)
   : Remove Statistical Outliers
 

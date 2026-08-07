@@ -16,13 +16,11 @@
     [`dplyr::group_by()`](https://dplyr.tidyverse.org/reference/group_by.html)
     under the hood for ease of use
   - new snapshot tests
-- New methods for
-  [`imputeNAs()`](https://stufield.github.io/wranglr/dev/reference/imputeNAs.md)
+- New methods for `imputeNAs()`
   - character and factor S3 methods
   - imputes randomly by sampling according to the distribution of unique
     values in `x` and replaces
-  - now the `.create_strata()` function can use
-    [`imputeNAs()`](https://stufield.github.io/wranglr/dev/reference/imputeNAs.md)
+  - now the `.create_strata()` function can use `imputeNAs()`
   - does so internally using internal methods rather than on-the-fly
 - S3 methods for `.get_indices()`
   - now dispatches correctly using S3 methods rather than
@@ -30,8 +28,7 @@
 
 #### Bugs
 
-- Fixed major bug in
-  [`imputeNAs()`](https://stufield.github.io/wranglr/dev/reference/imputeNAs.md)
+- Fixed major bug in `imputeNAs()`
   - data frame method was indexing incorrectly
   - removed [`seq()`](https://rdrr.io/r/base/seq.html) call and index
     only on `p`

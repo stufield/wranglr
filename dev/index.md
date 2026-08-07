@@ -11,6 +11,7 @@ convenient forms for analysis.
 ## Installation
 
 ``` r
+
 # current dev version
 remotes::install_github("stufield/wranglr")
 
@@ -26,12 +27,14 @@ To load `wranglr` simply make a call to
 [`library()`](https://rdrr.io/r/base/library.html) as usual:
 
 ``` r
+
 library(wranglr)
 ```
 
 ## Help summary of the package
 
 ``` r
+
 library(help = wranglr)
 ```
 
@@ -45,6 +48,7 @@ library(help = wranglr)
 - [`create_recipe()`](https://stufield.github.io/wranglr/dev/reference/create_recipe.md)
 
 ``` r
+
 scaled <- center_scale(mtcars)
 apply(feature_matrix(scaled), 2, mean) |> sum()  # mean = 0
 #> [1] 3.410697e-16
@@ -74,10 +78,11 @@ rcp
 
 - [`impute_outliers()`](https://stufield.github.io/wranglr/dev/reference/impute_outliers.md),
   `get_outliers()` (`helpr`)
-- [`imputeNAs()`](https://stufield.github.io/wranglr/dev/reference/imputeNAs.md)
+- `imputeNAs()`
 - [`impute_predictors()`](https://stufield.github.io/wranglr/dev/reference/impute_predictors.md)
 
 ``` r
+
 # Outliers
 x <- withr::with_seed(1, rnorm(10))   # normal
 x <- c(x, 100)                        # add outlier
@@ -137,6 +142,7 @@ impute_predictors(x, tbl)
 - [`bind_union()`](https://stufield.github.io/wranglr/dev/reference/bind.md)
 
 ``` r
+
 df1 <- data.frame(a = 1, b = 2, c = 3, row.names = "A")
 df2 <- data.frame(a = 4, b = 5, d = 6, row.names = "B")
 df3 <- data.frame(a = 7, b = 8, e = 9, row.names = "C")
@@ -175,6 +181,7 @@ bind_union(list_df)
 - [`feature_matrix()`](https://stufield.github.io/wranglr/dev/reference/feature_matrix.md)
 
 ``` r
+
 df  <- data.frame(a = factor(c("a", "b")), b = 1:2L)
 foo <- df[df$a == "a", ]
 foo
@@ -198,6 +205,7 @@ levels(bar$a)   # 1 level now
 - [`seqify()`](https://stufield.github.io/wranglr/dev/reference/anno.md)
 
 ``` r
+
 seqs <- withr::with_seed(101, sample(names(sample_df), 10L))
 seqs
 #>  [1] "seq.4500.50" "seq.2654.19" "seq.4993.16" "seq.3074.6"  "seq.4721.54" "seq.3516.60"

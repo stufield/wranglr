@@ -16,7 +16,7 @@ impute_outliers(x, n_sigma = 3)
 - x:
 
   A vector of values, approximating a Gaussian distribution and
-  containing (possibly) outlier samples.
+  (possibly) containing outliers.
 
 - n_sigma:
 
@@ -25,8 +25,8 @@ impute_outliers(x, n_sigma = 3)
 
 ## Value
 
-A vector of values approximating a Gaussian distribution with the
-outlier samples imputed back to the robust Gaussian fit.
+A vector approximating a Gaussian distribution with outliers imputed
+back to the robust Gaussian fit.
 
 ## Details
 
@@ -40,7 +40,7 @@ the \\3 \times \sigma\\ value of the Gaussian.
 [`helpr::get_outliers()`](https://stufield.github.io/helpr/reference/get_outliers.html)
 
 Other impute:
-[`imputeNAs()`](https://stufield.github.io/wranglr/dev/reference/imputeNAs.md),
+[`impute`](https://stufield.github.io/wranglr/dev/reference/impute.md),
 [`impute_predictors()`](https://stufield.github.io/wranglr/dev/reference/impute_predictors.md)
 
 ## Author
@@ -72,7 +72,7 @@ impute_outliers(vec)
 #> [25] 14.464039 12.072156 16.488872 12.179220 18.764836 21.374201
 
 # Plot what is happening:
-# original `vec` and critical 3*sd cutoffs in `red`
+#   original `vec` and critical 3*sd cutoffs in `red`
 library(ggplot2)
 range <- seq(min(vec), max(vec), length.out = 100)
 fit_data <- data.frame(
@@ -87,4 +87,5 @@ ggplot(data.frame(x = vec), aes(x = x)) +
             colour = "black", linetype = "longdash") +
   geom_vline(xintercept = pars$crit, colour = "red", linetype = "dashed") +
   ggtitle("Outlier Cutoffs (3*sigma) in Red")
+
 ```
