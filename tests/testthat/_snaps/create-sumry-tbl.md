@@ -5,7 +5,7 @@
     Output
       # A tibble: 4 x 14
         cyl   total_n   NAs     n   min   max  mean    sd median   mad  mode   Q25   Q75     CV
-        <chr>   <int> <int> <int> <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
+        <fct>   <int> <int> <int> <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
       1 4          11     0    11  21.4  33.9  26.7  4.51   26    4.4   22.8  22.8  30.4 0.169 
       2 6           7     0     7  17.8  21.4  19.7  1.45   19.7  1.3   21    18.6  21   0.0736
       3 8          14     0    14  10.4  19.2  15.1  2.56   15.2  1.05  10.4  14.4  16.2 0.170 
@@ -18,7 +18,7 @@
     Output
       # A tibble: 7 x 15
         cyl   am    total_n   NAs     n   min   max  mean    sd median   mad  mode   Q25   Q75     CV
-        <chr> <fct>   <int> <int> <int> <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
+        <fct> <fct>   <int> <int> <int> <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
       1 4     0           3     0     3  21.5  24.4  22.9 1.45    22.8 1.3    21.5  22.2  23.6 0.0634
       2 4     1           8     0     8  21.4  33.9  28.1 4.48    28.8 3.2    30.4  25.2  30.9 0.160 
       3 6     0           4     0     4  17.8  21.4  19.1 1.63    18.6 0.700  17.8  18.0  19.8 0.0853

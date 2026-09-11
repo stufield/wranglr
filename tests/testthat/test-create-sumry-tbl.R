@@ -74,7 +74,7 @@ test_that("the `Total` row equals ungrouped stats on the full data", {
 
 test_that("the `Total` row is the last row of the output", {
   out <- create_sumry_tbl(mtcars2, mpg, cyl)
-  expect_equal(out$cyl[nrow(out)], "Total")
+  expect_equal(as.character(out$cyl[nrow(out)]), "Total")
 })
 
 

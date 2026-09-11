@@ -46,18 +46,26 @@ create_sumry_tbl <- function(data, var, ...) {
   } else {
     shim <- toString(substitute(...))[1L]
   }
-  # Coerce the first grouping var so a "Total"
-  #   row can rbind cleanly
-  # Trade-off: first output column type is always character.
-  data <- data |>
-    mutate(across(all_of(shim), as.character))
+  # Group/summarise *before* touching the type of the first grouping
+  #   var, so a factor's original level order drives the row order
+  #   (dplyr sorts summarised groups by factor level by default)
+  #   Coerce only afterward so a "Total" row can rbind cleanly.
+  fct  <- is.factor(data[[shim]])
+  levs <- levels(data[[shim]])
   total <- ungroup(data) |>
     summarise(.calc_stats(!!ensym(var)))
-  total[[shim]] <- "Total"
-  data |>
+  ret <- data |>
     group_by(...) |>
-    summarise(.calc_stats(!!ensym(var)), .groups = "drop") |>
-    bind_rows(total)
+    summarise(.calc_stats(!!ensym(var)), .groups = "drop")
+  if ( fct ) {
+    levs          <- c(levs, "Total")
+    ret[[shim]]   <- factor(as.character(ret[[shim]]), levels = levs)
+    total[[shim]] <- factor("Total", levels = levs)
+  } else {
+    ret[[shim]]   <- as.character(ret[[shim]])
+    total[[shim]] <- "Total"
+  }
+  bind_rows(ret, total)
 }
 
 
