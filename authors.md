@@ -8,12 +8,12 @@
 ## Citation
 
 Field S (2026). *wranglr: Manipulate and Wrangle Data*. R package
-version 0.0.2, <https://stufield.github.io/wranglr>.
+version 0.0.3, <https://stufield.github.io/wranglr>.
 
     @Manual{,
       title = {wranglr: Manipulate and Wrangle Data},
       author = {Stu Field},
       year = {2026},
-      note = {R package version 0.0.2},
+      note = {R package version 0.0.3},
       url = {https://stufield.github.io/wranglr},
     }
